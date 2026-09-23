@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-157e783a-a620-454a-bd4d-d118bdfe4fed/styles.css">
+<script src="_ds/nocturne-157e783a-a620-454a-bd4d-d118bdfe4fed/_ds_bundle.js"></script>
+<style>
+:root{
+  --color-bg:#eef0f4; --color-surface:#fbfcfe; --color-text:#191b26;
+  --color-divider: color-mix(in srgb, #191b26 13%, transparent);
+  --color-accent:#2f4fce; --ink:#2a49c6;
+  --color-accent-100:#1e2a74; --color-accent-300:#2f4fce;
+  --color-accent-800:#dde3fb; --color-accent-900:#eef1ff;
+  --color-neutral-100:#2a2d3a; --color-neutral-700:#c7ccd8; --color-neutral-800:#e6e8f0;
+  --shadow-sm:0 0 0 1px rgba(25,27,38,.09);
+  --shadow-md:0 1px 2px rgba(25,27,38,.05), 0 8px 24px rgba(25,27,38,.09);
+  --shadow-lg:0 2px 4px rgba(25,27,38,.07), 0 18px 48px rgba(25,27,38,.14);
+}
+[data-theme="dark"]{
+  --color-bg:#161826; --color-surface:#232532; --color-text:#e9e9ed;
+  --color-divider: color-mix(in srgb, #e9e9ed 16%, transparent);
+  --color-accent:#5f78e6; --ink:#7a90f2;
+  --color-accent-100:#eef1ff; --color-accent-300:#b9c4fb;
+  --color-accent-800:#232a63; --color-accent-900:#191d45;
+  --color-neutral-100:#f3f5fe; --color-neutral-700:#595d6c; --color-neutral-800:#3f424d;
+  --shadow-sm:0 0 0 1px #3f424d;
+  --shadow-md:0 0 0 1px #4a4d5a, 0 6px 18px rgba(0,0,0,.5);
+  --shadow-lg:0 0 0 1px #6b6f80, 0 16px 40px rgba(0,0,0,.6);
+}
+[data-accent="red"]{ --color-accent:#d4392e; --color-accent-300:#c23327; --color-accent-800:#f7ddda; --color-accent-900:#fdeeec; --color-accent-100:#7a1a12; }
+[data-theme="dark"][data-accent="red"]{ --color-accent:#ef685b; --color-accent-300:#f19a90; --color-accent-800:#48201b; --color-accent-900:#301513; --color-accent-100:#ffe6e2; }
+@keyframes stampIn{ 0%{opacity:0;transform:scale(1.14) rotate(-3deg)} 55%{opacity:.5} 100%{opacity:.9;transform:scale(1) rotate(-1.5deg)} }
+[data-sticky]{ display:none }
+@media(max-width:860px){
+  [data-hero]{ grid-template-columns:1fr !important; }
+  [data-con]{ grid-template-columns:1fr !important; }
+  [data-navlinks]{ display:none !important; }
+  [data-hidemob]{ display:none !important; }
+  [data-sticky]{ display:grid !important; }
+  [data-body]{ padding-bottom:76px !important; }
+}
+</style>
+</helmet>
+<div data-body data-theme="{{ themeAttr }}" data-accent="{{ accentAttr }}" style="min-height:100%;background:radial-gradient(1150px 620px at 88% -160px, color-mix(in srgb, var(--color-accent) 13%, transparent), transparent 62%), var(--color-bg);color:var(--color-text);font-family:var(--font-body);">
+
+<!-- ─────────── header ─────────── -->
+<header style="position:sticky;top:0;z-index:40;backdrop-filter:saturate(1.4) blur(10px);background:color-mix(in srgb, var(--color-bg) 82%, transparent);border-bottom:1px solid var(--color-divider);">
+  <div style="max-width:1200px;margin:0 auto;padding:12px clamp(18px,4vw,56px);display:flex;align-items:center;gap:22px;">
+    <a href="#top" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--color-text);margin-right:auto;">
+      <img src="https://лабораторияпечатей.рф/img/logo_site.webp" alt="Лаборатория печатей" style="height:40px;width:auto;max-width:220px;object-fit:contain;">
+    </a>
+    <nav data-navlinks style="display:flex;align-items:center;gap:20px;">
+      <a href="#cat" style="color:inherit;text-decoration:none;font-size:14px;">Печати</a>
+      <a href="#cat" style="color:inherit;text-decoration:none;font-size:14px;">Штампы</a>
+      <a href="#tools" style="color:inherit;text-decoration:none;font-size:14px;">Оснастки</a>
+      <a href="#services" style="color:inherit;text-decoration:none;font-size:14px;">Услуги</a>
+      <a href="#footer" style="color:inherit;text-decoration:none;font-size:14px;">Контакты</a>
+    </nav>
+    <a href="#footer" data-hidemob style="display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--color-divider);border-radius:999px;text-decoration:none;color:inherit;font-size:12.5px;white-space:nowrap;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+      13 ПВЗ
+    </a>
+    <a href="tel:{{ phoneHref }}" style="font-family:var(--font-heading);font-weight:600;font-size:14.5px;color:inherit;text-decoration:none;white-space:nowrap;">{{ phoneText }}</a>
+    <a href="#" data-hidemob aria-label="Telegram" style="width:34px;height:34px;flex:none;border:1px solid var(--color-divider);border-radius:8px;display:grid;place-items:center;color:inherit;text-decoration:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 4L3 11l5.4 2.2L18 6.5l-7 8.2v4l3-3.4 3.4 2.5z"/></svg>
+    </a>
+    <button type="button" onClick="{{ toggleTheme }}" aria-label="Сменить тему" style="width:34px;height:34px;flex:none;border:1px solid var(--color-divider);border-radius:8px;display:grid;place-items:center;color:inherit;background:transparent;cursor:pointer;">
+      <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+      </sc-if>
+      <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 14.5A8 8 0 019.5 4 7.5 7.5 0 1020 14.5z"/></svg>
+      </sc-if>
+    </button>
+  </div>
+</header>
+
+<a id="top"></a>
+<div style="max-width:1200px;margin:0 auto;padding:0 clamp(18px,4vw,56px);">
+
+<!-- ─────────── hero ─────────── -->
+<section data-hero style="display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,64px);align-items:center;padding:clamp(40px,6vw,84px) 0 clamp(30px,4vw,56px);">
+  <div>
+    <span style="position:relative;display:inline-flex;align-items:center;gap:9px;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-300);margin-bottom:20px;">
+      <span style="width:26px;height:1px;background:currentColor;"></span>Печати · штампы · факсимиле
+    </span>
+    <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(36px,5vw,60px);line-height:1.04;letter-spacing:-.02em;margin:0;text-wrap:balance;">Ваша печать за час*!</h1>
+    <p style="font-size:17px;line-height:1.6;max-width:46ch;margin:22px 0 0;color:color-mix(in srgb,var(--color-text) 78%, transparent);">Соберите оттиск в конструкторе и увидите его вживую до оплаты. Изготовим по ГОСТ на лазере 1000&nbsp;dpi, выдадим в одном из 13 пунктов по городу — или привезём.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;">
+      <a href="Конструктор.dc.html" class="btn btn-primary" style="font-size:15px;padding:12px 22px;">Изготовить за час
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+  <div data-hidemob style="display:grid;place-items:center;">
+    <div style="width:min(340px,80vw);aspect-ratio:1;position:relative;">
+      <div style="position:absolute;inset:-6%;border-radius:50%;background:radial-gradient(circle at 50% 42%, color-mix(in srgb,var(--ink) 16%, transparent), transparent 62%);"></div>
+      <div style="position:relative;color:var(--ink);animation:stampIn .9s cubic-bezier(.2,.8,.2,1) both;">{{ roundStampHero }}</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── order steps ─────────── -->
+<section style="margin-top:0;border-radius:16px;background:var(--color-surface);box-shadow:var(--shadow-sm);padding:clamp(22px,3vw,32px) clamp(24px,3vw,38px);">
+  <span style="font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-300);">Как проходит заказ</span>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:16px;margin-top:18px;">
+    <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-family:var(--font-heading);font-weight:600;font-size:14px;color:var(--ink);border:1px solid var(--ink);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none;">{{ s.n }}</span>
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <span style="font-family:var(--font-heading);font-weight:600;font-size:14.5px;">{{ s.t }}</span>
+          <span style="font-size:12.5px;line-height:1.45;color:color-mix(in srgb,var(--color-text) 65%, transparent);">{{ s.d }}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<hr class="hr" style="margin:clamp(30px,4vw,54px) 0;">
+
+<!-- ─────────── categories ─────────── -->
+<section id="cat" style="scroll-margin-top:80px;margin-top:clamp(40px,5vw,64px);">
+  <p style="font-size:15px;color:color-mix(in srgb,var(--color-text) 66%, transparent);margin:0 0 22px;">Выберите ситуацию — подскажем печать и оснастку, покажем цену и срок.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,258px),1fr));gap:14px;">
+    <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+      <a href="{{ c.href }}" class="card" style="text-decoration:none;color:inherit;background:var(--color-surface);box-shadow:var(--shadow-sm);padding:18px;gap:12px;transition:transform .15s,box-shadow .15s;" style-hover="transform:translateY(-2px);box-shadow:var(--shadow-md);">
+        <span style="width:38px;height:38px;border-radius:9px;background:var(--color-accent-800);color:var(--color-accent-100);display:grid;place-items:center;">{{ c.icon }}</span>
+        <span style="font-family:var(--font-heading);font-weight:600;font-size:17px;line-height:1.15;">{{ c.title }}</span>
+        <span style="font-size:13px;line-height:1.5;color:color-mix(in srgb,var(--color-text) 70%, transparent);flex:1;">{{ c.desc }}</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:color-mix(in srgb,var(--color-text) 60%, transparent);">
+          <span>{{ c.price }}</span>
+          <span style="color:var(--color-accent);display:inline-flex;align-items:center;gap:4px;">Собрать
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+        </span>
+      </a>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ─────────── trust ─────────── -->
+<section style="margin-top:clamp(46px,6vw,72px);border-radius:16px;background:var(--color-surface);box-shadow:var(--shadow-sm);padding:clamp(24px,3vw,38px);">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:22px;">
+    <sc-for list="{{ badges }}" as="b" hint-placeholder-count="4">
+      <div style="display:flex;flex-direction:column;gap:9px;">
+        <span style="width:42px;height:42px;border-radius:11px;border:1px solid var(--color-divider);color:var(--ink);display:grid;place-items:center;">{{ b.icon }}</span>
+        <span style="font-family:var(--font-heading);font-weight:600;font-size:16px;">{{ b.title }}</span>
+        <span style="font-size:13px;line-height:1.5;color:color-mix(in srgb,var(--color-text) 68%, transparent);">{{ b.desc }}</span>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ─────────── services ─────────── -->
+<section id="services" style="scroll-margin-top:80px;margin-top:clamp(46px,6vw,72px);">
+  <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(24px,3vw,34px);letter-spacing:-.015em;margin:0 0 6px;">И ещё мы умеем</h2>
+  <p style="font-size:15px;color:color-mix(in srgb,var(--color-text) 66%, transparent);margin:0 0 24px;">Полный цикл: от дизайна до лазера — под одной крышей.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:12px;">
+    <sc-for list="{{ services }}" as="s" hint-placeholder-count="5">
+      <a href="#" style="text-decoration:none;color:inherit;border:1px solid var(--color-divider);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s;" style-hover="border-color:var(--color-accent);">
+        <span style="color:var(--ink);">{{ s.icon }}</span>
+        <span style="font-family:var(--font-heading);font-weight:600;font-size:15.5px;">{{ s.title }}</span>
+        <span style="font-size:12.5px;line-height:1.45;color:color-mix(in srgb,var(--color-text) 66%, transparent);">{{ s.desc }}</span>
+      </a>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ─────────── reviews ─────────── -->
+<section style="margin-top:clamp(46px,6vw,72px);">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;align-items:stretch;">
+    <div style="border-radius:14px;background:var(--color-accent-800);color:var(--color-accent-100);padding:24px;display:flex;flex-direction:column;justify-content:center;gap:8px;">
+      <div style="display:flex;align-items:baseline;gap:8px;">
+        <span style="font-family:var(--font-heading);font-weight:600;font-size:46px;line-height:1;">4.9</span>
+        <span style="display:inline-flex;gap:2px;">
+          <sc-for list="{{ stars }}" as="x" hint-placeholder-count="5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.6 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+          </sc-for>
+        </span>
+      </div>
+      <span style="font-size:13.5px;opacity:.9;">Рейтинг на Яндексе · 640+ отзывов</span>
+    </div>
+    <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="2">
+      <div class="card" style="background:var(--color-surface);box-shadow:var(--shadow-sm);padding:20px;gap:12px;">
+        <span style="display:inline-flex;gap:2px;color:var(--ink);">
+          <sc-for list="{{ stars }}" as="x" hint-placeholder-count="5">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.6 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+          </sc-for>
+        </span>
+        <span style="font-size:14px;line-height:1.55;color:color-mix(in srgb,var(--color-text) 82%, transparent);">{{ r.text }}</span>
+        <span style="font-size:12.5px;color:color-mix(in srgb,var(--color-text) 58%, transparent);margin-top:auto;">{{ r.who }}</span>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ─────────── final cta ─────────── -->
+<section style="margin-top:clamp(46px,6vw,72px);border-radius:18px;background:linear-gradient(180deg, color-mix(in srgb,var(--ink) 10%, var(--color-surface)), var(--color-surface));box-shadow:var(--shadow-sm);padding:clamp(30px,5vw,54px);text-align:center;">
+  <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(24px,3.2vw,36px);letter-spacing:-.015em;margin:0 0 10px;">Готовы? Нарисуй печать прямо сейчас</h2>
+  <p style="font-size:15.5px;color:color-mix(in srgb,var(--color-text) 70%, transparent);margin:0 auto 24px;max-width:52ch;">Оплата при получении в любом из 13 пунктов выдачи. Не подойдёт — переделаем по гарантии.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <a href="Конструктор.dc.html" class="btn btn-primary" style="font-size:15px;padding:12px 22px;">Начать рисовать</a>
+    <a href="tel:{{ phoneHref }}" class="btn btn-secondary" style="font-size:15px;padding:12px 22px;">Позвонить {{ phoneText }}</a>
+  </div>
+</section>
+
+</div>
+
+<!-- ─────────── footer ─────────── -->
+<footer id="footer" style="scroll-margin-top:80px;margin-top:clamp(46px,6vw,72px);border-top:1px solid var(--color-divider);background:color-mix(in srgb,var(--color-text) 3%, var(--color-bg));">
+  <div style="max-width:1200px;margin:0 auto;padding:clamp(30px,4vw,52px) clamp(18px,4vw,56px) 30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:28px;">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="https://лабораторияпечатей.рф/img/logo_site.webp" alt="Лаборатория печатей" style="height:38px;width:auto;max-width:210px;object-fit:contain;">
+      </div>
+      <span style="font-size:13px;line-height:1.55;color:color-mix(in srgb,var(--color-text) 60%, transparent);">Изготовление печатей и штампов в Оренбурге с 2010 года. Гарантия 10 лет.</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb,var(--color-text) 50%, transparent);margin-bottom:2px;">Каталог</span>
+      <a href="#cat" style="font-size:13.5px;color:inherit;text-decoration:none;">Печати ИП и ООО</a>
+      <a href="#cat" style="font-size:13.5px;color:inherit;text-decoration:none;">Печати врача</a>
+      <a href="#cat" style="font-size:13.5px;color:inherit;text-decoration:none;">Штампы и факсимиле</a>
+      <a href="#tools" style="font-size:13.5px;color:inherit;text-decoration:none;">Оснастки</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb,var(--color-text) 50%, transparent);margin-bottom:2px;">Как заказать</span>
+      <span style="font-size:13.5px;color:color-mix(in srgb,var(--color-text) 72%, transparent);">Приём заявок: сайт, конструктор, Telegram, телефон</span>
+      <span style="font-size:13.5px;color:color-mix(in srgb,var(--color-text) 72%, transparent);">Оплата при получении · доставка по России</span>
+      <span style="font-size:13.5px;color:color-mix(in srgb,var(--color-text) 72%, transparent);">13 пунктов выдачи по Оренбургу</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb,var(--color-text) 50%, transparent);margin-bottom:2px;">Связь</span>
+      <a href="tel:{{ phoneHref }}" style="font-family:var(--font-heading);font-weight:600;font-size:18px;color:inherit;text-decoration:none;">{{ phoneText }}</a>
+      <div style="display:flex;gap:8px;">
+        <a href="#" class="btn btn-secondary" style="padding:8px 12px;font-size:13px;">Telegram</a>
+        <a href="#" class="btn btn-secondary" style="padding:8px 12px;font-size:13px;">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1200px;margin:0 auto;padding:16px clamp(18px,4vw,56px);border-top:1px solid var(--color-divider);display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:space-between;font-size:12px;color:color-mix(in srgb,var(--color-text) 52%, transparent);">
+    <span>© 2010–2026 Лаборатория печатей · ИНН 5610000000</span>
+    <span style="display:flex;gap:18px;flex-wrap:wrap;"><a href="#" style="color:inherit;">Пользовательское соглашение</a><a href="#" style="color:inherit;">Политика конфиденциальности</a></span>
+  </div>
+</footer>
+
+<!-- ─────────── sticky mobile CTA ─────────── -->
+<div data-sticky style="position:fixed;left:0;right:0;bottom:0;z-index:50;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:center;padding:9px 12px calc(9px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--color-bg) 90%, transparent);backdrop-filter:blur(10px);border-top:1px solid var(--color-divider);">
+  <a href="tel:{{ phoneHref }}" aria-label="Позвонить" class="btn btn-secondary" style="width:44px;height:44px;padding:0;">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h3l2 5-2 1a12 12 0 006 6l1-2 5 2v3a2 2 0 01-2 2A16 16 0 014 5a2 2 0 012-2z"/></svg>
+  </a>
+  <a href="Конструктор.dc.html" class="btn btn-primary" style="height:44px;font-size:14.5px;">Заказать за 1 час</a>
+  <a href="Конструктор.dc.html" aria-label="Конструктор" class="btn btn-secondary" style="width:44px;height:44px;padding:0;">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/></svg>
+  </a>
+  <a href="#" aria-label="Telegram" class="btn btn-secondary" style="width:44px;height:44px;padding:0;">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 4L3 11l5.4 2.2L18 6.5l-7 8.2v4l3-3.4 3.4 2.5z"/></svg>
+  </a>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440&quot;,&quot;height&quot;:&quot;3400&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;blue&quot;,&quot;red&quot;],&quot;default&quot;:&quot;blue&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Бренд&quot;,&quot;label&quot;:&quot;Акцент&quot;},&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Бренд&quot;,&quot;label&quot;:&quot;Тема по умолчанию&quot;},&quot;phone&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;+7 (3532) 60-60-60&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Контакты&quot;,&quot;label&quot;:&quot;Телефон&quot;}}">
+class Component extends DCLogic {
+  state = { theme: null, shape: 'round', org: '', inn: '', city: '' };
+  set(k){ return (e) => this.setState({ [k]: e.target.value }); }
+
+  roundSvg(org, inn, city, big){
+    const R = React.createElement;
+    const ns = 'http://www.w3.org/2000/svg';
+    // build via innerHTML string for the curved text
+    const micro = '· лаборатория печатей · оренбург · гост · лазер 1000 dpi ';
+    const html = `
+      <defs>
+        <path id="arcTop${big?'H':''}" d="M39.1,190.4 A118,118 0 1 1 260.9,190.4"></path>
+        <path id="arcBot${big?'H':''}" d="M44,205 A112,112 0 0 0 256,205"></path>
+        <path id="micro${big?'H':''}" d="M150,17 A133,133 0 1 1 149.9,17"></path>
+      </defs>
+      <g fill="none" stroke="currentColor">
+        <circle cx="150" cy="150" r="146" stroke-width="3"></circle>
+        <circle cx="150" cy="150" r="139" stroke-width="1.1"></circle>
+        <circle cx="150" cy="150" r="66" stroke-width="1.3"></circle>
+      </g>
+      <text font-size="6.5" letter-spacing="0.5" fill="currentColor" font-family="Inter, sans-serif">
+        <textPath href="#micro${big?'H':''}" startOffset="0">${(micro+micro+micro)}</textPath>
+      </text>
+      <text font-size="15.5" font-weight="600" letter-spacing="0.4" fill="currentColor" font-family="Inter, sans-serif" text-anchor="middle" text-transform="uppercase">
+        <textPath href="#arcTop${big?'H':''}" startOffset="50%">${this.esc((big ? 'Лаборатория печатей' : (org||'ООО «Ромашка»')).toUpperCase())}</textPath>
+      </text>
+      <text font-size="11" letter-spacing="0.6" fill="currentColor" font-family="Inter, sans-serif" text-anchor="middle">
+        <textPath href="#arcBot${big?'H':''}" startOffset="50%">${this.esc(city||'г. Оренбург')}</textPath>
+      </text>
+      <g fill="currentColor">
+        <circle cx="34" cy="150" r="2.2"></circle>
+        <circle cx="266" cy="150" r="2.2"></circle>
+      </g>
+      ${ big
+        ? `<image href="https://лабораторияпечатей.рф/img/logo_site.webp" x="98" y="120" width="104" height="62" preserveAspectRatio="xMidYMid meet"></image>`
+        : `<g font-family="Inter, sans-serif" fill="currentColor" text-anchor="middle">
+        <text x="150" y="138" font-size="12.5" font-weight="600">${this.esc(org||'ООО «Ромашка»')}</text>
+        <text x="150" y="156" font-size="10">${this.esc(inn||'ИНН 5610000000')}</text>
+        <text x="150" y="170" font-size="8.5" opacity="0.85">ОГРН 1105600000000</text>
+      </g>` }`;
+    return R('svg', { width:'100%', height:'100%', viewBox:'0 0 300 300', style:{ display:'block', filter:'url(#rough'+(big?'H':'')+')' }, dangerouslySetInnerHTML:{ __html:
+      `<filter id="rough${big?'H':''}"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1"/></filter>` + html } });
+  }
+
+  rectSvg(org, inn, city){
+    const R = React.createElement;
+    const html = `
+      <g fill="none" stroke="currentColor">
+        <rect x="8" y="52" width="284" height="146" rx="10" stroke-width="3"></rect>
+        <rect x="16" y="60" width="268" height="130" rx="7" stroke-width="1"></rect>
+        <line x1="30" y1="96" x2="270" y2="96" stroke-width="1"></line>
+        <line x1="30" y1="156" x2="270" y2="156" stroke-width="1"></line>
+      </g>
+      <g font-family="Inter, sans-serif" fill="currentColor" text-anchor="middle">
+        <text x="150" y="84" font-size="10" letter-spacing="1.5" text-transform="uppercase">${this.esc((city||'г. Оренбург'))}</text>
+        <text x="150" y="128" font-size="19" font-weight="600">${this.esc(org||'ООО «Ромашка»')}</text>
+        <text x="150" y="148" font-size="11">${this.esc(inn||'ИНН 5610000000')}</text>
+        <text x="150" y="178" font-size="9.5" opacity="0.8">Копия · дата · подпись</text>
+      </g>`;
+    return R('svg', { width:'100%', height:'100%', viewBox:'0 0 300 250', style:{ display:'block' }, dangerouslySetInnerHTML:{ __html: html } });
+  }
+
+  esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  renderVals(){
+    const s = this.state;
+    const accent = this.props.accent === 'red' ? 'red' : 'blue';
+    const theme = s.theme != null ? s.theme : (this.props.defaultTheme === 'dark' ? 'dark' : 'light');
+    const dark = theme === 'dark';
+    const phoneText = this.props.phone || '+7 (3532) 60-60-60';
+    const R = React.createElement;
+    const ic = (d, extra) => R('svg', Object.assign({ width:22, height:22, viewBox:'0 0 24 24', fill:'none', stroke:'currentColor', 'stroke-width':1.5, 'stroke-linecap':'round', 'stroke-linejoin':'round' }, extra||{}), ...[].concat(d).map((p,i)=>R('path',{ key:i, d:p })));
+    const circleIc = (paths) => R('svg', { width:22, height:22, viewBox:'0 0 24 24', fill:'none', stroke:'currentColor', 'stroke-width':1.5 }, ...paths);
+
+    return {
+      themeAttr: dark ? 'dark' : null,
+      accentAttr: accent === 'red' ? 'red' : null,
+      isDark: dark, isLight: !dark,
+      toggleTheme: () => this.setState(p => ({ theme: (p.theme != null ? p.theme : (this.props.defaultTheme==='dark'?'dark':'light')) === 'dark' ? 'light' : 'dark' })),
+      isRound: s.shape === 'round', isRect: s.shape === 'rect',
+      setRound: () => this.setState({ shape:'round' }),
+      setRect: () => this.setState({ shape:'rect' }),
+      org: s.org, inn: s.inn, city: s.city,
+      onOrg: this.set('org'), onInn: this.set('inn'), onCity: this.set('city'),
+      phoneText, phoneHref: '+' + phoneText.replace(/[^0-9]/g,''),
+      roundStamp: this.roundSvg(s.org, s.inn, s.city, false),
+      roundStampHero: this.roundSvg('', '', '', true),
+      rectStamp: this.rectSvg(s.org, s.inn, s.city),
+      trust: ['от 1 часа', 'гарантия 10 лет', 'оплата при получении', 'лазер 1000 dpi'],
+      stars: [0,1,2,3,4],
+      cats: [
+        { href:'Конструктор.dc.html?s=ip', title:'Открыли ИП', desc:'Первая печать для ИП — соберём по вашим реквизитам.', price:'от 490 ₽', icon: ic('M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z') },
+        { href:'Конструктор.dc.html?s=ooo', title:'Регистрируете ООО', desc:'Печать организации по ГОСТ, с ОГРН и городом.', price:'от 690 ₽', icon: ic(['M4 20V8l8-4 8 4v12','M9 20v-6h6v6']) },
+        { href:'Конструктор.dc.html?s=doctor', title:'Печать врача', desc:'Именная печать с должностью и специальностью.', price:'от 590 ₽', icon: ic(['M12 3v6','M9 6h6','M6 21a6 6 0 0112 0']) },
+        { href:'Конструктор.dc.html?s=lost', title:'Потеряли печать', desc:'Восстановим точный дубликат по оттиску или фото.', price:'от 550 ₽', icon: ic('M3 12a9 9 0 109-9 9 9 0 00-7 3.3M3 4v4h4') },
+        { href:'Конструктор.dc.html?s=stamp', title:'Штампы для документов', desc:'«Оплачено», «Копия верна» и ваши формулировки.', price:'от 450 ₽', icon: ic(['M4 7h16','M4 12h16','M4 17h10']) },
+        { href:'Конструктор.dc.html?s=fax', title:'Факсимиле', desc:'Подпись-клише — печатает вашу подпись за секунду.', price:'от 690 ₽', icon: ic('M4 18c4-1 5-9 8-9s2 6 4 6 2-3 4-3') },
+      ],
+      tools: [
+        { name:'Trodat 4642', note:'Автоматическая, круг Ø42 мм', price:'890 ₽', stock:'в наличии', hot:true },
+        { name:'Colop Printer R40', note:'Карманная, компактная', price:'790 ₽', stock:'в наличии', hot:false },
+        { name:'Trodat 4913', note:'Прямоугольный штамп 58×22', price:'690 ₽', stock:'в наличии', hot:false },
+        { name:'Оснастка ручная', note:'Классическая, под клише', price:'250 ₽', stock:'в наличии', hot:false },
+        { name:'Карманная Mobile', note:'С защитной крышкой', price:'950 ₽', stock:'под заказ', hot:false },
+      ],
+      badges: [
+        { title:'Гарантия 10 лет', desc:'Не подойдёт или сотрётся — переделаем бесплатно.', icon: circleIc([R('path',{key:0,d:'M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z'}), R('path',{key:1,d:'M9 12l2 2 4-4'})]) },
+        { title:'ГОСТ · лазер 1000 dpi', desc:'Чёткий оттиск с микротекстом, точно по стандарту.', icon: circleIc([R('circle',{key:0,cx:12,cy:12,r:8}), R('circle',{key:1,cx:12,cy:12,r:3})]) },
+        { title:'Оплата при получении', desc:'Платите в пункте выдачи, когда увидели готовое.', icon: circleIc([R('rect',{key:0,x:3,y:6,width:18,height:12,rx:2}), R('circle',{key:1,cx:12,cy:12,r:2.5})]) },
+        { title:'13 ПВЗ и доставка', desc:'Заберите рядом с домом или закажите по России.', icon: circleIc([R('path',{key:0,d:'M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z'}), R('circle',{key:1,cx:12,cy:10,r:2.5})]) },
+      ],
+      steps: [
+        { n:'1', t:'Заявка или конструктор', d:'Соберите оттиск сами или оставьте реквизиты.' },
+        { n:'2', t:'Проверка макета', d:'Согласуем оттиск и права — без ошибок.' },
+        { n:'3', t:'Изготовление', d:'Срочно — от 1 часа, лазер 1000 dpi.' },
+        { n:'4', t:'Выдача', d:'Один из 13 ПВЗ или доставка по России.' },
+      ],
+      services: [
+        { title:'Факсимиле', desc:'Подпись-клише по вашему образцу.', icon: ic('M4 18c4-1 5-9 8-9s2 6 4 6 2-3 4-3') },
+        { title:'Электронная подпись', desc:'Выпуск и настройка ЭП для отчётности.', icon: ic(['M12 3v10','M8 9l4 4 4-4','M5 19h14']) },
+        { title:'Оперативная полиграфия', desc:'Визитки, бланки, печати за день.', icon: ic(['M6 9V4h12v5','M6 18H4v-6h16v6h-2','M8 14h8v6H8z']) },
+        { title:'Отрисовка по фото', desc:'Векторизуем логотип или старый оттиск.', icon: ic(['M4 16l5-5 4 4 3-3 4 4','M4 5h16v14H4z']) },
+        { title:'Лазерная резка и гравировка', desc:'По металлу, дереву, акрилу.', icon: ic(['M12 2v7','M12 15v7','M2 12h7','M15 12h7']) },
+      ],
+      reviews: [
+        { text:'Открыла ИП утром — к обеду печать уже была в пункте у дома. Собрала оттиск на сайте, ничего не перепутали.', who:'Марина, ИП' },
+        { text:'Потеряли печать организации. Восстановили по старому оттиску один в один, забрали в тот же день. Спасибо!', who:'Секретарь, ООО «Вектор»' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

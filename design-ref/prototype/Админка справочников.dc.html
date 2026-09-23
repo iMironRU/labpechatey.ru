@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-157e783a-a620-454a-bd4d-d118bdfe4fed/styles.css">
+<script src="_ds/nocturne-157e783a-a620-454a-bd4d-d118bdfe4fed/_ds_bundle.js"></script>
+<style>
+:root{
+  --color-bg:#eef0f4; --color-surface:#fbfcfe; --color-surface-2:#f3f5f9; --color-text:#191b26;
+  --color-divider: color-mix(in srgb, #191b26 12%, transparent);
+  --color-accent:#2f4fce;
+  --color-accent-100:#1e2a74; --color-accent-300:#2f4fce;
+  --color-accent-800:#dde3fb; --color-accent-900:#eef1ff;
+  --muted: color-mix(in srgb, var(--color-text) 52%, transparent);
+  --muted2: color-mix(in srgb, var(--color-text) 34%, transparent);
+  --ok:#1c7a4d; --ok-bg:#e2f4ea; --warn:#9a5a10; --warn-bg:#fbeed7; --danger:#b0332b; --danger-bg:#fbe6e4;
+  --shadow-sm:0 0 0 1px rgba(25,27,38,.08);
+  --shadow-md:0 1px 2px rgba(25,27,38,.05), 0 8px 24px rgba(25,27,38,.09);
+  --shadow-lg:0 2px 4px rgba(25,27,38,.07), 0 18px 48px rgba(25,27,38,.16);
+}
+[data-theme="dark"]{
+  --color-bg:#12141f; --color-surface:#1c1e2b; --color-surface-2:#171925; --color-text:#e9e9ed;
+  --color-divider: color-mix(in srgb, #e9e9ed 15%, transparent);
+  --color-accent:#6f86ec;
+  --color-accent-100:#eef1ff; --color-accent-300:#c3cdfb;
+  --color-accent-800:#242c5e; --color-accent-900:#1b2047;
+  --muted: color-mix(in srgb, var(--color-text) 54%, transparent);
+  --muted2: color-mix(in srgb, var(--color-text) 36%, transparent);
+  --ok:#54c98c; --ok-bg:#153021; --warn:#e0a44e; --warn-bg:#33260f; --danger:#e77a72; --danger-bg:#3a1c1a;
+  --shadow-sm:0 0 0 1px #34384a;
+  --shadow-md:0 0 0 1px #3d4257, 0 6px 18px rgba(0,0,0,.5);
+  --shadow-lg:0 0 0 1px #565b72, 0 16px 40px rgba(0,0,0,.6);
+}
+a{color:var(--color-accent);text-decoration:none}a:hover{text-decoration:underline}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--color-text) 18%,transparent);border-radius:8px;border:3px solid transparent;background-clip:padding-box}
+.adm-nav:hover{background:color-mix(in srgb,var(--color-text) 6%,transparent)}
+.adm-row:hover{background:var(--color-surface-2)}
+.adm-lib:hover{border-color:color-mix(in srgb,var(--color-accent) 45%,transparent)!important}
+.adm-drop:hover{border-color:var(--color-accent)!important;background:var(--color-accent-900)!important}
+.adm-mi:hover{background:var(--color-surface-2)}
+.adm-act:hover{color:var(--color-accent)!important;background:color-mix(in srgb,var(--color-accent) 12%,transparent)!important}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.adm-screen{animation:fadeup .22s ease both}
+.adm-thumb{font-family:var(--font-heading);font-weight:500}
+</style>
+</helmet>
+<div data-theme="{{ theme }}" style="--color-accent:{{ accent }};height:100vh;display:flex;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);overflow:hidden;font-size:14px;">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside style="width:238px;flex:0 0 238px;background:var(--color-surface);border-right:1px solid var(--color-divider);display:flex;flex-direction:column;">
+    <div style="padding:16px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--color-divider);">
+      <div style="width:30px;height:30px;border-radius:8px;background:var(--color-accent);display:grid;place-items:center;color:#fff;flex:0 0 auto;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="9" r="5"/><path d="M5 21h14M8 21l1-5m6 5l-1-5"/></svg>
+      </div>
+      <div style="line-height:1.15;">
+        <div style="font-family:var(--font-heading);font-weight:500;font-size:14.5px;">Лаборатория печатей</div>
+        <div style="font-size:11px;color:var(--muted);">Админка справочников</div>
+      </div>
+    </div>
+
+    <nav style="padding:12px 10px;display:flex;flex-direction:column;gap:2px;flex:1;overflow-y:auto;">
+      <div style="font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted2);padding:6px 8px 4px;">Справочники</div>
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="2">
+        <button type="button" class="adm-nav" onClick="{{ n.onClick }}" style="{{ n.style }}">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="{{ n.icon }}"/></svg>
+          <span style="flex:1;text-align:left;">{{ n.label }}</span>
+          <span style="{{ n.badgeStyle }}">{{ n.count }}</span>
+        </button>
+      </sc-for>
+
+      <div style="font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted2);padding:14px 8px 4px;">Библиотека</div>
+      <button type="button" class="adm-nav" onClick="{{ goLibrary }}" style="{{ libNavStyle }}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span style="flex:1;text-align:left;">Типовые поля</span>
+      </button>
+
+      <div style="font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted2);padding:14px 8px 4px;">Скоро</div>
+      <sc-for list="{{ soonItems }}" as="s" hint-placeholder-count="2">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--muted2);font-size:13.5px;cursor:not-allowed;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="{{ s.icon }}"/></svg>
+          <span style="flex:1;">{{ s.label }}</span>
+          <span style="font-size:10px;border:1px solid var(--color-divider);border-radius:20px;padding:1px 7px;">план</span>
+        </div>
+      </sc-for>
+    </nav>
+
+    <div style="padding:10px;border-top:1px solid var(--color-divider);display:flex;align-items:center;gap:8px;">
+      <div style="width:30px;height:30px;border-radius:50%;background:var(--color-accent-800);color:var(--color-accent-100);display:grid;place-items:center;font-size:12px;font-weight:600;flex:0 0 auto;">МК</div>
+      <div style="flex:1;line-height:1.2;overflow:hidden;">
+        <div style="font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Марина К.</div>
+        <div style="font-size:10.5px;color:var(--muted);">контент-менеджер</div>
+      </div>
+      <button type="button" class="adm-act" onClick="{{ toggleTheme }}" title="Тема" style="width:30px;height:30px;border-radius:8px;border:1px solid var(--color-divider);background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="{{ themeIcon }}"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main style="flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;">
+
+    <!-- TOP BAR -->
+    <header style="height:54px;flex:0 0 54px;border-bottom:1px solid var(--color-divider);background:var(--color-surface);display:flex;align-items:center;gap:10px;padding:0 18px;">
+      <div style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);min-width:0;">
+        <sc-for list="{{ crumbs }}" as="c" hint-placeholder-count="2">
+          <span style="{{ c.style }}">{{ c.label }}</span>
+          <span style="{{ c.sepStyle }}">/</span>
+        </sc-for>
+      </div>
+      <div style="flex:1;"></div>
+      <sc-if value="{{ isCardScreen }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:{{ saveColor }};padding:5px 11px;border-radius:20px;background:{{ saveBg }};">
+          <span style="width:7px;height:7px;border-radius:50%;background:currentColor;{{ saveDotAnim }}"></span>{{ saveText }}
+        </div>
+        <button type="button" class="btn btn-secondary" onClick="{{ askDelete }}" style="height:34px;">Архивировать</button>
+        <button type="button" class="btn btn-primary" onClick="{{ save }}" style="height:34px;">Сохранить</button>
+      </sc-if>
+    </header>
+
+    <!-- SCROLL REGION -->
+    <div style="flex:1;overflow-y:auto;">
+
+    <!-- ========== SCREEN: ОСНАСТКИ LIST ========== -->
+    <sc-if value="{{ showOsnList }}" hint-placeholder-val="{{ true }}">
+      <div class="adm-screen" style="padding:22px 26px 60px;max-width:1220px;">
+        <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:18px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;">
+            <h1 style="font-size:24px;margin:0 0 3px;">Оснастки</h1>
+            <div style="font-size:13px;color:var(--muted);">Корпуса печатей и штампов. Связь с клише — по паре <b style="color:var(--color-text);font-weight:500;">форма + габарит</b>.</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="btn btn-secondary" onClick="{{ goImport }}" style="height:38px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l4-4m-4 4l-4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>Импорт из прайса</button>
+            <button type="button" class="btn btn-primary" onClick="{{ goOsnCard }}" style="height:38px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Добавить</button>
+          </div>
+        </div>
+
+        <sc-if value="{{ osnEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1.5px dashed var(--color-divider);border-radius:16px;padding:56px 24px;text-align:center;background:var(--color-surface);">
+            <div style="width:56px;height:56px;border-radius:14px;background:var(--color-accent-900);color:var(--color-accent);display:grid;place-items:center;margin:0 auto 16px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg>
+            </div>
+            <h2 style="font-size:19px;margin:0 0 6px;">Справочник пуст</h2>
+            <div style="font-size:13.5px;color:var(--muted);max-width:400px;margin:0 auto 20px;">Наполните его из прайса пачкой — или добавьте первую оснастку вручную. Конструктор начнёт подбирать корпуса, как только появятся активные записи.</div>
+            <div style="display:flex;gap:8px;justify-content:center;">
+              <button type="button" class="btn btn-primary" onClick="{{ goImport }}" style="height:38px;">Импортировать прайс</button>
+              <button type="button" class="btn btn-secondary" onClick="{{ goOsnCard }}" style="height:38px;">Добавить вручную</button>
+            </div>
+            <div style="margin-top:22px;"><a onClick="{{ toggleEmpty }}" style="cursor:pointer;font-size:12.5px;">← показать пример с данными</a></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ osnHasData }}" hint-placeholder-val="{{ true }}">
+          <div style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden;">
+            <!-- toolbar -->
+            <div style="display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--color-divider);flex-wrap:wrap;">
+              <div style="position:relative;flex:1;min-width:180px;max-width:320px;">
+                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+                <input class="input" placeholder="Поиск по бренду или модели…" style="padding-left:32px;height:34px;width:100%;">
+              </div>
+              <sc-for list="{{ osnFilters }}" as="f" hint-placeholder-count="4">
+                <button type="button" class="btn btn-secondary" style="height:34px;font-size:13px;color:var(--muted);gap:5px;">
+                  {{ f }}<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+              </sc-for>
+              <div style="flex:1;"></div>
+              <a onClick="{{ toggleEmpty }}" style="cursor:pointer;font-size:12px;color:var(--muted);">первый запуск →</a>
+            </div>
+            <!-- header row -->
+            <div style="display:grid;grid-template-columns:46px 1.6fr 1fr .9fr .8fr .9fr 92px;gap:12px;padding:9px 16px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);border-bottom:1px solid var(--color-divider);align-items:center;">
+              <span></span><span>Бренд · модель</span><span>Форма · габарит</span><span>Механизм</span><span>Цена</span><span>Статус</span><span></span>
+            </div>
+            <sc-for list="{{ osnGroups }}" as="g" hint-placeholder-count="2">
+              <div style="padding:8px 16px 5px;font-size:11.5px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;background:var(--color-surface-2);">
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--color-accent);"></span>{{ g.brand }}
+                <span style="font-weight:400;color:var(--muted2);">· {{ g.count }}</span>
+              </div>
+              <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+                <div class="adm-row" onClick="{{ goOsnCard }}" style="display:grid;grid-template-columns:46px 1.6fr 1fr .9fr .8fr .9fr 92px;gap:12px;padding:10px 16px;align-items:center;border-bottom:1px solid var(--color-divider);cursor:pointer;">
+                  <div class="adm-thumb" style="width:38px;height:38px;border-radius:8px;background:{{ r.thumbBg }};color:{{ r.thumbFg }};display:grid;place-items:center;font-size:11px;">{{ r.abbr }}</div>
+                  <div style="min-width:0;"><div style="font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ r.model }}</div><div style="font-size:11.5px;color:var(--muted);">{{ r.brand }}</div></div>
+                  <div style="font-size:13px;"><span style="display:inline-flex;align-items:center;gap:6px;">{{ r.shapeGlyph }}{{ r.gab }}</span></div>
+                  <div style="font-size:12.5px;color:var(--muted);">{{ r.mech }}</div>
+                  <div style="font-size:13px;font-variant-numeric:tabular-nums;">{{ r.price }}</div>
+                  <div><span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:2px 9px;border-radius:20px;background:{{ r.stBg }};color:{{ r.stFg }};"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;"></span>{{ r.status }}</span></div>
+                  <div style="display:flex;gap:2px;justify-content:flex-end;" onClick="{{ stop }}">
+                    <button type="button" class="adm-act" title="Дублировать" style="width:28px;height:28px;border-radius:7px;border:0;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg></button>
+                    <button type="button" class="adm-act" title="Скрыть" style="width:28px;height:28px;border-radius:7px;border:0;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button type="button" class="adm-act" title="В архив" style="width:28px;height:28px;border-radius:7px;border:0;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11a1 1 0 001 1h12a1 1 0 001-1V8M10 12h4"/></svg></button>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ========== SCREEN: ОСНАСТКА CARD ========== -->
+    <sc-if value="{{ showOsnCard }}" hint-placeholder-val="{{ false }}">
+      <div class="adm-screen" style="padding:22px 26px 80px;max-width:940px;">
+        <a onClick="{{ goOsnList }}" style="cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:5px;margin-bottom:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Все оснастки</a>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <h1 style="font-size:23px;margin:0;">Новая оснастка</h1>
+          <span style="font-size:11.5px;padding:2px 10px;border-radius:20px;background:var(--warn-bg);color:var(--warn);">Черновик</span>
+        </div>
+        <div style="font-size:12.5px;color:var(--muted);margin-bottom:16px;">Не попадёт в конструктор, пока статус — черновик и не заполнены обязательные поля.</div>
+
+        <!-- tabs -->
+        <div style="display:flex;gap:2px;border-bottom:1px solid var(--color-divider);margin-bottom:22px;overflow-x:auto;">
+          <sc-for list="{{ osnTabs }}" as="t" hint-placeholder-count="6">
+            <button type="button" onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}<sc-if value="{{ t.warn }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:50%;background:var(--warn);display:inline-block;margin-left:6px;vertical-align:middle;"></span></sc-if></button>
+          </sc-for>
+        </div>
+
+        <!-- TAB: Основное -->
+        <sc-if value="{{ osnTabMain }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 22px;max-width:640px;">
+            <label style="display:block;grid-column:1/2;">
+              <span style="font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:5px;">Бренд <a style="cursor:pointer;font-size:11.5px;">+ добавить</a></span>
+              <select class="input" onChange="{{ onEdit }}" style="width:100%;height:38px;"><option>Colop</option><option>Trodat</option><option>GRM</option></select>
+            </label>
+            <label style="display:block;">
+              <span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Модель</span>
+              <input class="input" onChange="{{ onEdit }}" placeholder="напр. Printer R40" style="width:100%;height:38px;">
+            </label>
+            <label style="display:block;grid-column:1/3;max-width:302px;">
+              <span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Тип механизма</span>
+              <div class="seg" style="width:100%;">
+                <label class="seg-opt"><input type="radio" name="mech" checked>Автоматическая</label>
+                <label class="seg-opt"><input type="radio" name="mech">Ручная</label>
+              </div>
+            </label>
+          </div>
+        </sc-if>
+
+        <!-- TAB: Клише (key section) -->
+        <sc-if value="{{ osnTabClise }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start;">
+            <div>
+              <div style="font-size:12.5px;color:var(--muted);margin-bottom:6px;">Форма клише</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+                <sc-for list="{{ shapes }}" as="sh" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ sh.onClick }}" style="{{ sh.style }}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">{{ sh.svg }}</svg>{{ sh.label }}</button>
+                </sc-for>
+              </div>
+
+              <sc-if value="{{ shapeCircle }}" hint-placeholder-val="{{ true }}">
+                <label style="display:block;max-width:220px;">
+                  <span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Диаметр, Ø мм</span>
+                  <input class="input" value="{{ gabD }}" onChange="{{ onGabD }}" inputmode="numeric" style="width:100%;height:40px;font-size:15px;">
+                </label>
+              </sc-if>
+              <sc-if value="{{ shapeRect }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:12px;align-items:flex-end;">
+                  <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Ширина, мм</span><input class="input" value="{{ gabW }}" onChange="{{ onGabW }}" inputmode="numeric" style="width:110px;height:40px;font-size:15px;"></label>
+                  <span style="padding-bottom:11px;color:var(--muted);">×</span>
+                  <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Высота, мм</span><input class="input" value="{{ gabH }}" onChange="{{ onGabH }}" inputmode="numeric" style="width:110px;height:40px;font-size:15px;"></label>
+                </div>
+              </sc-if>
+              <div style="font-size:12px;color:var(--muted2);margin-top:9px;display:flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>Эта пара — ключ совместимости. Введите габарит и следите за панелью справа.</div>
+            </div>
+
+            <!-- LIVE «Подойдёт к:» PLASHKA -->
+            <div style="border-radius:14px;border:1px solid {{ compatBorder }};background:{{ compatBg }};padding:15px 16px;position:sticky;top:8px;">
+              <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:{{ compatTitleColor }};margin-bottom:12px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">{{ compatIcon }}</svg>{{ compatTitle }}
+              </div>
+              <sc-if value="{{ compatOk }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <sc-for list="{{ compatList }}" as="c" hint-placeholder-count="3">
+                    <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;background:var(--color-surface);box-shadow:var(--shadow-sm);">
+                      <span style="width:22px;height:22px;border-radius:50%;border:1.6px solid var(--color-accent);flex:0 0 auto;"></span>
+                      <span style="font-size:12.5px;">{{ c }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="font-size:11px;color:var(--muted);margin-top:11px;">{{ compatCountNote }}</div>
+              </sc-if>
+              <sc-if value="{{ compatEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="text-align:center;padding:6px 2px 2px;">
+                  <div style="font-size:13px;font-weight:600;color:var(--warn);margin-bottom:5px;">Ничего не подойдёт</div>
+                  <div style="font-size:12px;color:var(--muted);">Ни одна печать не связывается с габаритом <b>{{ gabLabel }}</b>. Скорее всего — опечатка. Оснастка молча перестанет подбираться.</div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- TAB: Оттиск -->
+        <sc-if value="{{ osnTabOttisk }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 22px;max-width:640px;">
+            <div><span style="font-size:12.5px;color:var(--muted);margin-bottom:6px;display:block;">Цвет краски (мультивыбор)</span>
+              <div style="display:flex;gap:7px;flex-wrap:wrap;">
+                <sc-for list="{{ inkColors }}" as="ic" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;padding:5px 11px;border-radius:20px;border:1px solid {{ ic.border }};background:{{ ic.bg }};color:{{ ic.fg }};cursor:pointer;"><span style="width:11px;height:11px;border-radius:50%;background:{{ ic.dot }};"></span>{{ ic.name }}</span></sc-for>
+              </div>
+            </div>
+            <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Ресурс, оттисков</span><input class="input" onChange="{{ onEdit }}" placeholder="напр. 50 000" style="width:100%;height:38px;"></label>
+            <label style="display:flex;align-items:center;gap:9px;grid-column:1/3;font-size:13.5px;cursor:pointer;"><input type="checkbox" checked onChange="{{ onEdit }}" style="width:16px;height:16px;accent-color:var(--color-accent);">Встроенная штемпельная подушка</label>
+          </div>
+        </sc-if>
+
+        <!-- TAB: Корпус -->
+        <sc-if value="{{ osnTabKorpus }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 22px;max-width:640px;">
+            <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Цвет корпуса</span><select class="input" onChange="{{ onEdit }}" style="width:100%;height:38px;"><option>Чёрный</option><option>Синий</option><option>Красный</option><option>Прозрачный</option></select></label>
+            <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Исполнение</span><select class="input" onChange="{{ onEdit }}" style="width:100%;height:38px;"><option>Настольная</option><option>Карманная</option></select></label>
+            <div style="grid-column:1/3;display:flex;gap:22px;flex-wrap:wrap;">
+              <label style="display:flex;align-items:center;gap:9px;font-size:13.5px;cursor:pointer;"><input type="checkbox" onChange="{{ onEdit }}" style="width:16px;height:16px;accent-color:var(--color-accent);">С крышкой</label>
+              <label style="display:flex;align-items:center;gap:9px;font-size:13.5px;cursor:pointer;"><input type="checkbox" checked onChange="{{ onEdit }}" style="width:16px;height:16px;accent-color:var(--color-accent);">Окно подписи</label>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- TAB: Продажа -->
+        <sc-if value="{{ osnTabSale }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 22px;max-width:640px;">
+            <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Цена, ₽</span><input class="input" onChange="{{ onEdit }}" placeholder="напр. 690" style="width:100%;height:38px;"></label>
+            <div><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Статус наличия</span>
+              <div class="seg"><label class="seg-opt"><input type="radio" name="stk" checked onChange="{{ onEdit }}">В наличии</label><label class="seg-opt"><input type="radio" name="stk" onChange="{{ onEdit }}">Под заказ</label></div>
+            </div>
+          </div>
+          <!-- price history -->
+          <div style="margin-top:26px;max-width:640px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div><div style="font-size:13.5px;font-weight:500;font-family:var(--font-heading);">История цен</div><div style="font-size:11.5px;color:var(--muted);">Каждое изменение цены фиксируется автоматически.</div></div>
+              <span style="font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ priceTrendColor }}" stroke-width="2">{{ priceTrendIcon }}</svg>{{ priceTrend }}</span>
+            </div>
+            <div style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);">
+              <div style="display:grid;grid-template-columns:1fr .9fr .9fr 1.3fr;gap:12px;padding:9px 15px;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted2);border-bottom:1px solid var(--color-divider);"><span>Дата</span><span>Цена</span><span>Δ</span><span>Причина</span></div>
+              <sc-for list="{{ priceHistory }}" as="p" hint-placeholder-count="4">
+                <div style="display:grid;grid-template-columns:1fr .9fr .9fr 1.3fr;gap:12px;padding:10px 15px;align-items:center;border-bottom:1px solid var(--color-divider);font-size:13px;">
+                  <span style="color:var(--muted);">{{ p.date }}</span>
+                  <span style="font-variant-numeric:tabular-nums;">{{ p.price }}</span>
+                  <span style="font-size:11.5px;font-variant-numeric:tabular-nums;color:{{ p.deltaColor }};display:inline-flex;align-items:center;gap:3px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">{{ p.deltaIcon }}</svg>{{ p.delta }}</span>
+                  <span style="font-size:12px;color:var(--muted);">{{ p.reason }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- TAB: Медиа -->
+        <sc-if value="{{ osnTabMedia }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:640px;">
+            <div class="adm-drop" onClick="{{ simUpload }}" style="border:1.5px dashed var(--color-divider);border-radius:14px;padding:30px;text-align:center;cursor:pointer;transition:.15s;margin-bottom:16px;">
+              <sc-if value="{{ mediaIdle }}" hint-placeholder-val="{{ true }}">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.5" style="margin:0 auto 10px;"><path d="M12 16V6m0 0l-4 4m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+                <div style="font-size:14px;">Перетащите фото или <span style="color:var(--color-accent);">выберите файлы</span></div>
+                <div style="font-size:12px;color:var(--muted);margin-top:4px;">JPG, PNG или SVG до 5 МБ · первое станет главным</div>
+              </sc-if>
+              <sc-if value="{{ mediaUploading }}" hint-placeholder-val="{{ false }}">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" style="margin:0 auto 10px;animation:spin 1s linear infinite;"><path d="M21 12a9 9 0 11-6.2-8.5"/></svg>
+                <div style="font-size:14px;">Загрузка… 64%</div>
+                <div style="height:5px;border-radius:4px;background:var(--color-divider);max-width:240px;margin:10px auto 0;overflow:hidden;"><div style="width:64%;height:100%;background:var(--color-accent);"></div></div>
+              </sc-if>
+              <sc-if value="{{ mediaError }}" hint-placeholder-val="{{ false }}">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.7" style="margin:0 auto 10px;"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                <div style="font-size:14px;color:var(--danger);">Неверный формат файла</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:4px;">Файл «logo.pdf» — PDF не поддерживается. Нужен JPG, PNG или SVG.</div>
+              </sc-if>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:20px;font-size:12px;color:var(--muted);align-items:center;"><span>Демо-состояние:</span>
+              <sc-for list="{{ mediaSims }}" as="m" hint-placeholder-count="3"><button type="button" onClick="{{ m.onClick }}" style="{{ m.style }}">{{ m.label }}</button></sc-for>
+            </div>
+            <sc-if value="{{ mediaDone }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+                <sc-for list="{{ mediaFiles }}" as="mf" hint-placeholder-count="3">
+                  <div style="position:relative;aspect-ratio:1;border-radius:11px;background:{{ mf.bg }};display:grid;place-items:center;box-shadow:var(--shadow-sm);overflow:hidden;">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="{{ mf.fg }}" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    <sc-if value="{{ mf.main }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:6px;left:6px;font-size:10px;padding:1px 7px;border-radius:20px;background:var(--color-accent);color:#fff;">Главное</span></sc-if>
+                  </div>
+                </sc-for>
+                <div class="adm-drop" onClick="{{ simUpload }}" style="aspect-ratio:1;border:1.5px dashed var(--color-divider);border-radius:11px;display:grid;place-items:center;cursor:pointer;color:var(--muted);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ========== SCREEN: IMPORT ========== -->
+    <sc-if value="{{ showImport }}" hint-placeholder-val="{{ false }}">
+      <div class="adm-screen" style="padding:22px 26px 80px;max-width:1000px;">
+        <a onClick="{{ goOsnList }}" style="cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:5px;margin-bottom:14px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Отменить импорт</a>
+        <h1 style="font-size:23px;margin:0 0 18px;">Импорт оснасток из прайса</h1>
+        <!-- stepper -->
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:26px;max-width:720px;">
+          <sc-for list="{{ importSteps }}" as="st" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:9px;">
+              <span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:{{ st.dotBg }};color:{{ st.dotFg }};border:1.5px solid {{ st.dotBorder }};">{{ st.num }}</span>
+              <span style="font-size:12.5px;color:{{ st.txt }};white-space:nowrap;">{{ st.label }}</span>
+            </div>
+            <span style="{{ st.lineStyle }}"></span>
+          </sc-for>
+        </div>
+
+        <!-- step 1: upload -->
+        <sc-if value="{{ imp1 }}" hint-placeholder-val="{{ true }}">
+          <div class="adm-drop" onClick="{{ importNext }}" style="border:1.5px dashed var(--color-divider);border-radius:16px;padding:52px 24px;text-align:center;cursor:pointer;transition:.15s;background:var(--color-surface);">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.4" style="margin:0 auto 12px;"><path d="M14 3v5h5M14 3l5 5v11a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M9 13h6M9 16h4"/></svg>
+            <div style="font-size:15px;margin-bottom:4px;">Перетащите файл Excel / CSV или <span style="color:var(--color-accent);">выберите</span></div>
+            <div style="font-size:12.5px;color:var(--muted);">Первая строка — заголовки колонок. До 2000 позиций за раз.</div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:12px;display:flex;gap:6px;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>Не уверены в формате? <a style="cursor:pointer;">Скачать шаблон-образец</a></div>
+        </sc-if>
+
+        <!-- step 2: mapping -->
+        <sc-if value="{{ imp2 }}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden;">
+            <div style="padding:12px 16px;border-bottom:1px solid var(--color-divider);display:flex;align-items:center;gap:10px;font-size:13px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><b style="font-weight:500;">прайс_colop_2026.xlsx</b><span style="color:var(--muted);">· 148 строк · 7 колонок</span></div>
+            <div style="display:grid;grid-template-columns:1fr 24px 1fr 130px;gap:10px 14px;padding:14px 16px;align-items:center;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted2);border-bottom:1px solid var(--color-divider);"><span>Колонка в файле</span><span></span><span>Поле справочника</span><span>Образец</span></div>
+            <sc-for list="{{ mapRows }}" as="mp" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:1fr 24px 1fr 130px;gap:10px 14px;padding:11px 16px;align-items:center;border-bottom:1px solid var(--color-divider);">
+                <div style="font-size:13px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted2)" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 4v16"/></svg>{{ mp.col }}</div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted2)" stroke-width="1.8"><path d="M5 12h14m0 0l-5-5m5 5l-5 5"/></svg>
+                <select class="input" onChange="{{ onEdit }}" style="height:34px;width:100%;color:{{ mp.selColor }};">{{ mp.options }}</select>
+                <span style="font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ mp.sample }}</span>
+              </div>
+            </sc-for>
+            <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:12px;color:var(--warn);display:flex;gap:6px;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.3 4.3L2.5 18a2 2 0 001.7 3h15.6a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/></svg>1 колонка не сопоставлена — будет пропущена</span>
+              <button type="button" class="btn btn-primary" onClick="{{ importNext }}" style="height:36px;">Далее — предпросмотр</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- step 3: preview -->
+        <sc-if value="{{ imp3 }}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden;">
+            <div style="padding:12px 16px;border-bottom:1px solid var(--color-divider);display:flex;gap:16px;font-size:12.5px;flex-wrap:wrap;">
+              <span style="color:var(--ok);">✓ 142 готовы к созданию</span><span style="color:var(--warn);">⚠ 4 с предупреждением</span><span style="color:var(--danger);">✕ 2 с ошибкой (пропустим)</span>
+            </div>
+            <div style="overflow-x:auto;">
+              <div style="display:grid;grid-template-columns:28px 1.4fr 1fr .9fr .8fr 1.2fr;gap:10px;padding:9px 16px;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted2);border-bottom:1px solid var(--color-divider);min-width:640px;"><span></span><span>Бренд·модель</span><span>Форма·габарит</span><span>Механизм</span><span>Цена</span><span>Проверка</span></div>
+              <sc-for list="{{ previewRows }}" as="pv" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:28px 1.4fr 1fr .9fr .8fr 1.2fr;gap:10px;padding:10px 16px;align-items:center;border-bottom:1px solid var(--color-divider);min-width:640px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{ pv.iconColor }}" stroke-width="2">{{ pv.icon }}</svg>
+                  <span style="font-size:13px;">{{ pv.model }}</span>
+                  <span style="font-size:12.5px;">{{ pv.gab }}</span>
+                  <span style="font-size:12px;color:var(--muted);">{{ pv.mech }}</span>
+                  <span style="font-size:12.5px;">{{ pv.price }}</span>
+                  <span style="font-size:11.5px;color:{{ pv.noteColor }};">{{ pv.note }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+              <a onClick="{{ importBack }}" style="cursor:pointer;font-size:12.5px;color:var(--muted);">← вернуться к маппингу</a>
+              <button type="button" class="btn btn-primary" onClick="{{ importNext }}" style="height:36px;">Импортировать 142 позиции</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- step 4: report -->
+        <sc-if value="{{ imp4 }}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:16px;box-shadow:var(--shadow-sm);padding:34px;text-align:center;max-width:560px;margin:0 auto;">
+            <div style="width:56px;height:56px;border-radius:50%;background:var(--ok-bg);color:var(--ok);display:grid;place-items:center;margin:0 auto 16px;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <h2 style="font-size:20px;margin:0 0 6px;">Импорт завершён</h2>
+            <div style="font-size:13.5px;color:var(--muted);margin-bottom:22px;">142 оснастки созданы как черновики. Проверьте записи с предупреждениями перед активацией.</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;">
+              <div style="padding:14px;border-radius:11px;background:var(--ok-bg);"><div style="font-size:24px;font-weight:600;color:var(--ok);">142</div><div style="font-size:11.5px;color:var(--muted);">создано</div></div>
+              <div style="padding:14px;border-radius:11px;background:var(--warn-bg);"><div style="font-size:24px;font-weight:600;color:var(--warn);">4</div><div style="font-size:11.5px;color:var(--muted);">с замечаниями</div></div>
+              <div style="padding:14px;border-radius:11px;background:var(--danger-bg);"><div style="font-size:24px;font-weight:600;color:var(--danger);">2</div><div style="font-size:11.5px;color:var(--muted);">пропущено</div></div>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:center;">
+              <button type="button" class="btn btn-secondary" style="height:38px;">Скачать отчёт об ошибках</button>
+              <button type="button" class="btn btn-primary" onClick="{{ goOsnList }}" style="height:38px;">К списку оснасток</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ========== SCREEN: ВИДЫ КЛИШЕ LIST ========== -->
+    <sc-if value="{{ showVidyList }}" hint-placeholder-val="{{ false }}">
+      <div class="adm-screen" style="padding:22px 26px 60px;max-width:1180px;">
+        <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:18px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><h1 style="font-size:24px;margin:0 0 3px;">Виды клише</h1><div style="font-size:13px;color:var(--muted);">Шаблоны печатей и штампов с полями и раскладками. Вложенные структуры: поля и шаблоны → слоты.</div></div>
+          <button type="button" class="btn btn-primary" onClick="{{ goVidyCard }}" style="height:38px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Добавить вид</button>
+        </div>
+        <div style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--color-divider);flex-wrap:wrap;">
+            <div style="position:relative;flex:1;min-width:180px;max-width:320px;"><svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><input class="input" placeholder="Поиск по названию…" style="padding-left:32px;height:34px;width:100%;"></div>
+            <sc-for list="{{ vidyFilters }}" as="f" hint-placeholder-count="4"><button type="button" class="btn btn-secondary" style="height:34px;font-size:13px;color:var(--muted);gap:5px;">{{ f }}<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1.6fr 1fr .8fr .8fr .9fr 60px;gap:12px;padding:9px 16px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);border-bottom:1px solid var(--color-divider);"><span>Название</span><span>Тип · вид</span><span>Форма</span><span>Поля / шабл.</span><span>Статус</span><span></span></div>
+          <sc-for list="{{ vidyGroups }}" as="g" hint-placeholder-count="3">
+            <div style="padding:8px 16px 5px;font-size:11.5px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;background:var(--color-surface-2);"><span style="width:5px;height:5px;border-radius:50%;background:var(--color-accent);"></span>{{ g.type }}<span style="font-weight:400;color:var(--muted2);">· {{ g.count }}</span></div>
+            <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+              <div class="adm-row" onClick="{{ goVidyCard }}" style="display:grid;grid-template-columns:1.6fr 1fr .8fr .8fr .9fr 60px;gap:12px;padding:11px 16px;align-items:center;border-bottom:1px solid var(--color-divider);cursor:pointer;">
+                <div style="font-size:13.5px;">{{ r.name }}</div>
+                <div style="font-size:12.5px;color:var(--muted);">{{ r.vid }}</div>
+                <div style="font-size:12.5px;">{{ r.shape }}</div>
+                <div style="font-size:12.5px;color:var(--muted);">{{ r.counts }}</div>
+                <div><span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:2px 9px;border-radius:20px;background:{{ r.stBg }};color:{{ r.stFg }};"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;"></span>{{ r.status }}</span></div>
+                <div style="text-align:right;color:var(--muted2);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+              </div>
+            </sc-for>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ========== SCREEN: ВИД CARD (master-detail) ========== -->
+    <sc-if value="{{ showVidyCard }}" hint-placeholder-val="{{ false }}">
+      <div class="adm-screen" style="padding:22px 26px 40px;max-width:1180px;">
+        <a onClick="{{ goVidyList }}" style="cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:5px;margin-bottom:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Все виды клише</a>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><h1 style="font-size:23px;margin:0;">Печать ИП</h1><span style="font-size:11.5px;padding:2px 10px;border-radius:20px;background:var(--ok-bg);color:var(--ok);">Активна</span></div>
+        <div style="display:flex;gap:2px;border-bottom:1px solid var(--color-divider);margin-bottom:20px;overflow-x:auto;">
+          <sc-for list="{{ vidyTabs }}" as="t" hint-placeholder-count="4"><button type="button" onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}<sc-if value="{{ t.count }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;margin-left:6px;padding:0 6px;border-radius:20px;background:var(--color-surface-2);color:var(--muted);">{{ t.count }}</span></sc-if></button></sc-for>
+        </div>
+
+        <!-- vidy tab: базовые -->
+        <sc-if value="{{ vidyTabBase }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px 22px;max-width:760px;">
+            <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Тип</span><select class="input" onChange="{{ onEdit }}" style="width:100%;height:38px;"><option>Печать</option><option>Штамп</option><option>Факсимиле</option></select></label>
+            <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Вид</span><select class="input" onChange="{{ onEdit }}" style="width:100%;height:38px;"><option>ИП</option><option>Организация</option><option>Врач</option></select></label>
+            <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Форма</span><select class="input" onChange="{{ onEdit }}" style="width:100%;height:38px;"><option>Круг</option><option>Прямоугольник</option><option>Овал</option></select></label>
+            <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Размеры, Ø мм</span><input class="input" onChange="{{ onEdit }}" value="38–42" style="width:100%;height:38px;"></label>
+            <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Уровень проверки</span><select class="input" onChange="{{ onEdit }}" style="width:100%;height:38px;"><option>Базовый</option><option>Строгий (ИНН/ОГРН)</option></select></label>
+            <label style="display:block;"><span style="font-size:12.5px;color:var(--muted);margin-bottom:5px;display:block;">Источник данных</span><select class="input" onChange="{{ onEdit }}" style="width:100%;height:38px;"><option>Реквизиты клиента</option><option>Ручной ввод</option></select></label>
+            <div style="grid-column:1/4;display:flex;gap:22px;flex-wrap:wrap;margin-top:2px;">
+              <label style="display:flex;align-items:center;gap:9px;font-size:13.5px;cursor:pointer;"><input type="checkbox" checked onChange="{{ onEdit }}" style="width:16px;height:16px;accent-color:var(--color-accent);">Центральная надпись</label>
+              <label style="display:flex;align-items:center;gap:9px;font-size:13.5px;cursor:pointer;"><input type="checkbox" onChange="{{ onEdit }}" style="width:16px;height:16px;accent-color:var(--color-accent);">Допускать пустые поля</label>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- vidy tab: поля (master-detail) -->
+        <sc-if value="{{ vidyTabFields }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start;">
+            <!-- master list -->
+            <div style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);">
+              <div style="padding:10px 13px;border-bottom:1px solid var(--color-divider);display:flex;align-items:center;justify-content:space-between;"><span style="font-size:12px;font-weight:600;color:var(--muted);">Поля · {{ fieldsCount }}</span><button type="button" class="btn btn-ghost" onClick="{{ addField }}" style="font-size:12.5px;padding:2px 6px;">+ Поле</button></div>
+              <sc-for list="{{ fieldsList }}" as="f" hint-placeholder-count="4">
+                <div class="adm-mi" onClick="{{ f.onClick }}" style="{{ f.rowStyle }}">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted2)" stroke-width="1.7" style="cursor:grab;flex:0 0 auto;"><circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/></svg>
+                  <div style="flex:1;min-width:0;"><div style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ f.label }}</div><div style="font-size:11px;color:var(--muted);">{{ f.meta }}</div></div>
+                  <sc-if value="{{ f.req }}" hint-placeholder-val="{{ false }}"><span style="font-size:10px;color:var(--danger);flex:0 0 auto;">обяз.</span></sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <!-- detail -->
+            <div style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:12px;box-shadow:var(--shadow-sm);padding:18px 20px;">
+              <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent);margin-bottom:12px;">Редактирование поля</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;">
+                <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Код</span><input class="input" value="{{ selField.code }}" onChange="{{ onFieldCode }}" style="width:100%;height:36px;font-family:ui-monospace,monospace;font-size:13px;"></label>
+                <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Подпись</span><input class="input" value="{{ selField.label }}" onChange="{{ onFieldLabel }}" style="width:100%;height:36px;"></label>
+                <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Тип поля</span><select class="input" value="{{ selField.type }}" onChange="{{ onFieldType }}" style="width:100%;height:36px;"><option>Текст</option><option>Многострочный</option><option>Число</option><option>Выбор</option></select></label>
+                <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Источник</span><select class="input" onChange="{{ onEdit }}" style="width:100%;height:36px;"><option>Реквизиты</option><option>Ручной ввод</option><option>Справочник городов</option></select></label>
+                <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Валидация</span><input class="input" value="{{ selField.valid }}" onChange="{{ onEdit }}" placeholder="напр. ИНН 12 цифр" style="width:100%;height:36px;"></label>
+                <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Слот раскладки</span><select class="input" onChange="{{ onEdit }}" style="width:100%;height:36px;"><option>Кольцо-верх</option><option>Кольцо-низ</option><option>Центр</option></select></label>
+              </div>
+              <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--color-divider);">
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" onChange="{{ onFieldReq }}" style="width:15px;height:15px;accent-color:var(--color-accent);">Обязательное</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" onChange="{{ onEdit }}" style="width:15px;height:15px;accent-color:var(--color-accent);">Многострочный</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" onChange="{{ onEdit }}" style="width:15px;height:15px;accent-color:var(--color-accent);">Разрешить сокращение</label>
+                <button type="button" class="adm-act" onClick="{{ delField }}" style="margin-left:auto;background:transparent;border:0;color:var(--muted);font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:7px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M6 7v13a1 1 0 001 1h10a1 1 0 001-1V7"/></svg>Удалить поле</button>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- vidy tab: шаблоны (double-nested master-detail) -->
+        <sc-if value="{{ vidyTabTpl }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;">
+            <div style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);">
+              <div style="padding:10px 13px;border-bottom:1px solid var(--color-divider);display:flex;align-items:center;justify-content:space-between;"><span style="font-size:12px;font-weight:600;color:var(--muted);">Шаблоны · {{ tplCount }}</span><button type="button" class="btn btn-ghost" onClick="{{ addTpl }}" style="font-size:12.5px;padding:2px 6px;">+ Шаблон</button></div>
+              <sc-for list="{{ tplList }}" as="t" hint-placeholder-count="2">
+                <div class="adm-mi" onClick="{{ t.onClick }}" style="{{ t.rowStyle }}">
+                  <div style="width:34px;height:34px;border-radius:8px;background:var(--color-surface-2);display:grid;place-items:center;flex:0 0 auto;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:13px;">{{ t.label }}</div><div style="font-size:11px;color:var(--muted);">{{ t.meta }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+            <!-- template detail: either template form+slots, or slot editor -->
+            <div style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:12px;box-shadow:var(--shadow-sm);padding:18px 20px;">
+              <sc-if value="{{ slotView }}" hint-placeholder-val="{{ false }}">
+                <a onClick="{{ closeSlot }}" style="cursor:pointer;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;margin-bottom:14px;color:var(--muted);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>{{ selTpl.label }} · слоты</a>
+                <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent);margin-bottom:12px;">Редактирование слота</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;">
+                  <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Имя слота</span><input class="input" value="{{ selSlot.name }}" onChange="{{ onSlotName }}" style="width:100%;height:36px;"></label>
+                  <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Зона</span><select class="input" onChange="{{ onEdit }}" style="width:100%;height:36px;"><option>Кольцо-верх</option><option>Кольцо-низ</option><option>Центр</option><option>Микротекст</option></select></label>
+                  <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Ёмкость, симв.</span><input class="input" value="{{ selSlot.cap }}" onChange="{{ onEdit }}" style="width:100%;height:36px;"></label>
+                  <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Кегль, пт</span><input class="input" value="{{ selSlot.kegl }}" onChange="{{ onEdit }}" style="width:100%;height:36px;"></label>
+                </div>
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;margin-top:14px;"><input type="checkbox" onChange="{{ onEdit }}" style="width:15px;height:15px;accent-color:var(--color-accent);">Многострочный слот</label>
+              </sc-if>
+              <sc-if value="{{ tplView }}" hint-placeholder-val="{{ true }}">
+                <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent);margin-bottom:12px;">Шаблон раскладки</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;margin-bottom:18px;">
+                  <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Код</span><input class="input" value="{{ selTpl.code }}" onChange="{{ onEdit }}" style="width:100%;height:36px;font-family:ui-monospace,monospace;font-size:13px;"></label>
+                  <label style="display:block;"><span style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block;">Размер, Ø мм</span><input class="input" value="{{ selTpl.size }}" onChange="{{ onEdit }}" style="width:100%;height:36px;"></label>
+                </div>
+                <div style="border:1px dashed var(--color-divider);border-radius:10px;padding:16px;display:flex;gap:16px;align-items:center;margin-bottom:20px;">
+                  <div style="width:56px;height:56px;border-radius:8px;background:var(--color-surface-2);display:grid;place-items:center;flex:0 0 auto;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div>
+                  <div style="flex:1;"><div style="font-size:13px;margin-bottom:2px;">SVG раскладки загружен</div><div style="font-size:11.5px;color:var(--muted);">layout_ip_40.svg · 8 КБ</div></div>
+                  <button type="button" class="btn btn-secondary" style="height:32px;font-size:12.5px;">Заменить</button>
+                </div>
+                <!-- nested: slots list -->
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;font-weight:600;color:var(--muted);">Слоты · {{ slotsCount }}</span><button type="button" class="btn btn-ghost" onClick="{{ addSlot }}" style="font-size:12.5px;padding:2px 6px;">+ Слот</button></div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <sc-for list="{{ slotsList }}" as="s" hint-placeholder-count="3">
+                    <div class="adm-mi" onClick="{{ s.onClick }}" style="display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--color-divider);border-radius:9px;cursor:pointer;">
+                      <span style="font-size:10.5px;color:var(--muted);font-family:ui-monospace,monospace;background:var(--color-surface-2);padding:2px 6px;border-radius:5px;flex:0 0 auto;">{{ s.zone }}</span>
+                      <span style="flex:1;font-size:13px;">{{ s.name }}</span>
+                      <span style="font-size:11.5px;color:var(--muted);">{{ s.meta }}</span>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted2)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- vidy tab: фасеты -->
+        <sc-if value="{{ vidyTabFacets }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:640px;font-size:13px;color:var(--muted);">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <sc-for list="{{ facets }}" as="fc" hint-placeholder-count="3"><div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--color-surface);border:1px solid var(--color-divider);border-radius:10px;"><span style="color:var(--color-text);font-size:13.5px;">{{ fc.name }}</span><span style="font-size:12px;">{{ fc.val }}</span></div></sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ========== SCREEN: FIELD LIBRARY ========== -->
+    <sc-if value="{{ showLibrary }}" hint-placeholder-val="{{ false }}">
+      <div class="adm-screen" style="padding:22px 26px 60px;max-width:1120px;">
+        <h1 style="font-size:24px;margin:0 0 3px;">Библиотека типовых полей</h1>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:22px;max-width:640px;">Один набор компонентов, из которых собираются обе карточки. Строится один раз — дальше переиспользуется. Перечни всегда выпадающими, валидация инлайн.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;">
+          <sc-for list="{{ libFields }}" as="lf" hint-placeholder-count="8">
+            <div class="adm-lib" style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:13px;padding:16px 17px;transition:.15s;">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px;"><div style="width:28px;height:28px;border-radius:7px;background:var(--color-accent-900);color:var(--color-accent);display:grid;place-items:center;flex:0 0 auto;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">{{ lf.icon }}</svg></div><span style="font-size:14px;font-weight:500;font-family:var(--font-heading);">{{ lf.name }}</span></div>
+              <div style="font-size:11.5px;color:var(--muted);margin-bottom:13px;">{{ lf.desc }}</div>
+              <div style="border-top:1px solid var(--color-divider);padding-top:13px;">{{ lf.demo }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    </div><!-- /scroll -->
+  </main>
+
+  <!-- ========== DIALOG: delete used → archive ========== -->
+  <sc-if value="{{ showDialog }}" hint-placeholder-val="{{ false }}">
+    <div class="dialog-backdrop" onClick="{{ closeDialog }}" style="z-index:50;">
+      <div class="dialog" onClick="{{ stop }}">
+        <div style="display:flex;align-items:center;gap:11px;">
+          <div style="width:38px;height:38px;border-radius:10px;background:var(--warn-bg);color:var(--warn);display:grid;place-items:center;flex:0 0 auto;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.3 4.3L2.5 18a2 2 0 001.7 3h15.6a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/></svg></div>
+          <div class="dialog-title" style="font-size:18px;">Запись используется</div>
+        </div>
+        <div class="dialog-body">Оснастка связана с <b>34 активными печатями</b> и встречается в <b>12 заказах</b>. Удалить нельзя — иначе подбор в конструкторе сломается молча. Можно отправить в архив: она исчезнет из подбора, но история заказов сохранится.</div>
+        <div class="dialog-actions">
+          <button type="button" class="btn btn-secondary" onClick="{{ closeDialog }}">Отмена</button>
+          <button type="button" class="btn btn-primary" onClick="{{ closeDialog }}">Отправить в архив</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1280&quot;,&quot;height&quot;:&quot;820&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Оформление&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#2f4fce&quot;,&quot;options&quot;:[&quot;#2f4fce&quot;,&quot;#0f766e&quot;,&quot;#7c3aed&quot;,&quot;#b0332b&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Оформление&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen:'osn-list', osnEmpty:false, osnTab:'main',
+    shape:'circle', gabD:'40', gabW:'38', gabH:'14',
+    importStep:1, vidyTab:'fields',
+    selField:'f1', selTpl:'t1', selSlot:null,
+    mediaState:'idle', saveState:'saved', dialog:false,
+    fields:[
+      {id:'f1',code:'org_name',label:'Наименование ИП',type:'Текст',valid:'не пусто',req:true},
+      {id:'f2',code:'inn',label:'ИНН',type:'Текст',valid:'12 цифр',req:true},
+      {id:'f3',code:'ogrnip',label:'ОГРНИП',type:'Текст',valid:'15 цифр',req:false},
+      {id:'f4',code:'city',label:'Город',type:'Выбор',valid:'из справочника',req:false},
+    ],
+    templates:[
+      {id:'t1',code:'std_40',label:'Стандарт Ø40',size:'40',slots:[
+        {id:'s1',name:'Наименование',zone:'Кольцо-верх',cap:'64',kegl:'8'},
+        {id:'s2',name:'ИНН / ОГРНИП',zone:'Кольцо-низ',cap:'40',kegl:'7'},
+        {id:'s3',name:'Центральный блок',zone:'Центр',cap:'20',kegl:'10'},
+      ]},
+      {id:'t2',code:'compact_30',label:'Компакт Ø30',size:'30',slots:[
+        {id:'s4',name:'Наименование',zone:'Кольцо-верх',cap:'48',kegl:'7'},
+        {id:'s5',name:'ИНН',zone:'Центр',cap:'12',kegl:'8'},
+      ]},
+    ],
+  };
+
+  go(s){ this.setState({screen:s}); }
+  goOsnList=()=>this.setState({screen:'osn-list'});
+  goOsnCard=()=>this.setState({screen:'osn-card',osnTab:'main',saveState:'saved'});
+  goImport=()=>this.setState({screen:'import',importStep:1});
+  goVidyList=()=>this.setState({screen:'vidy-list'});
+  goVidyCard=()=>this.setState({screen:'vidy-card',vidyTab:'fields',selField:'f1',selTpl:'t1',selSlot:null,saveState:'saved'});
+  goLibrary=()=>this.setState({screen:'library'});
+  toggleEmpty=()=>this.setState(s=>({osnEmpty:!s.osnEmpty}));
+  toggleTheme=()=>this.setState(s=>({theme:s.theme==='dark'?'light':'dark'}));
+  setOsnTab=(k)=>()=>this.setState({osnTab:k});
+  setVidyTab=(k)=>()=>this.setState({vidyTab:k,selSlot:null});
+  setShape=(k)=>()=>this.setState({shape:k,saveState:'dirty'});
+  onGabD=(e)=>this.setState({gabD:e.target.value,saveState:'dirty'});
+  onGabW=(e)=>this.setState({gabW:e.target.value,saveState:'dirty'});
+  onGabH=(e)=>this.setState({gabH:e.target.value,saveState:'dirty'});
+  onEdit=()=>this.setState({saveState:'dirty'});
+  save=()=>this.setState({saveState:'saving'},()=>setTimeout(()=>this.setState({saveState:'saved'}),700));
+  importNext=()=>this.setState(s=>({importStep:Math.min(4,s.importStep+1)}));
+  importBack=()=>this.setState(s=>({importStep:Math.max(1,s.importStep-1)}));
+  simUpload=()=>this.setState({mediaState:'uploading'},()=>setTimeout(()=>this.setState({mediaState:'done'}),1100));
+  setMedia=(k)=>()=>this.setState({mediaState:k});
+  askDelete=()=>this.setState({dialog:true});
+  closeDialog=()=>this.setState({dialog:false});
+  stop=(e)=>{ e.stopPropagation(); };
+  selectField=(id)=>()=>this.setState({selField:id});
+  selectTpl=(id)=>()=>this.setState({selTpl:id,selSlot:null});
+  selectSlot=(id)=>()=>this.setState({selSlot:id});
+  closeSlot=()=>this.setState({selSlot:null});
+  addField=()=>this.setState(s=>{const id='f'+Date.now();return{fields:[...s.fields,{id,code:'new_field',label:'Новое поле',type:'Текст',valid:'',req:false}],selField:id,saveState:'dirty'};});
+  delField=()=>this.setState(s=>{const fl=s.fields.filter(f=>f.id!==s.selField);return{fields:fl,selField:fl[0]?fl[0].id:null,saveState:'dirty'};});
+  editField=(prop)=>(e)=>this.setState(s=>({saveState:'dirty',fields:s.fields.map(f=>f.id===s.selField?{...f,[prop]:e.target.value}:f)}));
+  toggleFieldReq=(e)=>this.setState(s=>({saveState:'dirty',fields:s.fields.map(f=>f.id===s.selField?{...f,req:e.target.checked}:f)}));
+  addTpl=()=>this.setState(s=>{const id='t'+Date.now();return{templates:[...s.templates,{id,code:'new_tpl',label:'Новый шаблон',size:'40',slots:[]}],selTpl:id,selSlot:null,saveState:'dirty'};});
+  addSlot=()=>this.setState(s=>{const id='s'+Date.now();return{saveState:'dirty',selSlot:id,templates:s.templates.map(t=>t.id===s.selTpl?{...t,slots:[...t.slots,{id,name:'Новый слот',zone:'Центр',cap:'20',kegl:'8'}]}:t)};});
+  editSlot=(prop)=>(e)=>this.setState(s=>({saveState:'dirty',templates:s.templates.map(t=>t.id===s.selTpl?{...t,slots:t.slots.map(sl=>sl.id===s.selSlot?{...sl,[prop]:e.target.value}:sl)}:t)}));
+
+  h(...a){ return React.createElement(...a); }
+
+  renderVals(){
+    const s=this.state;
+    const accent=this.props.accent ?? '#2f4fce';
+    const theme=this.props.theme ?? 'light';
+
+    const navStyle=(active)=>`display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;border:0;cursor:pointer;font-size:13.5px;font-family:var(--font-body);width:100%;text-align:left;${active?'background:var(--color-accent-900);color:var(--color-accent);font-weight:500;':'background:transparent;color:var(--color-text);'}`;
+    const onOsn=s.screen==='osn-list'||s.screen==='osn-card'||s.screen==='import';
+    const onVidy=s.screen==='vidy-list'||s.screen==='vidy-card';
+    const badge=(active)=>`font-size:10.5px;padding:1px 7px;border-radius:20px;${active?'background:color-mix(in srgb,var(--color-accent) 20%,transparent);color:var(--color-accent);':'background:var(--color-surface-2);color:var(--muted);'}`;
+    const navItems=[
+      {label:'Оснастки',count:'148',icon:'M12 2a5 5 0 015 5v0a5 5 0 01-5 5 5 5 0 01-5-5v0a5 5 0 015-5zM5 21h14l-1.5-6h-11z',onClick:this.goOsnList,style:navStyle(onOsn),badgeStyle:badge(onOsn)},
+      {label:'Виды клише',count:'26',icon:'M4 5h16M4 12h16M4 19h10',onClick:this.goVidyList,style:navStyle(onVidy),badgeStyle:badge(onVidy)},
+    ];
+    const soonItems=[
+      {label:'Бренды и перечни',icon:'M20 7l-8-4-8 4 8 4 8-4zM4 12l8 4 8-4M4 17l8 4 8-4'},
+      {label:'Пункты выдачи',icon:'M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z M12 10a1 1 0 100-2 1 1 0 000 2z'},
+    ];
+
+    // crumbs
+    const crumbMap={
+      'osn-list':['Оснастки'],'osn-card':['Оснастки','Новая оснастка'],'import':['Оснастки','Импорт из прайса'],
+      'vidy-list':['Виды клише'],'vidy-card':['Виды клише','Печать ИП'],'library':['Библиотека','Типовые поля'],
+    };
+    const cparts=crumbMap[s.screen]||['—'];
+    const crumbs=cparts.map((c,i)=>({label:c,style:i===cparts.length-1?'color:var(--color-text);':'',sepStyle:i===cparts.length-1?'display:none;':'color:var(--muted2);'}));
+
+    // save chip
+    const isCardScreen=s.screen==='osn-card'||s.screen==='vidy-card';
+    const saveMap={saved:['Сохранено','var(--ok)','var(--ok-bg)',''],dirty:['Есть изменения · автосейв…','var(--warn)','var(--warn-bg)',''],saving:['Сохранение…','var(--color-accent)','var(--color-accent-900)','animation:spin 1s linear infinite']};
+    const sv=saveMap[s.saveState]||saveMap.saved;
+
+    // osn card tabs
+    const tabStyle=(active)=>`padding:9px 4px;margin-right:20px;background:none;border:0;border-bottom:2px solid ${active?'var(--color-accent)':'transparent'};color:${active?'var(--color-text)':'var(--muted)'};font-weight:${active?'500':'400'};font-size:13.5px;cursor:pointer;font-family:var(--font-body);white-space:nowrap;`;
+    const osnTabDefs=[['main','Основное'],['clise','Клише'],['ottisk','Оттиск'],['korpus','Корпус'],['sale','Продажа'],['media','Медиа']];
+    const osnTabs=osnTabDefs.map(([k,l])=>({label:l,onClick:this.setOsnTab(k),style:tabStyle(s.osnTab===k),warn:k==='clise'&&this.compatEmptyCalc()}));
+
+    // shapes
+    const shapeBtn=(active)=>`display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:10px;border:1.5px solid ${active?'var(--color-accent)':'var(--color-divider)'};background:${active?'var(--color-accent-900)':'var(--color-surface)'};color:${active?'var(--color-accent)':'var(--color-text)'};cursor:pointer;font-size:13px;font-family:var(--font-body);`;
+    const shapes=[
+      {key:'circle',label:'Круг',svg:this.h('circle',{cx:12,cy:12,r:8})},
+      {key:'rect',label:'Прямоугольник',svg:this.h('rect',{x:4,y:7,width:16,height:10,rx:1.5})},
+      {key:'oval',label:'Овал',svg:this.h('ellipse',{cx:12,cy:12,rx:9,ry:6})},
+      {key:'tri',label:'Треугольник',svg:this.h('path',{d:'M12 4l8 15H4z'})},
+    ].map(sh=>({label:sh.label,svg:sh.svg,onClick:this.setShape(sh.key),style:shapeBtn(s.shape===sh.key)}));
+
+    // compat panel
+    const compatMap={
+      circle:{'40':['Печать ИП · Ø40','Печать организации · Ø40','Печать врача · Ø40'],'42':['Печать ИП · Ø42','Печать организации · Ø42'],'45':['Печать организации · Ø45'],'38':['Малая печать ИП · Ø38'],'30':['Компактная печать · Ø30']},
+      rect:{'38x14':['Штамп «Реквизиты» · 38×14'],'47x18':['Штамп адресный · 47×18','Штамп банковский · 47×18'],'70x25':['Штамп большой · 70×25']},
+      oval:{'45x35':['Овальная печать ИП · 45×35']},tri:{},
+    };
+    const key=s.shape==='circle'?s.gabD:(s.shape==='oval'?`${s.gabW}x${s.gabH}`:(s.shape==='rect'?`${s.gabW}x${s.gabH}`:''));
+    const compatList=(compatMap[s.shape]||{})[key]||[];
+    const compatOk=compatList.length>0;
+    const gabLabel=s.shape==='circle'?`Ø${s.gabD}`:`${s.gabW}×${s.gabH}`;
+
+    // media
+    const mediaSimStyle=(active)=>`font-size:11.5px;padding:3px 10px;border-radius:20px;border:1px solid ${active?'var(--color-accent)':'var(--color-divider)'};background:${active?'var(--color-accent-900)':'transparent'};color:${active?'var(--color-accent)':'var(--muted)'};cursor:pointer;`;
+    const mediaSims=[['idle','пусто'],['uploading','загрузка'],['error','ошибка формата']].map(([k,l])=>({label:l,onClick:this.setMedia(k),style:mediaSimStyle(s.mediaState===k)}));
+    const mediaFiles=[{bg:'#e7ecf7',fg:'#8593b8',main:true},{bg:'#eef0f4',fg:'#9aa1b4',main:false},{bg:'#f0ece6',fg:'#b4a68f',main:false}];
+
+    // price history
+    const up=this.h('path',{d:'M12 19V5m0 0l-6 6m6-6l6 6'});
+    const down=this.h('path',{d:'M12 5v14m0 0l6-6m-6 6l-6-6'});
+    const flat=this.h('path',{d:'M5 12h14'});
+    const priceHistory=[
+      {date:'12 июн 2026',price:'690 ₽',delta:'+40 ₽',deltaColor:'var(--danger)',deltaIcon:up,reason:'Индексация прайса Colop'},
+      {date:'03 мар 2026',price:'650 ₽',delta:'−30 ₽',deltaColor:'var(--ok)',deltaIcon:down,reason:'Акция «весна»'},
+      {date:'18 янв 2026',price:'680 ₽',delta:'+50 ₽',deltaColor:'var(--danger)',deltaIcon:up,reason:'Новый курс поставщика'},
+      {date:'01 ноя 2025',price:'630 ₽',delta:'—',deltaColor:'var(--muted)',deltaIcon:flat,reason:'Первичная цена'},
+    ];
+
+    // ink colors
+    const inkColors=[
+      {name:'Синий',dot:'#2f4fce',bg:'var(--color-accent-900)',border:'var(--color-accent)',fg:'var(--color-accent)'},
+      {name:'Чёрный',dot:'#222',bg:'transparent',border:'var(--color-divider)',fg:'var(--muted)'},
+      {name:'Красный',dot:'#c33',bg:'transparent',border:'var(--color-divider)',fg:'var(--muted)'},
+      {name:'Зелёный',dot:'#2a8',bg:'transparent',border:'var(--color-divider)',fg:'var(--muted)'},
+    ];
+
+    // osn list
+    const st=(inStock)=>inStock?{status:'В наличии',stBg:'var(--ok-bg)',stFg:'var(--ok)'}:{status:'Под заказ',stBg:'var(--warn-bg)',stFg:'var(--warn)'};
+    const glyph=this.h('span',{style:{width:'12px',height:'12px',borderRadius:'50%',border:'1.5px solid var(--muted)',display:'inline-block'}});
+    const mkRow=(model,brand,abbr,thumbBg,thumbFg,gab,mech,price,inStock)=>({model,brand,abbr,thumbBg,thumbFg,gab,mech,price,shapeGlyph:glyph,...st(inStock)});
+    const osnGroups=[
+      {brand:'Colop',count:'92',rows:[
+        mkRow('Printer R40','Colop','C','#e7ecf7','#4a63b0','Ø40','Автомат.','690 ₽',true),
+        mkRow('Printer R45','Colop','C','#e7ecf7','#4a63b0','Ø45','Автомат.','790 ₽',true),
+        mkRow('Printer R30','Colop','C','#e7ecf7','#4a63b0','Ø30','Автомат.','560 ₽',false),
+        mkRow('Pocket Stamp 20','Colop','C','#e7ecf7','#4a63b0','14×38','Карман.','640 ₽',true),
+      ]},
+      {brand:'Trodat',count:'56',rows:[
+        mkRow('Printy 4642','Trodat','T','#f0ece6','#a5895b','Ø42','Автомат.','720 ₽',true),
+        mkRow('Printy 4926','Trodat','T','#f0ece6','#a5895b','75×38','Автомат.','940 ₽',false),
+        mkRow('Mobile 9440','Trodat','T','#f0ece6','#a5895b','Ø40','Ручная','850 ₽',true),
+      ]},
+    ];
+    const osnFilters=['Форма','Бренд','Механизм','Статус'];
+
+    // import
+    const importSteps=[['1','Загрузка'],['2','Маппинг'],['3','Предпросмотр'],['4','Отчёт']].map(([n,l],i)=>{
+      const num=i+1, cur=s.importStep, done=num<cur, active=num===cur;
+      return {num:done?'✓':n,label:l,
+        dotBg:done?'var(--color-accent)':active?'var(--color-accent-900)':'transparent',
+        dotFg:done?'#fff':active?'var(--color-accent)':'var(--muted2)',
+        dotBorder:done||active?'var(--color-accent)':'var(--color-divider)',
+        txt:active||done?'var(--color-text)':'var(--muted)',
+        lineStyle:i<3?`flex:1;height:1.5px;margin:0 10px;background:${done?'var(--color-accent)':'var(--color-divider)'};`:'display:none;'};
+    });
+    const opt=(list,sel)=>list.map(o=>this.h('option',{key:o,selected:o===sel},o));
+    const mapRows=[
+      {col:'Артикул',sample:'CL-R40-BK',sel:'— пропустить —',selColor:'var(--muted)'},
+      {col:'Наименование',sample:'Colop Printer R40',sel:'Модель',selColor:'var(--color-text)'},
+      {col:'Форма',sample:'круг',sel:'Форма клише',selColor:'var(--color-text)'},
+      {col:'Размер',sample:'40',sel:'Габарит',selColor:'var(--color-text)'},
+      {col:'Механизм',sample:'автоматический',sel:'Тип механизма',selColor:'var(--color-text)'},
+      {col:'Розница',sample:'690',sel:'Цена',selColor:'var(--color-text)'},
+    ].map(m=>({col:m.col,sample:m.sample,selColor:m.selColor,options:opt(['— пропустить —','Модель','Бренд','Форма клише','Габарит','Тип механизма','Цена'],m.sel)}));
+    const okIcon=this.h('path',{d:'M20 6L9 17l-5-5'});
+    const warnIcon=this.h('path',{d:'M12 9v4M12 17h.01M10.3 4.3L2.5 18a2 2 0 001.7 3h15.6a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z'});
+    const errIcon=this.h('g',{},this.h('circle',{cx:12,cy:12,r:9}),this.h('path',{d:'M15 9l-6 6M9 9l6 6'}));
+    const previewRows=[
+      {model:'Colop Printer R40',gab:'Ø40',mech:'Автомат.',price:'690 ₽',icon:okIcon,iconColor:'var(--ok)',note:'Подойдёт к 3 печатям',noteColor:'var(--ok)'},
+      {model:'Colop Printer R45',gab:'Ø45',mech:'Автомат.',price:'790 ₽',icon:okIcon,iconColor:'var(--ok)',note:'Подойдёт к 1 печати',noteColor:'var(--ok)'},
+      {model:'Colop Printer R404',gab:'Ø404',mech:'Автомат.',price:'690 ₽',icon:warnIcon,iconColor:'var(--warn)',note:'Габарит подозрителен — ни к чему не подойдёт',noteColor:'var(--warn)'},
+      {model:'Trodat Printy 4642',gab:'Ø42',mech:'Автомат.',price:'720 ₽',icon:okIcon,iconColor:'var(--ok)',note:'Подойдёт к 2 печатям',noteColor:'var(--ok)'},
+      {model:'(без модели)',gab:'—',mech:'—',price:'—',icon:errIcon,iconColor:'var(--danger)',note:'Нет модели — строка пропущена',noteColor:'var(--danger)'},
+    ];
+
+    // vidy list
+    const vst=(active)=>active?{status:'Активна',stBg:'var(--ok-bg)',stFg:'var(--ok)'}:{status:'Черновик',stBg:'var(--warn-bg)',stFg:'var(--warn)'};
+    const vidyGroups=[
+      {type:'Печать',count:'11',rows:[
+        {name:'Печать ИП',vid:'Печать · ИП',shape:'Круг Ø40',counts:'4 / 2',...vst(true)},
+        {name:'Печать организации',vid:'Печать · Орг.',shape:'Круг Ø40',counts:'6 / 3',...vst(true)},
+        {name:'Печать врача',vid:'Печать · Врач',shape:'Круг Ø40',counts:'5 / 2',...vst(false)},
+      ]},
+      {type:'Штамп',count:'9',rows:[
+        {name:'Штамп «Реквизиты»',vid:'Штамп · Блок',shape:'Прям. 47×18',counts:'7 / 1',...vst(true)},
+        {name:'Штамп «Оплачено»',vid:'Штамп · Готовый',shape:'Прям. 38×14',counts:'1 / 1',...vst(true)},
+      ]},
+      {type:'Факсимиле',count:'6',rows:[
+        {name:'Факсимиле подписи',vid:'Факсимиле',shape:'Прям. 38×14',counts:'1 / 1',...vst(true)},
+      ]},
+    ];
+    const vidyFilters=['Тип','Форма','Источник','Статус'];
+
+    // vidy card tabs
+    const vTabs=[['base','Базовые',null],['fields','Поля',String(s.fields.length)],['tpl','Шаблоны',String(s.templates.length)],['facets','Фасеты',null]];
+    const vidyTabs=vTabs.map(([k,l,c])=>({label:l,count:c,onClick:this.setVidyTab(k),style:tabStyle(s.vidyTab===k)}));
+
+    // fields master-detail
+    const miRow=(active)=>`display:flex;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--color-divider);${active?'background:var(--color-accent-900);box-shadow:inset 3px 0 0 var(--color-accent);':''}`;
+    const fieldsList=s.fields.map(f=>({label:f.label,meta:`${f.code} · ${f.type}`,req:f.req,onClick:this.selectField(f.id),rowStyle:miRow(f.id===s.selField)}));
+    const selField=s.fields.find(f=>f.id===s.selField)||{code:'',label:'',type:'Текст',valid:''};
+
+    // templates master-detail
+    const tplRow=(active)=>`display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--color-divider);${active?'background:var(--color-accent-900);box-shadow:inset 3px 0 0 var(--color-accent);':''}`;
+    const tplList=s.templates.map(t=>({label:t.label,meta:`${t.code} · ${t.slots.length} слот.`,onClick:this.selectTpl(t.id),rowStyle:tplRow(t.id===s.selTpl)}));
+    const selTpl=s.templates.find(t=>t.id===s.selTpl)||{label:'',code:'',size:'',slots:[]};
+    const slotsList=selTpl.slots.map(sl=>({name:sl.name,zone:sl.zone,meta:`${sl.cap} симв · ${sl.kegl}пт`,onClick:this.selectSlot(sl.id)}));
+    const selSlot=selTpl.slots.find(sl=>sl.id===s.selSlot)||{name:'',zone:'',cap:'',kegl:''};
+
+    // facets
+    const facets=[{name:'Уровень проверки',val:'Строгий (ИНН/ОГРН)'},{name:'Разрешённые цвета',val:'Синий, чёрный'},{name:'Мин. кегль',val:'6 пт'},{name:'Источник по умолчанию',val:'Реквизиты клиента'}];
+
+    // library demo builders
+    const lbl=(t)=>this.h('div',{style:{fontSize:'11px',color:'var(--muted)',marginBottom:'5px'}},t);
+    const inp=(v,ph)=>this.h('input',{className:'input',defaultValue:v,placeholder:ph,style:{width:'100%',height:'34px'}});
+    const demoText=this.h('div',{},lbl('Подпись'),inp('Наименование ИП',''));
+    const demoNum=this.h('div',{},lbl('Ресурс, оттисков'),this.h('div',{style:{position:'relative'}},inp('50 000',''),this.h('span',{style:{position:'absolute',right:'10px',top:'8px',fontSize:'12px',color:'var(--muted)'}},'шт')));
+    const demoSelect=this.h('div',{},lbl('Бренд'),this.h('select',{className:'input',style:{width:'100%',height:'34px'}},this.h('option',{},'Colop'),this.h('option',{},'Trodat')),this.h('a',{style:{fontSize:'11.5px',cursor:'pointer',display:'inline-block',marginTop:'6px'}},'+ добавить значение'));
+    const chip=(t,on)=>this.h('span',{key:t,style:{display:'inline-flex',alignItems:'center',gap:'5px',fontSize:'12px',padding:'3px 9px',borderRadius:'20px',border:'1px solid '+(on?'var(--color-accent)':'var(--color-divider)'),background:on?'var(--color-accent-900)':'transparent',color:on?'var(--color-accent)':'var(--muted)'}},t,on?this.h('span',{style:{fontSize:'13px'}},'×'):null);
+    const demoMulti=this.h('div',{},lbl('Цвет краски'),this.h('div',{style:{display:'flex',gap:'6px',flexWrap:'wrap'}},chip('Синий',true),chip('Чёрный',true),chip('Красный',false)));
+    const demoSeg=this.h('div',{},lbl('Механизм'),this.h('div',{className:'seg'},this.h('label',{className:'seg-opt'},this.h('input',{type:'radio',name:'lseg',defaultChecked:true}),'Автомат.'),this.h('label',{className:'seg-opt'},this.h('input',{type:'radio',name:'lseg'}),'Ручная')));
+    const demoDep=this.h('div',{},lbl('Форма → габарит (зависимое)'),this.h('div',{style:{display:'flex',gap:'8px',alignItems:'center'}},this.h('select',{className:'input',style:{height:'34px',flex:'0 0 96px'}},this.h('option',{},'Круг'),this.h('option',{},'Прям.')),this.h('span',{style:{color:'var(--muted)',fontSize:'13px'}},'Ø'),this.h('input',{className:'input',defaultValue:'40',style:{height:'34px',flex:1}})));
+    const demoUpload=this.h('div',{style:{border:'1.5px dashed var(--color-divider)',borderRadius:'10px',padding:'16px',textAlign:'center',fontSize:'12px',color:'var(--muted)'}},this.h('svg',{width:22,height:22,viewBox:'0 0 24 24',fill:'none',stroke:'var(--color-accent)',strokeWidth:1.5,style:{margin:'0 auto 6px',display:'block'}},this.h('path',{d:'M12 16V6m0 0l-4 4m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2'})),'Загрузить изображение / SVG');
+    const repRow=(t)=>this.h('div',{key:t,style:{display:'flex',alignItems:'center',gap:'8px',padding:'7px 9px',border:'1px solid var(--color-divider)',borderRadius:'8px',marginBottom:'5px'}},this.h('svg',{width:12,height:12,viewBox:'0 0 24 24',fill:'none',stroke:'var(--muted2)',strokeWidth:1.7},this.h('circle',{cx:9,cy:8,r:1}),this.h('circle',{cx:15,cy:8,r:1}),this.h('circle',{cx:9,cy:16,r:1}),this.h('circle',{cx:15,cy:16,r:1})),this.h('span',{style:{flex:1,fontSize:'12.5px'}},t),this.h('span',{style:{fontSize:'11px',color:'var(--muted)'}},'✎'));
+    const demoRepeat=this.h('div',{},repRow('Поле «ИНН»'),repRow('Поле «ОГРНИП»'),this.h('button',{className:'btn btn-ghost',style:{fontSize:'12.5px',padding:'2px 4px'}},'+ Добавить строку'));
+
+    const ic={
+      text:this.h('path',{d:'M4 7h16M4 12h10M4 17h7'}),
+      num:this.h('path',{d:'M6 4v16M18 4v16M4 9h16M4 15h16'}),
+      sel:this.h('path',{d:'M6 9l6 6 6-6'}),
+      multi:this.h('path',{d:'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01'}),
+      seg:this.h('g',{},this.h('rect',{x:3,y:8,width:18,height:8,rx:2}),this.h('rect',{x:3,y:8,width:9,height:8,rx:2})),
+      dep:this.h('path',{d:'M6 3v6a3 3 0 003 3h9m0 0l-3-3m3 3l-3 3'}),
+      up:this.h('path',{d:'M12 16V6m0 0l-4 4m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2'}),
+      rep:this.h('g',{},this.h('rect',{x:4,y:5,width:16,height:5,rx:1.5}),this.h('rect',{x:4,y:14,width:16,height:5,rx:1.5})),
+    };
+    const libFields=[
+      {name:'Текст',desc:'Однострочный ввод. Инлайн-валидация под полем.',icon:ic.text,demo:demoText},
+      {name:'Число',desc:'Числовой ввод с единицей измерения.',icon:ic.num,demo:demoNum},
+      {name:'Выбор',desc:'Перечень выпадающим — с «+ добавить значение».',icon:ic.sel,demo:demoSelect},
+      {name:'Мультивыбор',desc:'Несколько значений тегами-чипами.',icon:ic.multi,demo:demoMulti},
+      {name:'Сегмент / радио',desc:'2–3 коротких взаимоисключающих варианта.',icon:ic.seg,demo:demoSeg},
+      {name:'Зависимое поле',desc:'Габарит зависит от формы. Ключ совместимости.',icon:ic.dep,demo:demoDep},
+      {name:'Загрузка файла',desc:'Изображение или SVG. Состояния идёт/успех/ошибка.',icon:ic.up,demo:demoUpload},
+      {name:'Повторяемый блок',desc:'Строки с добавлением, удалением, порядком.',icon:ic.rep,demo:demoRepeat},
+    ];
+
+    return {
+      accent, theme,
+      themeAttr:theme,
+      themeIcon: theme==='dark'?'M12 3a6 6 0 000 12 6 6 0 006-6c0-.3 0-.6-.1-.9A4 4 0 0112 3z':'M12 2v2m0 16v2M4 12H2m20 0h-2M6 6L4.5 4.5M18 18l1.5 1.5M6 18l-1.5 1.5M18 6l1.5-1.5M12 8a4 4 0 100 8 4 4 0 000-8z',
+      navItems, soonItems, crumbs,
+      goLibrary:this.goLibrary, goImport:this.goImport, goOsnCard:this.goOsnCard, goOsnList:this.goOsnList, goVidyCard:this.goVidyCard, goVidyList:this.goVidyList,
+      toggleEmpty:this.toggleEmpty, toggleTheme:this.toggleTheme, onEdit:this.onEdit, save:this.save, askDelete:this.askDelete, closeDialog:this.closeDialog, stop:this.stop,
+      libNavStyle:navStyle(s.screen==='library'),
+      isCardScreen, saveText:sv[0], saveColor:sv[1], saveBg:sv[2], saveDotAnim:sv[3],
+      showOsnList:s.screen==='osn-list', showOsnCard:s.screen==='osn-card', showImport:s.screen==='import',
+      showVidyList:s.screen==='vidy-list', showVidyCard:s.screen==='vidy-card', showLibrary:s.screen==='library',
+      osnEmpty:s.osnEmpty, osnHasData:!s.osnEmpty, osnGroups, osnFilters,
+      osnTabs, osnTabMain:s.osnTab==='main', osnTabClise:s.osnTab==='clise', osnTabOttisk:s.osnTab==='ottisk', osnTabKorpus:s.osnTab==='korpus', osnTabSale:s.osnTab==='sale', osnTabMedia:s.osnTab==='media',
+      shapes, shapeCircle:s.shape==='circle', shapeRect:s.shape==='rect'||s.shape==='oval'||s.shape==='tri',
+      gabD:s.gabD, gabW:s.gabW, gabH:s.gabH, gabLabel, onGabD:this.onGabD, onGabW:this.onGabW, onGabH:this.onGabH,
+      compatList, compatOk, compatEmpty:!compatOk,
+      compatBg: compatOk?'var(--color-accent-900)':'var(--warn-bg)',
+      compatBorder: compatOk?'color-mix(in srgb,var(--color-accent) 30%,transparent)':'color-mix(in srgb,var(--warn) 40%,transparent)',
+      compatTitle: compatOk?'Подойдёт к печатям':'Проверьте габарит',
+      compatTitleColor: compatOk?'var(--color-accent)':'var(--warn)',
+      compatCountNote:`${compatList.length} совместимых печати · пара ${gabLabel}`,
+      compatIcon: compatOk?this.h('path',{d:'M20 6L9 17l-5-5'}):this.h('path',{d:'M12 9v4M12 17h.01M10.3 4.3L2.5 18a2 2 0 001.7 3h15.6a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z'}),
+      priceHistory, priceTrend:'+9,5% за год', priceTrendColor:'var(--danger)', priceTrendIcon:up,
+      inkColors, mediaSims,
+      mediaIdle:s.mediaState==='idle', mediaUploading:s.mediaState==='uploading', mediaDone:s.mediaState==='done', mediaError:s.mediaState==='error',
+      mediaFiles, simUpload:this.simUpload,
+      importSteps, imp1:s.importStep===1, imp2:s.importStep===2, imp3:s.importStep===3, imp4:s.importStep===4,
+      mapRows, previewRows, importNext:this.importNext, importBack:this.importBack,
+      vidyGroups, vidyFilters, vidyTabs,
+      vidyTabBase:s.vidyTab==='base', vidyTabFields:s.vidyTab==='fields', vidyTabTpl:s.vidyTab==='tpl', vidyTabFacets:s.vidyTab==='facets',
+      fieldsList, fieldsCount:s.fields.length, selField, addField:this.addField, delField:this.delField,
+      onFieldCode:this.editField('code'), onFieldLabel:this.editField('label'), onFieldType:this.editField('type'), onFieldReq:this.toggleFieldReq,
+      tplList, tplCount:s.templates.length, selTpl, addTpl:this.addTpl,
+      slotsList, slotsCount:selTpl.slots.length, selSlot, addSlot:this.addSlot, closeSlot:this.closeSlot,
+      onSlotName:this.editSlot('name'),
+      tplView:!s.selSlot, slotView:!!s.selSlot,
+      facets, libFields,
+      showDialog:s.dialog,
+    };
+  }
+
+  compatEmptyCalc(){
+    const s=this.state;
+    const compatMap={circle:{'40':1,'42':1,'45':1,'38':1,'30':1},rect:{'38x14':1,'47x18':1,'70x25':1},oval:{'45x35':1},tri:{}};
+    const key=s.shape==='circle'?s.gabD:`${s.gabW}x${s.gabH}`;
+    return !((compatMap[s.shape]||{})[key]);
+  }
+}
+</script>
+</body>
+</html>

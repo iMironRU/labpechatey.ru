@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-157e783a-a620-454a-bd4d-d118bdfe4fed/styles.css">
+<script src="_ds/nocturne-157e783a-a620-454a-bd4d-d118bdfe4fed/_ds_bundle.js"></script>
+<meta name="design_doc_mode" content="canvas">
+<style>
+:root{ --color-bg:#e7e9ef; --color-text:#191b26; --color-accent:#2f4fce; --color-accent-300:#2f4fce; --color-divider: color-mix(in srgb,#191b26 13%, transparent); }
+</style>
+</helmet>
+<div style="min-height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);padding:40px clamp(24px,4vw,64px) 80px;">
+
+  <div style="max-width:1400px;margin:0 auto 8px;">
+    <span style="font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-300);">Адаптив · один источник</span>
+    <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(26px,3vw,38px);letter-spacing:-.015em;margin:8px 0 4px;">Десктоп 1440 и мобайл 390 — одни и те же страницы</h1>
+    <p style="font-size:14.5px;color:color-mix(in srgb,var(--color-text) 62%, transparent);margin:0;max-width:70ch;">Каждый экран — это живая страница из проекта. Правки в «Главная.dc.html» и «Конструктор.dc.html» сразу видны в обоих фреймах. Панель можно панорамировать и зумить.</p>
+  </div>
+
+  <!-- Главная -->
+  <div style="max-width:1400px;margin:36px auto 0;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <span style="font-family:var(--font-heading);font-weight:600;font-size:16px;">Главная</span>
+      <a href="Главная.dc.html" style="font-size:12.5px;color:var(--color-accent);text-decoration:none;">открыть отдельно →</a>
+    </div>
+    <div style="display:flex;flex-wrap:nowrap;flex-direction:row-reverse;justify-content:flex-end;gap:40px;align-items:flex-start;">
+      <!-- desktop -->
+      <figure style="margin:0;">
+        <div style="width:864px;border-radius:12px;overflow:hidden;box-shadow:0 12px 40px rgba(25,27,38,.16);background:#fff;border:1px solid var(--color-divider);">
+          <div style="height:34px;display:flex;align-items:center;gap:7px;padding:0 14px;background:#f2f3f6;border-bottom:1px solid var(--color-divider);">
+            <span style="width:11px;height:11px;border-radius:50%;background:#e0625a;"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#e5b04a;"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#68b45f;"></span>
+            <span style="margin-left:12px;font-size:11px;color:#8a8f9c;">лабораторияпечатей.рф</span>
+          </div>
+          <div style="width:864px;height:940px;overflow:hidden;">
+            <iframe src="Главная.dc.html" title="Главная — десктоп 1440" style="width:1440px;height:1567px;border:0;transform:scale(.6);transform-origin:top left;"></iframe>
+          </div>
+        </div>
+        <figcaption style="font-size:12px;color:color-mix(in srgb,var(--color-text) 55%, transparent);margin-top:10px;text-align:center;">Десктоп · 1440px</figcaption>
+      </figure>
+      <!-- mobile -->
+      <figure style="margin:0;">
+        <div style="width:414px;padding:12px;border-radius:44px;background:#1b1c24;box-shadow:0 16px 44px rgba(25,27,38,.22);">
+          <div style="position:relative;border-radius:33px;overflow:hidden;background:#fff;">
+            <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:130px;height:24px;background:#1b1c24;border-radius:0 0 16px 16px;z-index:2;"></div>
+            <iframe src="Главная.dc.html" title="Главная — мобайл 390" style="width:390px;height:800px;border:0;display:block;"></iframe>
+          </div>
+        </div>
+        <figcaption style="font-size:12px;color:color-mix(in srgb,var(--color-text) 55%, transparent);margin-top:10px;text-align:center;">Мобайл · 390px</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- Конструктор -->
+  <div style="max-width:1400px;margin:56px auto 0;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <span style="font-family:var(--font-heading);font-weight:600;font-size:16px;">Конструктор</span>
+      <a href="Конструктор.dc.html" style="font-size:12.5px;color:var(--color-accent);text-decoration:none;">открыть отдельно →</a>
+    </div>
+    <div style="display:flex;flex-wrap:nowrap;flex-direction:row-reverse;justify-content:flex-end;gap:40px;align-items:flex-start;">
+      <figure style="margin:0;">
+        <div style="width:864px;border-radius:12px;overflow:hidden;box-shadow:0 12px 40px rgba(25,27,38,.16);background:#fff;border:1px solid var(--color-divider);">
+          <div style="height:34px;display:flex;align-items:center;gap:7px;padding:0 14px;background:#f2f3f6;border-bottom:1px solid var(--color-divider);">
+            <span style="width:11px;height:11px;border-radius:50%;background:#e0625a;"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#e5b04a;"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#68b45f;"></span>
+            <span style="margin-left:12px;font-size:11px;color:#8a8f9c;">лабораторияпечатей.рф/конструктор</span>
+          </div>
+          <div style="width:864px;height:620px;overflow:hidden;">
+            <iframe src="Конструктор.dc.html" title="Конструктор — десктоп 1440" style="width:1440px;height:1033px;border:0;transform:scale(.6);transform-origin:top left;"></iframe>
+          </div>
+        </div>
+        <figcaption style="font-size:12px;color:color-mix(in srgb,var(--color-text) 55%, transparent);margin-top:10px;text-align:center;">Десктоп · 1440px</figcaption>
+      </figure>
+      <figure style="margin:0;">
+        <div style="width:414px;padding:12px;border-radius:44px;background:#1b1c24;box-shadow:0 16px 44px rgba(25,27,38,.22);">
+          <div style="position:relative;border-radius:33px;overflow:hidden;background:#fff;">
+            <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:130px;height:24px;background:#1b1c24;border-radius:0 0 16px 16px;z-index:2;"></div>
+            <iframe src="Конструктор.dc.html" title="Конструктор — мобайл 390" style="width:390px;height:800px;border:0;display:block;"></iframe>
+          </div>
+        </div>
+        <figcaption style="font-size:12px;color:color-mix(in srgb,var(--color-text) 55%, transparent);margin-top:10px;text-align:center;">Мобайл · 390px</figcaption>
+      </figure>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

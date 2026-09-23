@@ -5,13 +5,24 @@ import KindSelector from "@/components/KindSelector";
 import Mounts from "@/components/Mounts";
 import StampPreview from "@/components/StampPreview";
 import Checkout from "@/components/Checkout";
-import StartScreen from "@/components/StartScreen";
+import Home from "@/components/Home";
+import SiteHeader from "@/components/SiteHeader";
 import catalog from "@/content/catalog.json";
 import texts from "@/content/constructor.json";
-import startTexts from "@/content/start.json";
+import home from "@/content/home.json";
 import { checkInn, checkOgrn, lookupInn, type Registry } from "@/lib/inn";
 import { valuesFor, type Kind, type Scored, type TemplateIndex } from "@/lib/stamp";
 import { asset } from "@/lib/paths";
+
+// что понадобится принести — зависит от ситуации, с которой пришёл человек
+const BRING: Record<string, string> = {
+  ip: "лист записи ЕГРИП (или ОГРНИП) и паспорт",
+  ooo: "лист записи ЕГРЮЛ (или ОГРН) и паспорт руководителя",
+  doctor: "диплом или сертификат специалиста и паспорт",
+  lost: "старый оттиск или фото и документ на право",
+  stamp: "ничего — штамп изготавливаем без проверки прав",
+  fax: "образец подписи на белом листе",
+};
 
 export default function Page() {
   // состояние конструктора — см. design-ref/README.md, раздел State Management
@@ -85,16 +96,19 @@ export default function Page() {
   const onChoose = useCallback((id: string) => setTpl(id), []);
   const onVariants = useCallback((list: Scored[]) => setVariants(list), []);
 
+  const pick = (kind: string, sit: string) => {
+    setSel(kind);
+    setSituation(sit);
+    setTpl(null);
+    setScreen("build");
+  };
+
   if (screen === "start") {
     return (
-      <StartScreen
-        onPick={(kind, sit) => {
-          setSel(kind);
-          setSituation(sit);
-          setTpl(null);
-          setScreen("build");
-        }}
-      />
+      <>
+        <SiteHeader />
+        <Home onPick={pick} />
+      </>
     );
   }
 
@@ -135,11 +149,11 @@ export default function Page() {
           <span className="text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]">
             Печать · {kindItem.ent}
           </span>
-          {situation && (startTexts.bring as Record<string, string>)[situation] && (
+          {situation && (BRING as Record<string, string>)[situation] && (
             <>
               <span className="h-[14px] w-px bg-[var(--color-divider)]" />
               <span className="min-w-0 truncate text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]">
-                Понадобится: {(startTexts.bring as Record<string, string>)[situation]}
+                Понадобится: {(BRING as Record<string, string>)[situation]}
               </span>
             </>
           )}
