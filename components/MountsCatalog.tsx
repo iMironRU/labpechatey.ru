@@ -62,29 +62,23 @@ export default function MountsCatalog() {
             { v: "pocket", label: "Карманные" },
           ]}
         />
-        <select
-          className="input w-auto py-[7px] text-[13px]"
-          value={String(brand)}
-          onChange={(e) => setBrand(e.target.value)}
-          aria-label="Бренд"
-        >
+        <Select value={String(brand)} onChange={setBrand} label="Бренд">
           <option value="all">Все бренды</option>
           {brands.map((b) => (
             <option key={b} value={b}>{b}</option>
           ))}
-        </select>
+        </Select>
         {shape === "round" && (
-          <select
-            className="input w-auto py-[7px] text-[13px]"
+          <Select
             value={String(size)}
-            onChange={(e) => setSize(e.target.value === "all" ? "all" : Number(e.target.value))}
-            aria-label="Диаметр поля под клише"
+            onChange={(v) => setSize(v === "all" ? "all" : Number(v))}
+            label="Диаметр поля под клише"
           >
             <option value="all">Любой диаметр</option>
             {ROUND_SIZES.map((s) => (
               <option key={s} value={s}>Ø{s} мм</option>
             ))}
-          </select>
+          </Select>
         )}
         <span className="ml-auto text-[12.5px]" style={{ color: muted(55) }}>
           найдено: {list.length}
@@ -159,6 +153,28 @@ function MountCard({ m }: { m: Mount }) {
         </span>
       </div>
     </div>
+  );
+}
+
+/** Селект в стиле набора: пилюля со своим шевроном вместо системного. */
+function Select({
+  value, onChange, label, children,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <span className="select-wrap">
+      <select className="select" value={value} onChange={(e) => onChange(e.target.value)} aria-label={label}>
+        {children}
+      </select>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+        strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M6 9l6 6 6-6" />
+      </svg>
+    </span>
   );
 }
 
