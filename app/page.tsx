@@ -12,6 +12,7 @@ import texts from "@/content/constructor.json";
 import home from "@/content/home.json";
 import { checkInn, checkOgrn, lookupInn, type Registry } from "@/lib/inn";
 import { valuesFor, type Kind, type Scored, type TemplateIndex } from "@/lib/stamp";
+import { forDiameter } from "@/lib/mounts";
 import { asset } from "@/lib/paths";
 
 // что понадобится принести — зависит от ситуации, с которой пришёл человек
@@ -83,17 +84,21 @@ export default function Page() {
     [sealKind, org, city, inn, ogrn],
   );
 
-  const mountItem = catalog.mounts[mount];
+  const diameter = (variants.find((v) => v.tpl.id === tpl) ?? variants[0])?.tpl.diameterMm ?? 40;
+  const fitting = forDiameter(diameter);
+  const mountItem = fitting[mount] ?? fitting[0];
+  // самая дешёвая подходящая входит в цену печати, остальные — доплатой к ней
+  const mountExtra = mountItem && fitting[0] ? mountItem.price - fitting[0].price : 0;
   const total =
     catalog.prices.stamp +
-    (mountItem.mode === "included" ? 0 : mountItem.cost) +
+    mountExtra +
     (urgency === "rush" ? catalog.prices.rush : 0) +
     (ownLayout ? catalog.prices.ownLayout : 0);
 
   const currentTemplate = variants.find((v) => v.tpl.id === tpl) ?? variants[0];
   const money = (n: number) => `${n.toLocaleString("ru-RU")} ₽`;
 
-  const onChoose = useCallback((id: string) => setTpl(id), []);
+  const onChoose = useCallback((id: string) => { setTpl(id); setMount(0); }, []);
   const onVariants = useCallback((list: Scored[]) => setVariants(list), []);
 
   const pick = (kind: string, sit: string) => {
@@ -119,8 +124,8 @@ export default function Page() {
         layoutTitle={currentTemplate?.tpl.title ?? "Макет"}
         total={total}
         ownLayout={ownLayout}
-        mountName={mountItem.name}
-        mountCost={mountItem.mode === "included" ? 0 : mountItem.cost}
+        mountName={mountItem ? `${mountItem.brand} ${mountItem.model}` : "подберём вручную"}
+        mountCost={mountExtra}
         urgency={urgency}
         onBack={() => setScreen("build")}
       />
@@ -189,9 +194,9 @@ export default function Page() {
           <div className="flex flex-wrap gap-x-7 gap-y-3">
             <PriceRow label={`${texts.price.stampRow} · ${currentTemplate?.tpl.title ?? "макет"}`} value={money(catalog.prices.stamp)} />
             <PriceRow
-              label={`${texts.price.mountRow} · ${mountItem.name}`}
-              value={mountItem.mode === "included" ? texts.price.included : `+ ${money(mountItem.cost)}`}
-              muted={mountItem.mode === "included"}
+              label={`${texts.price.mountRow} · ${mountItem ? `${mountItem.brand} ${mountItem.model}` : "подберём"}`}
+              value={mountExtra === 0 ? texts.price.included : `+ ${money(mountExtra)}`}
+              muted={mountExtra === 0}
             />
             <PriceRow
               label={texts.price.urgencyRow}
@@ -361,7 +366,7 @@ export default function Page() {
             onVariants={onVariants}
             filled={filled}
           />
-          <Mounts value={mount} onChange={setMount} />
+          <Mounts diameterMm={diameter} value={mount} onChange={setMount} />
         </section>
       </div>
     </main>

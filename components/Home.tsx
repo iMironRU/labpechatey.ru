@@ -2,6 +2,7 @@
 
 import home from "@/content/home.json";
 import HeroStamp from "@/components/HeroStamp";
+import MountsCatalog from "@/components/MountsCatalog";
 
 const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, transparent)`;
 
@@ -158,60 +159,7 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
         </section>
 
 
-        {/* ——— оснастки ———
-            В прототипе главной данные для этого блока есть, а вёрстки нет:
-            пункт меню «Оснастки» вёл на несуществующий якорь #tools.
-            Собрано в той же стилистике, что карточки ситуаций. */}
-        <section id="tools" className="mt-[clamp(46px,6vw,72px)]">
-          <h2 className="m-0 text-[clamp(22px,2.6vw,30px)] font-semibold">{home.toolsTitle}</h2>
-          <p className="mb-5 mt-2 max-w-[60ch] text-[15px]" style={{ color: muted(68) }}>
-            {home.toolsLead}
-          </p>
-          <div className="grid gap-3.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 210px), 1fr))" }}>
-            {home.tools.map((t) => (
-              <div key={t.name} className="card flex flex-col gap-3 p-4">
-                <div
-                  className="relative grid h-[120px] place-items-center overflow-hidden rounded-[10px]"
-                  style={{
-                    background:
-                      "repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-text) 7%, transparent) 0 1px, transparent 1px 9px)",
-                    color: "color-mix(in srgb, var(--color-text) 30%, transparent)",
-                  }}
-                >
-                  <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M10 3h4v4h-4z" />
-                    <path d="M8 7h8l1.5 6h-11z" />
-                    <rect x="5" y="15" width="14" height="4" rx="1.5" />
-                  </svg>
-                  {t.hot && (
-                    <span
-                      className="absolute left-2 top-2 rounded-full px-2 py-[3px] text-[10.5px] font-semibold"
-                      style={{ background: "var(--color-accent-800)", color: "var(--color-accent-100)" }}
-                    >
-                      Хит
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[14.5px] font-semibold">{t.name}</span>
-                  <span className="text-[12.5px] leading-[1.45]" style={{ color: muted(65) }}>
-                    {t.note}
-                  </span>
-                </div>
-                <div className="mt-auto flex items-baseline justify-between gap-2">
-                  <span className="text-[15px] font-semibold">{t.price}</span>
-                  <span
-                    className="text-[11.5px]"
-                    style={{ color: t.stock === "в наличии" ? "var(--ok)" : muted(55) }}
-                  >
-                    {t.stock}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <MountsCatalog />
 
         {/* ——— услуги ——— */}
         <section id="services" className="mt-[clamp(46px,6vw,72px)]">
