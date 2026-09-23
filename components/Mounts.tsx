@@ -11,7 +11,72 @@ const TAG_STYLE: Record<string, { bg: string; color: string }> = {
   },
 };
 
-/** Лента оснасток. Фото пока плейсхолдеры — реальных снимков нет. */
+/** Иконки характеристик: линейные 24×24, как в хендоффе (стиль Phosphor). */
+const CHAR_ICON: Record<string, React.ReactNode> = {
+  Автоматическая: (
+    <>
+      <path d="M12 4v7" />
+      <path d="M8 11h8l1 4H7z" />
+      <path d="M6 19h12" />
+    </>
+  ),
+  Карманная: (
+    <>
+      <rect x="6" y="4" width="12" height="16" rx="3" />
+      <path d="M9 4v3h6V4" />
+    </>
+  ),
+  Круглая: (
+    <>
+      <circle cx="12" cy="12" r="7.5" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  "Ø40": (
+    <>
+      <circle cx="12" cy="12" r="7.5" />
+      <path d="M5 19L19 5" />
+    </>
+  ),
+  "Сменная подушка": (
+    <>
+      <rect x="4" y="9" width="16" height="7" rx="2" />
+      <path d="M8 9V6h8v3" />
+    </>
+  ),
+};
+
+function CharIcon({ name }: { name: string }) {
+  return (
+    <span
+      title={name}
+      className="grid h-6 w-6 place-items-center rounded-[7px]"
+      style={{ background: "color-mix(in srgb, var(--color-surface) 90%, transparent)" }}
+    >
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-label={name}
+      >
+        {CHAR_ICON[name] ?? <circle cx="12" cy="12" r="7" />}
+      </svg>
+    </span>
+  );
+}
+
+/**
+ * Лента оснасток.
+ *
+ * Фото — плейсхолдеры: реальных снимков нет, в хендоффе это штриховка со
+ * значком. При наведении фотозона раскрывается на всю плитку, тег уезжает,
+ * иконки разлетаются — анимация из спецификации.
+ */
 export default function Mounts({
   value, onChange,
 }: {
@@ -51,25 +116,32 @@ export default function Mounts({
                   height: 126,
                   transitionTimingFunction: "cubic-bezier(.2,.75,.2,1)",
                   background:
-                    "repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-text) 6%, transparent) 0 1px, transparent 1px 9px)",
+                    "repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-text) 7%, transparent) 0 1px, transparent 1px 9px)",
                 }}
               >
+                {/* вместо фото — силуэт оснастки */}
+                <span
+                  className="absolute inset-0 grid place-items-center"
+                  style={{ color: "color-mix(in srgb, var(--color-text) 28%, transparent)" }}
+                >
+                  <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10 3h4v4h-4z" />
+                    <path d="M8 7h8l1.5 6h-11z" />
+                    <rect x="5" y="15" width="14" height="4" rx="1.5" />
+                  </svg>
+                </span>
+
                 <span
                   className="absolute left-2 top-2 rounded-full px-2 py-[3px] text-[10.5px] font-semibold transition-all duration-[380ms] group-hover:-translate-x-3 group-hover:-translate-y-3.5 group-hover:opacity-0"
                   style={{ background: tag.bg, color: tag.color }}
                 >
                   {m.tag}
                 </span>
+
                 <span className="absolute bottom-2 left-0 right-0 flex justify-center gap-2 transition-opacity duration-[380ms] group-hover:opacity-0">
                   {m.chars.map((c) => (
-                    <span
-                      key={c}
-                      title={c}
-                      className="flex h-6 w-6 items-center justify-center rounded-[7px] text-[10px]"
-                      style={{ background: "color-mix(in srgb, var(--color-surface) 90%, transparent)" }}
-                    >
-                      {c.slice(0, 1)}
-                    </span>
+                    <CharIcon key={c} name={c} />
                   ))}
                 </span>
               </div>
