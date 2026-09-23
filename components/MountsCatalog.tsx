@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { KIND_LABEL, MOUNTS, ROUND_SIZES, sizeLabel, type Mount } from "@/lib/mounts";
+import MountPhoto from "@/components/MountPhoto";
 
 const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, transparent)`;
 
@@ -112,23 +113,11 @@ export default function MountsCatalog() {
 function MountCard({ m }: { m: Mount }) {
   return (
     <div className="card flex flex-col gap-3 p-4">
-      <div
-        className="relative grid h-[116px] place-items-center overflow-hidden rounded-[10px]"
-        style={{
-          background:
-            "repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-text) 7%, transparent) 0 1px, transparent 1px 9px)",
-          color: muted(30),
-        }}
-      >
-        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3"
-          strokeLinecap="round" strokeLinejoin="round">
-          <path d="M10 3h4v4h-4z" />
-          <path d="M8 7h8l1.5 6h-11z" />
-          <rect x="5" y="15" width="14" height="4" rx="1.5" />
-        </svg>
+      <div className="relative">
+        <MountPhoto m={m} className="mount-photo--card" />
         <span
           className="absolute left-2 top-2 rounded-full px-2 py-[3px] text-[10.5px] font-semibold"
-          style={{ background: "color-mix(in srgb, var(--color-text) 8%, transparent)", color: muted(62) }}
+          style={{ background: "color-mix(in srgb, #10121c 8%, transparent)", color: "#5b6070" }}
         >
           {m.brand}
         </span>

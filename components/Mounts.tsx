@@ -1,6 +1,7 @@
 "use client";
 
 import { forDiameter, nearestSizes, sizeLabel, KIND_LABEL, type Mount } from "@/lib/mounts";
+import MountPhoto from "@/components/MountPhoto";
 
 /** Иконки характеристик: линейные 24×24, как в хендоффе (стиль Phosphor). */
 const ICONS: Record<string, React.ReactNode> = {
@@ -42,7 +43,8 @@ function Chip({ name, icon }: { name: string; icon: keyof typeof ICONS }) {
     <span
       title={name}
       className="grid h-6 w-6 place-items-center rounded-[7px]"
-      style={{ background: "color-mix(in srgb, var(--color-surface) 90%, transparent)" }}
+      // плашка фото белая в обеих темах, поэтому цвета значков заданы явно
+      style={{ background: "#eceef4", color: "#3b4050" }}
     >
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
         strokeLinecap="round" strokeLinejoin="round" aria-label={name}>
@@ -141,18 +143,9 @@ function Tile({
         style={{
           height: 126,
           transitionTimingFunction: "cubic-bezier(.2,.75,.2,1)",
-          background:
-            "repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-text) 7%, transparent) 0 1px, transparent 1px 9px)",
         }}
       >
-        <span className="absolute inset-0 grid place-items-center" style={{ color: "color-mix(in srgb, var(--color-text) 28%, transparent)" }}>
-          <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3"
-            strokeLinecap="round" strokeLinejoin="round">
-            <path d="M10 3h4v4h-4z" />
-            <path d="M8 7h8l1.5 6h-11z" />
-            <rect x="5" y="15" width="14" height="4" rx="1.5" />
-          </svg>
-        </span>
+        <MountPhoto m={m} className="mount-photo--tile" />
 
         <span
           className="absolute left-2 top-2 rounded-full px-2 py-[3px] text-[10.5px] font-semibold transition-all duration-[380ms] group-hover:-translate-x-3 group-hover:-translate-y-3.5 group-hover:opacity-0"
@@ -161,7 +154,11 @@ function Tile({
           {tag}
         </span>
 
-        <span className="absolute bottom-2 left-0 right-0 flex justify-center gap-2 transition-opacity duration-[380ms] group-hover:opacity-0">
+        <span
+          className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 py-[7px] transition-opacity duration-[380ms] group-hover:opacity-0"
+          // значки лежат поверх снимка — без подложки они тонут в предмете
+          style={{ background: "rgba(255,255,255,.78)", backdropFilter: "blur(4px)" }}
+        >
           <Chip name={KIND_LABEL[m.kind]} icon={m.kind} />
           <Chip name="Круглая" icon="round" />
           <Chip name={sizeLabel(m)} icon="size" />

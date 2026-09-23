@@ -152,3 +152,21 @@ body {
   55% { opacity: .5; }
   100% { opacity: .9; transform: scale(1) rotate(-1.5deg); }
 }
+
+/* Снимки оснасток сняты на белом, поэтому подложка белая в обеих темах:
+   так фон фотографии совпадает с плашкой и предмет не висит в рамке.
+   Геометрия целиком здесь: утилиты Tailwind того же веса перебивались
+   правилами класса, и снимок вылезал за окно плитки. */
+.mount-photo { position: relative; display: block; overflow: hidden; border-radius: 10px; background: #fff; }
+.mount-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.mount-photo--empty { display: grid; place-items: center;
+  color: color-mix(in srgb, var(--color-text) 28%, transparent);
+  background:
+    repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-text) 7%, transparent) 0 1px, transparent 1px 9px),
+    var(--color-surface);
+}
+/* карточка каталога: квадрат во всю ширину */
+.mount-photo--card { width: 100%; aspect-ratio: 1; }
+/* плитка конструктора: окно над полосой значков, на ховере раскрывается */
+.mount-photo--tile { position: absolute; inset: 0 0 30px; border-radius: 0; transition: inset .4s cubic-bezier(.2,.75,.2,1); }
+.group:hover .mount-photo--tile { inset: 0; }
