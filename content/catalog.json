@@ -1,0 +1,35 @@
+{
+  "kinds": [
+    { "id": "ip", "ent": "ИП", "label": "Печать для ИП", "title": "Печать для ИП", "note": "новая по реквизитам", "copy": false },
+    { "id": "ip-copy", "ent": "ИП", "label": "Копия печати ИП", "title": "Копия печати для ИП", "note": "загрузите старый оттиск", "copy": true },
+    { "id": "ooo", "ent": "ООО", "label": "Печать для ООО", "title": "Печать для ООО", "note": "новая по реквизитам", "copy": false },
+    { "id": "ooo-copy", "ent": "ООО", "label": "Копия печати ООО", "title": "Копия печати для ООО", "note": "загрузите старый оттиск", "copy": true }
+  ],
+  "mounts": [
+    { "name": "Trodat 46040", "chars": ["Автоматическая", "Круглая", "Ø40"], "tag": "Оптимально", "kind": "accent", "mode": "included", "cost": 0 },
+    { "name": "Colop R40", "chars": ["Автоматическая", "Круглая", "Ø40"], "tag": "Для офиса", "kind": "neutral", "mode": "plain", "cost": 390 },
+    { "name": "Trodat Mobile 9440", "chars": ["Карманная", "Круглая", "Ø40"], "tag": "Дорожный", "kind": "neutral", "mode": "plain", "cost": 690 },
+    { "name": "Colop Printer R40", "chars": ["Автоматическая", "Круглая", "Сменная подушка"], "tag": "Скидка", "kind": "sale", "mode": "discount", "cost": 390, "costOld": 590 }
+  ],
+  "delivery": [
+    { "id": "pickup", "name": "Самовывоз", "eta": "Сегодня из мастерской", "cost": 0 },
+    { "id": "courier", "name": "Курьер", "eta": "Завтра, по городу", "cost": 300 },
+    { "id": "post", "name": "Почта / СДЭК", "eta": "3–7 дней по России", "cost": 250 }
+  ],
+  "pay": [
+    { "id": "online", "name": "Онлайн картой", "note": "Чек придёт на email" },
+    { "id": "receipt", "name": "При получении", "note": "Наличными или картой" },
+    { "id": "invoice", "name": "По счёту", "note": "Счёт и закрывающие для ЮЛ" }
+  ],
+  "courierServices": [
+    { "id": "cdek", "name": "СДЭК" },
+    { "id": "boxberry", "name": "Boxberry" },
+    { "id": "dpd", "name": "DPD" }
+  ],
+  "pvz": [
+    { "addr": "ул. Пролетарская, 10", "note": "Пн–сб, до 18:00" },
+    { "addr": "пр. Гагарина, 27/2", "note": "ТЦ «Гулливер», ежедневно" },
+    { "addr": "ул. Чкалова, 41", "note": "Ежедневно, до 20:00" }
+  ],
+  "prices": { "stamp": 690, "rush": 300, "ownLayout": 250 }
+}

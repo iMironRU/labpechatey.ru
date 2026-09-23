@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+/* Токены из хендоффа дизайнера (design-ref/README.md, раздел Design Tokens).
+   Светлая тема — по умолчанию, тёмная — по [data-theme="dark"]. */
+:root {
+  --color-bg: #eef0f4;
+  --color-surface: #fbfcfe;
+  --color-text: #191b26;
+  --color-divider: color-mix(in srgb, #191b26 13%, transparent);
+  --color-accent: #2f4fce;
+  --ink: #2a49c6;
+  --color-accent-100: #1e2a74;
+  --color-accent-300: #2f4fce;
+  --color-accent-800: #dde3fb;
+  --color-accent-900: #eef1ff;
+  --ok: #1c7a4d;
+  --ok-bg: #e2f4ea;
+  --warn: #9a5a10;
+  --warn-bg: #fbeed7;
+  --shadow-sm: 0 0 0 1px rgba(25, 27, 38, .09);
+  --shadow-md: 0 1px 2px rgba(25, 27, 38, .05), 0 8px 24px rgba(25, 27, 38, .09);
+  --shadow-lg: 0 2px 4px rgba(25, 27, 38, .07), 0 18px 48px rgba(25, 27, 38, .14);
+}
+
+[data-theme="dark"] {
+  --color-bg: #161826;
+  --color-surface: #232532;
+  --color-text: #e9e9ed;
+  --color-divider: color-mix(in srgb, #e9e9ed 16%, transparent);
+  --color-accent: #5f78e6;
+  --ink: #7a90f2;
+  --color-accent-100: #eef1ff;
+  --color-accent-300: #b9c4fb;
+  --color-accent-800: #232a63;
+  --color-accent-900: #191d45;
+  --ok: #54c98c;
+  --ok-bg: #16301f;
+  --warn: #e0a44e;
+  --warn-bg: #332411;
+  --shadow-sm: 0 0 0 1px #3f424d;
+  --shadow-md: 0 0 0 1px #4a4d5a, 0 6px 18px rgba(0, 0, 0, .5);
+  --shadow-lg: 0 0 0 1px #6b6f80, 0 16px 40px rgba(0, 0, 0, .6);
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-text: var(--color-text);
+  --color-divider: var(--color-divider);
+  --color-accent: var(--color-accent);
+  --font-heading: var(--font-inter), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+}
+
+html, body { height: 100%; }
+
+body {
+  /* Фон страницы из хендоффа: мягкое пятно акцента справа сверху */
+  background:
+    radial-gradient(1150px 620px at 88% -160px,
+      color-mix(in srgb, var(--color-accent) 13%, transparent), transparent 62%),
+    var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ——— примитивы дизайн-системы (подмножество Nocturne) ——— */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: 10px; border: 1px solid transparent; cursor: pointer;
+  font-weight: 600; line-height: 1.2; transition: background .15s, border-color .15s, color .15s;
+}
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary { background: var(--color-accent); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 88%, #000); }
+.btn-secondary {
+  background: var(--color-surface); color: var(--color-text); border-color: var(--color-divider);
+  box-shadow: var(--shadow-sm);
+}
+.btn-secondary:hover:not(:disabled) { border-color: var(--color-accent); color: var(--color-accent); }
+.btn-ghost { background: transparent; color: var(--color-accent); border-color: var(--color-divider); }
+.btn-ghost:hover:not(:disabled) { border-color: var(--color-accent); }
+.btn-block { width: 100%; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field > label { font-size: 12.5px; color: color-mix(in srgb, var(--color-text) 62%, transparent); }
+.input {
+  width: 100%; padding: 11px 12px; border-radius: 11px;
+  border: 1px solid var(--color-divider); background: var(--color-surface);
+  color: var(--color-text); font: inherit; font-size: 14px;
+}
+.input:focus { outline: 2px solid var(--color-accent); outline-offset: -1px; }
+.input:disabled { opacity: .45; }
+
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+/* Карточка-секция: базовый блок обоих экранов */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  padding: clamp(16px, 2vw, 24px);
+}
+
+/* Двухколоночная сетка экранов. На узких — одна колонка:
+   minmax-сетка иначе режет текст по краю (грабли из брифа Апликон). */
+.two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr); gap: 16px; align-items: stretch; }
+/* дети сетки и флекса по умолчанию не сжимаются уже содержимого: лента
+   оснасток раздувала страницу до 694px на экране 375px */
+.two-col > * { min-width: 0; }
+@media (max-width: 860px) { .two-col { grid-template-columns: minmax(0, 1fr); } }
+
+/* Лейбл + значение в строку — тот же класс-страховка, что в Апликоне */
+.ap-2col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+@media (max-width: 640px) { .ap-2col { grid-template-columns: 1fr !important; } }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 16px; height: 16px; border-radius: 999px;
+  border: 2px solid var(--color-divider); border-top-color: var(--color-accent);
+  animation: spin .7s linear infinite;
+}
+
+@keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
