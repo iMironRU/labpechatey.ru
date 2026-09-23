@@ -5,15 +5,19 @@ import KindSelector from "@/components/KindSelector";
 import Mounts from "@/components/Mounts";
 import StampPreview from "@/components/StampPreview";
 import Checkout from "@/components/Checkout";
+import StartScreen from "@/components/StartScreen";
 import catalog from "@/content/catalog.json";
 import texts from "@/content/constructor.json";
+import startTexts from "@/content/start.json";
 import { checkInn, checkOgrn, lookupInn, type Registry } from "@/lib/inn";
 import { valuesFor, type Kind, type Scored, type TemplateIndex } from "@/lib/stamp";
 import { asset } from "@/lib/paths";
 
 export default function Page() {
   // состояние конструктора — см. design-ref/README.md, раздел State Management
-  const [screen, setScreen] = useState<"build" | "checkout">("build");
+  // стартовый экран — первый: человек приходит с ситуацией, а не с типом печати
+  const [screen, setScreen] = useState<"start" | "build" | "checkout">("start");
+  const [situation, setSituation] = useState<string | null>(null);
   const [sel, setSel] = useState("ip");
   const [inn, setInn] = useState("");
   const [reg, setReg] = useState<Registry>({ status: "idle" });
@@ -81,6 +85,19 @@ export default function Page() {
   const onChoose = useCallback((id: string) => setTpl(id), []);
   const onVariants = useCallback((list: Scored[]) => setVariants(list), []);
 
+  if (screen === "start") {
+    return (
+      <StartScreen
+        onPick={(kind, sit) => {
+          setSel(kind);
+          setSituation(sit);
+          setTpl(null);
+          setScreen("build");
+        }}
+      />
+    );
+  }
+
   if (screen === "checkout") {
     return (
       <Checkout
@@ -106,7 +123,10 @@ export default function Page() {
         <div className="mb-3 flex items-center gap-3">
           <button
             type="button"
-            onClick={() => { setInn(""); setOrg(""); setCity(""); setOgrn(""); setManual(false); }}
+            onClick={() => {
+              setInn(""); setOrg(""); setCity(""); setOgrn(""); setManual(false);
+              setReg({ status: "idle" }); setTpl(null); setScreen("start");
+            }}
             className="text-[13px] text-[var(--color-accent)]"
           >
             {texts.breadcrumbRestart}
@@ -115,6 +135,14 @@ export default function Page() {
           <span className="text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]">
             Печать · {kindItem.ent}
           </span>
+          {situation && (startTexts.bring as Record<string, string>)[situation] && (
+            <>
+              <span className="h-[14px] w-px bg-[var(--color-divider)]" />
+              <span className="min-w-0 truncate text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]">
+                Понадобится: {(startTexts.bring as Record<string, string>)[situation]}
+              </span>
+            </>
+          )}
         </div>
 
         <div className="flex flex-wrap items-end justify-between gap-4">
