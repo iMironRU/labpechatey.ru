@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { forDiameter, nearestSizes, sizeLabel, KIND_LABEL, type Mount } from "@/lib/mounts";
 import MountPhoto from "@/components/MountPhoto";
 
@@ -71,6 +72,7 @@ export default function Mounts({
 }) {
   const list = forDiameter(diameterMm);
   const base = list[0]?.price ?? 0;
+  const [sheet, setSheet] = useState(false);
 
   if (!list.length) {
     const near = nearestSizes(diameterMm);
@@ -85,8 +87,47 @@ export default function Mounts({
     );
   }
 
+  const current = list[value] ?? list[0];
+  const priceLabel = current.price === base
+    ? "включена в стоимость"
+    : `+ ${(current.price - base).toLocaleString("ru-RU")} ₽`;
+
+  const tiles = (onPick?: () => void) =>
+    list.map((m, i) => (
+      <Tile key={m.id} m={m} extra={m.price - base} active={i === value}
+        onClick={() => { onChange(i); onPick?.(); }} />
+    ));
+
   return (
-    <div className="mt-4 min-w-0 border-t border-[var(--color-divider)] pt-4">
+    <>
+      {/* на телефоне лента не помещается: строка с выбранной и лист по кнопке */}
+      <div className="mt-4 hidden items-center gap-3 border-t border-[var(--color-divider)] pt-4 max-[560px]:flex">
+        <div className="min-w-0 flex-1">
+          <div className="text-[11.5px]" style={{ color: "color-mix(in srgb, var(--color-text) 52%, transparent)" }}>
+            Оснастка
+          </div>
+          <div className="truncate text-[14.5px] font-semibold">
+            {current.brand} {current.model} · {priceLabel}
+          </div>
+        </div>
+        <button type="button" className="btn btn-secondary whitespace-nowrap px-[14px] py-[9px] text-[13px]"
+          onClick={() => setSheet(true)}>
+          Изменить
+        </button>
+      </div>
+
+      {sheet && (
+        <>
+          <div className="sheet-backdrop" onClick={() => setSheet(false)} />
+          <div className="sheet" role="dialog" aria-label="Подходящие оснастки">
+            <div className="sheet-handle" />
+            <div className="mb-[13px] text-[18px] font-semibold">Подходящие оснастки</div>
+            <div className="flex gap-2.5 overflow-x-auto pb-1">{tiles(() => setSheet(false))}</div>
+          </div>
+        </>
+      )}
+
+    <div className="mt-4 min-w-0 border-t border-[var(--color-divider)] pt-4 max-[560px]:hidden">
       <div className="mb-3 flex items-center justify-between gap-3">
         <span className="text-[15px] font-semibold">
           Подходящие оснастки{" "}
@@ -99,12 +140,9 @@ export default function Mounts({
         </a>
       </div>
 
-      <div className="flex min-w-0 gap-3 overflow-x-auto pb-1">
-        {list.map((m, i) => (
-          <Tile key={m.id} m={m} extra={m.price - base} active={i === value} onClick={() => onChange(i)} />
-        ))}
-      </div>
+      <div className="flex min-w-0 gap-3 overflow-x-auto pb-1">{tiles()}</div>
     </div>
+    </>
   );
 }
 

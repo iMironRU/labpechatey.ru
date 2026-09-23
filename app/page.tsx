@@ -101,6 +101,10 @@ export default function Page() {
   const onChoose = useCallback((id: string) => { setTpl(id); setMount(0); }, []);
   const onVariants = useCallback((list: Scored[]) => setVariants(list), []);
 
+  // экраны живут на одной странице: без сброса прокрутки конструктор,
+  // открытый с нижней кнопки главной, показывался с середины
+  useEffect(() => { window.scrollTo(0, 0); }, [screen]);
+
   const pick = (kind: string, sit: string) => {
     setSel(kind);
     setSituation(sit);
@@ -135,7 +139,8 @@ export default function Page() {
   return (
     <main
       className="mx-auto flex w-full flex-1 flex-col gap-4"
-      style={{ maxWidth: 1180, padding: "clamp(20px,4vw,40px) clamp(16px,4vw,48px)" }}
+      // снизу место под панель с итогом, она перекрывает контент
+      style={{ maxWidth: 1180, padding: "clamp(20px,4vw,40px) clamp(16px,4vw,48px) max(clamp(20px,4vw,40px), 92px)" }}
     >
       {/* ——— шапка ——— */}
       <section className="card">
@@ -156,8 +161,8 @@ export default function Page() {
           </span>
           {situation && (BRING as Record<string, string>)[situation] && (
             <>
-              <span className="h-[14px] w-px bg-[var(--color-divider)]" />
-              <span className="min-w-0 truncate text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]">
+              <span className="h-[14px] w-px bg-[var(--color-divider)] max-[560px]:hidden" />
+              <span className="min-w-0 truncate text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)] max-[560px]:hidden">
                 Понадобится: {(BRING as Record<string, string>)[situation]}
               </span>
             </>
@@ -190,7 +195,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="mt-[14px] flex flex-wrap items-end justify-between gap-4 border-t border-[var(--color-divider)] pt-4">
+        <div className="mt-[14px] flex flex-wrap items-end justify-between gap-4 border-t border-[var(--color-divider)] pt-4 max-[560px]:hidden">
           <div className="flex flex-wrap gap-x-7 gap-y-3">
             <PriceRow label={`${texts.price.stampRow} · ${currentTemplate?.tpl.title ?? "макет"}`} value={money(catalog.prices.stamp)} />
             <PriceRow
@@ -209,7 +214,7 @@ export default function Page() {
             )}
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 max-[560px]:hidden">
             <div className="text-right">
               <div className="text-[11.5px] text-[color-mix(in_srgb,var(--color-text)_52%,transparent)]">
                 {texts.price.total}
@@ -368,6 +373,27 @@ export default function Page() {
           />
           <Mounts diameterMm={diameter} value={mount} onChange={setMount} />
         </section>
+      </div>
+
+      {/* ——— нижняя панель на телефоне (макет «Конструктор — реквизиты (моб)») ——— */}
+      <div className="mcta">
+        <div className="flex flex-col leading-[1.15]">
+          <span className="text-[11px]" style={{ color: "color-mix(in srgb, var(--color-text) 52%, transparent)" }}>
+            Итого · оплата при получении
+          </span>
+          <span className="text-[20px] font-semibold">
+            {ownLayout ? "от " : ""}
+            {money(total)}
+          </span>
+        </div>
+        <button
+          type="button"
+          className="btn btn-primary whitespace-nowrap px-[22px] py-3 text-[15px]"
+          disabled={!filled}
+          onClick={() => setScreen("checkout")}
+        >
+          Оформить
+        </button>
       </div>
     </main>
   );
