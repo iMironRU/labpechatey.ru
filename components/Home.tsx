@@ -13,9 +13,10 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
       <div id="top" className="mx-auto w-full" style={{ maxWidth: 1200, padding: "0 clamp(18px,4vw,56px)" }}>
         {/* ——— герой ——— */}
         <section
-          className="grid items-center"
+          // колонки классом, а не в style: скрытая правая колонка всё равно
+          // держала трек, и на телефоне текст жался в половину ширины
+          className="grid items-center grid-cols-1 md:grid-cols-[1.05fr_.95fr]"
           style={{
-            gridTemplateColumns: "1.05fr .95fr",
             gap: "clamp(28px,4vw,64px)",
             padding: "clamp(40px,6vw,84px) 0 clamp(30px,4vw,56px)",
           }}
