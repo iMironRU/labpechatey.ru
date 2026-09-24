@@ -3,6 +3,7 @@
 import home from "@/content/home.json";
 import HeroStamp from "@/components/HeroStamp";
 import { IconArrowRight, IconCat } from "@/components/Icons";
+import { asset } from "@/lib/paths";
 
 const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, transparent)`;
 
@@ -106,31 +107,34 @@ export default function Home({ onPick, onStart }: {
         <hr className="border-0 border-t border-[var(--color-divider)]" style={{ margin: "clamp(30px,4vw,54px) 0" }} />
 
         {/* ——— ситуации ——— */}
-        <section id="cat">
-          <p className="mb-4 text-[15px]" style={{ color: muted(72) }}>
+        <section id="cat" className="mt-[clamp(40px,5vw,64px)]" style={{ scrollMarginTop: 80 }}>
+          <p className="m-0 mb-[22px] text-[15px]" style={{ color: muted(66) }}>
             {home.catsLead}
           </p>
-          <div className="grid gap-3.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))" }}>
+          <div className="grid gap-3.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 258px), 1fr))" }}>
             {home.cats.map((c) => (
               <button
                 key={c.sit}
                 type="button"
                 onClick={() => onPick(c.kind, c.sit)}
-                className="card flex w-full cursor-pointer flex-col items-start gap-3 border-0 p-5 text-left transition-transform hover:-translate-y-0.5"
+                className="card flex w-full cursor-pointer flex-col items-start gap-3 border-0 p-[18px] text-left transition-transform hover:-translate-y-0.5"
               >
                 <span
-                  className="grid h-10 w-10 place-items-center rounded-[10px]"
+                  className="grid h-[38px] w-[38px] place-items-center rounded-[9px]"
                   style={{ background: "var(--color-accent-800)", color: "var(--color-accent-100)" }}
                 >
-<IconCat name={c.icon} />
+                  <IconCat name={c.icon} />
                 </span>
-                <span className="text-[18px] font-semibold leading-[1.14]">{c.title}</span>
-                <span className="flex-1 text-[13px] leading-[1.5]" style={{ color: muted(68) }}>
+                <span className="text-[17px] font-semibold leading-[1.15]">{c.title}</span>
+                <span className="flex-1 text-[13px] leading-[1.5]" style={{ color: muted(70) }}>
                   {c.desc}
                 </span>
-                <span className="flex w-full items-center justify-between text-[12.5px]" style={{ color: muted(58) }}>
+                <span className="flex w-full items-center justify-between text-[12.5px]" style={{ color: muted(60) }}>
                   <span>{c.price}</span>
-                  <span style={{ color: "var(--color-accent)" }}>Собрать →</span>
+                  <span className="inline-flex items-center gap-1" style={{ color: "var(--color-accent)" }}>
+                    Собрать
+                    <IconArrowRight size={13} width={2} />
+                  </span>
                 </span>
               </button>
             ))}
@@ -139,25 +143,26 @@ export default function Home({ onPick, onStart }: {
 
         {/* ——— почему мы ——— */}
         <section
-          className="card mt-[clamp(30px,4vw,54px)] grid gap-6"
-          style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 220px), 1fr))" }}
+          className="mt-[clamp(46px,6vw,72px)] rounded-2xl"
+          style={{ background: "var(--color-surface)", boxShadow: "var(--shadow-sm)", padding: "clamp(24px,3vw,38px)" }}
         >
-          {home.badges.map((b) => (
-            <div key={b.title} className="flex flex-col gap-2">
-              <span
-                className="grid h-10 w-10 place-items-center rounded-[10px]"
-                style={{ background: "var(--color-accent-800)", color: "var(--color-accent-100)" }}
-              >
-<IconCat name={b.icon} />
-              </span>
-              <span className="text-[15px] font-semibold">{b.title}</span>
-              <span className="text-[13px] leading-[1.5]" style={{ color: muted(65) }}>
-                {b.desc}
-              </span>
-            </div>
-          ))}
+          <div className="grid gap-[22px]" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 210px), 1fr))" }}>
+            {home.badges.map((b) => (
+              <div key={b.title} className="flex flex-col gap-[9px]">
+                <span
+                  className="grid h-[42px] w-[42px] place-items-center rounded-[11px] border border-[var(--color-divider)]"
+                  style={{ color: "var(--ink)" }}
+                >
+                  <IconCat name={b.icon} />
+                </span>
+                <span className="text-[16px] font-semibold">{b.title}</span>
+                <span className="text-[13px] leading-[1.5]" style={{ color: muted(68) }}>
+                  {b.desc}
+                </span>
+              </div>
+            ))}
+          </div>
         </section>
-
 
         {/* ——— услуги ——— */}
         {/* ——— услуги ——— */}
@@ -223,60 +228,96 @@ export default function Home({ onPick, onStart }: {
 
         {/* ——— финальный призыв ——— */}
         <section
-          className="mt-[clamp(46px,6vw,72px)] flex flex-wrap items-center justify-between gap-5 rounded-2xl p-[clamp(24px,3vw,36px)]"
-          style={{ background: "var(--color-accent-900)" }}
+          className="mt-[clamp(46px,6vw,72px)] text-center"
+          style={{
+            borderRadius: 18,
+            background: "linear-gradient(180deg, color-mix(in srgb, var(--ink) 10%, var(--color-surface)), var(--color-surface))",
+            boxShadow: "var(--shadow-sm)",
+            padding: "clamp(30px,5vw,54px)",
+          }}
         >
-          <div>
-            <h2 className="m-0 text-[clamp(22px,2.6vw,30px)] font-semibold">{home.final.title}</h2>
-            <p className="mt-2 max-w-[54ch] text-[14px]" style={{ color: muted(70) }}>
-              {home.final.lead}
-            </p>
+          <h2 className="m-0 mb-2.5 font-semibold" style={{ fontSize: "clamp(24px,3.2vw,36px)", letterSpacing: "-0.015em" }}>
+            {home.final.title}
+          </h2>
+          <p className="mx-auto mb-6 mt-0 max-w-[52ch] text-[15.5px]" style={{ color: muted(70) }}>
+            {home.final.lead}
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <button type="button" className="btn btn-primary px-[22px] py-3 text-[15px]" onClick={onStart}>
+              {home.final.cta}
+            </button>
+            <a href={home.phoneHref} className="btn btn-secondary px-[22px] py-3 text-[15px] no-underline">
+              {home.final.callPrefix} {home.phone}
+            </a>
           </div>
-          <button type="button" className="btn btn-primary px-[22px] py-3 text-[15px]" onClick={onStart}>
-            {home.final.cta}
-            <IconArrowRight />
-          </button>
         </section>
       </div>
 
       {/* ——— футер ——— */}
-      <footer id="footer" className="mt-[clamp(46px,6vw,72px)] border-t border-[var(--color-divider)] max-[860px]:pb-[calc(76px+env(safe-area-inset-bottom))]">
+      <footer
+        id="footer"
+        className="mt-[clamp(46px,6vw,72px)] border-t border-[var(--color-divider)] max-[860px]:pb-[calc(76px+env(safe-area-inset-bottom))]"
+        style={{ scrollMarginTop: 80, background: "color-mix(in srgb, var(--color-text) 3%, var(--color-bg))" }}
+      >
         <div
-          className="mx-auto grid gap-8"
+          className="mx-auto grid gap-7"
           style={{
             maxWidth: 1200,
-            padding: "clamp(28px,4vw,44px) clamp(18px,4vw,56px)",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))",
+            padding: "clamp(30px,4vw,52px) clamp(18px,4vw,56px) 30px",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 200px), 1fr))",
           }}
         >
-          <div>
-            <div className="text-[15px] font-semibold">{home.brand}</div>
-            <p className="mt-2 text-[13px] leading-[1.55]" style={{ color: muted(65) }}>
+          <div className="flex flex-col gap-3">
+            <img
+              src={asset(home.logo)}
+              alt={home.brand}
+              className="dark-invert"
+              style={{ height: 38, width: "auto", maxWidth: 210, objectFit: "contain" }}
+            />
+            <span className="text-[13px] leading-[1.55]" style={{ color: muted(60) }}>
               {home.footer.about}
-            </p>
-            <a href={home.phoneHref} className="mt-3 inline-block text-[15px] font-semibold no-underline" style={{ color: "inherit" }}>
-              {home.phone}
-            </a>
+            </span>
           </div>
+
           {home.footer.cols.map((col) => (
-            <div key={col.title}>
-              <div className="text-[13.5px] font-semibold">{col.title}</div>
-              <ul className="m-0 mt-2 list-none p-0 text-[13px]" style={{ color: muted(65) }}>
-                {col.items.map((it) => (
-                  <li key={it} className="mt-1.5">
-                    {it}
-                  </li>
-                ))}
-              </ul>
+            <div key={col.title} className="flex flex-col gap-2">
+              <span
+                className="mb-0.5 text-[11px] uppercase tracking-[0.08em]"
+                style={{ color: muted(50) }}
+              >
+                {col.title}
+              </span>
+              {col.items.map((it) => (
+                <span key={it} className="text-[13.5px]" style={{ color: muted(72) }}>
+                  {it}
+                </span>
+              ))}
             </div>
           ))}
+
+          <div className="flex flex-col gap-2.5">
+            <span className="mb-0.5 text-[11px] uppercase tracking-[0.08em]" style={{ color: muted(50) }}>
+              {home.footer.contactsTitle}
+            </span>
+            <a href={home.phoneHref} className="text-[18px] font-semibold no-underline" style={{ color: "inherit" }}>
+              {home.phone}
+            </a>
+            <div className="flex gap-2">
+              {home.footer.messengers.map((m) => (
+                <a key={m} href="https://t.me/" className="btn btn-secondary px-3 py-2 text-[13px] no-underline">
+                  {m}
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
+
         <div
-          className="mx-auto flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-divider)] text-[12px]"
-          style={{ maxWidth: 1200, padding: "14px clamp(18px,4vw,56px)", color: muted(55) }}
+          className="mx-auto flex flex-wrap justify-between gap-x-5 gap-y-2.5 border-t border-[var(--color-divider)] text-[12px]"
+          style={{ maxWidth: 1200, padding: "16px clamp(18px,4vw,56px)", color: muted(52) }}
         >
           <span>{home.footer.legal}</span>
-          <span className="flex gap-4">
+          <span className="flex flex-wrap gap-[18px]">
             {home.footer.links.map((l) => (
               <span key={l}>{l}</span>
             ))}
