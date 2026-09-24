@@ -15,7 +15,7 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
         <section
           // колонки классом, а не в style: скрытая правая колонка всё равно
           // держала трек, и на телефоне текст жался в половину ширины
-          className="grid items-center grid-cols-1 md:grid-cols-[1.05fr_.95fr]"
+          className="grid items-center grid-cols-1 min-[861px]:grid-cols-[1.05fr_.95fr]"
           style={{
             gap: "clamp(28px,4vw,64px)",
             padding: "clamp(40px,6vw,84px) 0 clamp(30px,4vw,56px)",
@@ -39,14 +39,14 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
             <p className="mt-[22px] text-[17px] leading-[1.6]" style={{ maxWidth: "46ch", color: muted(78) }}>
               {home.hero.lead}
             </p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-wrap gap-3 max-[860px]:hidden">
               <button type="button" className="btn btn-primary px-[22px] py-3 text-[15px]" onClick={() => onPick("ip", "ip")}>
                 {home.hero.cta} →
               </button>
             </div>
           </div>
 
-          <div className="hidden place-items-center md:grid">
+          <div className="hidden place-items-center min-[861px]:grid">
             <div className="relative aspect-square" style={{ width: "min(340px, 80vw)" }}>
               <div
                 className="absolute rounded-full"
@@ -233,7 +233,7 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
       </div>
 
       {/* ——— футер ——— */}
-      <footer id="footer" className="mt-[clamp(46px,6vw,72px)] border-t border-[var(--color-divider)]">
+      <footer id="footer" className="mt-[clamp(46px,6vw,72px)] border-t border-[var(--color-divider)] max-[860px]:pb-[calc(76px+env(safe-area-inset-bottom))]">
         <div
           className="mx-auto grid gap-8"
           style={{
@@ -277,14 +277,41 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
         </div>
       </footer>
 
-      {/* ——— липкая кнопка на мобильном ——— */}
+      {/* ——— нижняя панель на телефоне (макет «Главная», ≤860px):
+          позвонить · «Заказать за 1 час» · конструктор · Telegram ——— */}
       <div
-        className="fixed inset-x-0 bottom-0 z-30 grid border-t border-[var(--color-divider)] p-3 md:hidden"
-        style={{ background: "color-mix(in srgb, var(--color-bg) 92%, transparent)", backdropFilter: "blur(8px)" }}
+        className="fixed inset-x-0 bottom-0 z-30 grid items-center gap-2 border-t border-[var(--color-divider)] min-[861px]:hidden"
+        style={{
+          gridTemplateColumns: "auto 1fr auto auto",
+          padding: "9px 12px calc(9px + env(safe-area-inset-bottom))",
+          background: "color-mix(in srgb, var(--color-bg) 90%, transparent)",
+          backdropFilter: "blur(10px)",
+        }}
       >
-        <button type="button" className="btn btn-primary py-3 text-[15px]" onClick={() => onPick("ip", "ip")}>
+        <a href={home.phoneHref} aria-label="Позвонить" className="btn btn-secondary h-11 w-11 p-0">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+            <path d="M6 3h3l2 5-2 1a12 12 0 006 6l1-2 5 2v3a2 2 0 01-2 2A16 16 0 014 5a2 2 0 012-2z" />
+          </svg>
+        </a>
+        <button type="button" className="btn btn-primary h-11 text-[14.5px]" onClick={() => onPick("ip", "ip")}>
           {home.stickyCta}
         </button>
+        <button
+          type="button"
+          aria-label="Конструктор"
+          className="btn btn-secondary h-11 w-11 p-0"
+          onClick={() => onPick("ip", "ip")}
+        >
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <circle cx="12" cy="12" r="8.5" />
+            <circle cx="12" cy="12" r="3.4" />
+          </svg>
+        </button>
+        <a href="https://t.me/" aria-label="Telegram" className="btn btn-secondary h-11 w-11 p-0">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round">
+            <path d="M21 4L3 11l5.4 2.2L18 6.5l-7 8.2v4l3-3.4 3.4 2.5z" />
+          </svg>
+        </a>
       </div>
     </>
   );

@@ -33,7 +33,7 @@ export default function SiteHeader() {
       }}
     >
       <div
-        className="mx-auto flex items-center gap-3 md:gap-[22px]"
+        className="mx-auto flex items-center gap-3 min-[861px]:gap-[22px]"
         style={{ maxWidth: 1200, padding: "12px clamp(18px,4vw,56px)" }}
       >
         <a href="#top" className="mr-auto flex items-center gap-[11px] no-underline" style={{ color: "var(--color-text)" }}>
@@ -54,7 +54,7 @@ export default function SiteHeader() {
           )}
         </a>
 
-        <nav className="hidden items-center gap-5 md:flex">
+        <nav className="hidden items-center gap-5 min-[861px]:flex">
           {home.nav.map((n) => (
             <a key={n.label} href={n.href} className="text-[14px] no-underline" style={{ color: "inherit" }}>
               {n.label}
@@ -64,7 +64,7 @@ export default function SiteHeader() {
 
         <a
           href="#footer"
-          className="hidden items-center gap-[5px] whitespace-nowrap rounded-full border border-[var(--color-divider)] px-2.5 py-[5px] text-[12.5px] no-underline md:flex"
+          className="hidden items-center gap-[5px] whitespace-nowrap rounded-full border border-[var(--color-divider)] px-2.5 py-[5px] text-[12.5px] no-underline min-[861px]:flex"
           style={{ color: "inherit" }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -76,7 +76,7 @@ export default function SiteHeader() {
 
         <a
           href={home.phoneHref}
-          className="whitespace-nowrap text-[13.5px] font-semibold no-underline md:text-[14.5px]"
+          className="whitespace-nowrap text-[13.5px] font-semibold no-underline min-[861px]:text-[14.5px]"
           style={{ color: "inherit" }}
         >
           {home.phone}
@@ -85,7 +85,7 @@ export default function SiteHeader() {
         <a
           href="https://t.me/"
           aria-label="Telegram"
-          className="hidden h-[34px] w-[34px] flex-none place-items-center rounded-[8px] border border-[var(--color-divider)] no-underline md:grid"
+          className="hidden h-[34px] w-[34px] flex-none place-items-center rounded-[8px] border border-[var(--color-divider)] no-underline min-[861px]:grid"
           style={{ color: "inherit" }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round">

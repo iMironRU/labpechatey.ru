@@ -66,22 +66,28 @@ body {
 }
 
 /* ——— примитивы дизайн-системы (подмножество Nocturne) ——— */
+/* Кнопки — один в один из дизайн-системы хендоффа
+   (_ds/nocturne-…/styles.css): primary у неё контурная, а не залитая;
+   space-2 = 5.6px, space-3 * 1.2 = 10.08px, radius-md = 8px. */
 .btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  border-radius: 10px; border: 1px solid transparent; cursor: pointer;
-  font-weight: 600; line-height: 1.2; transition: background .15s, border-color .15s, color .15s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  cursor: pointer; text-decoration: none;
+  font-family: var(--font-heading); font-weight: 600;
+  font-size: 14px; line-height: 1.2; color: var(--color-text);
+  background: transparent; border: 1px solid transparent;
+  padding: 5.6px 10.08px; border-radius: 8px;
+  transition: background .15s, border-color .15s, color .15s;
 }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
-.btn-primary { background: var(--color-accent); color: #fff; }
-.btn-primary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 88%, #000); }
-.btn-secondary {
-  background: var(--color-surface); color: var(--color-text); border-color: var(--color-divider);
-  box-shadow: var(--shadow-sm);
-}
-.btn-secondary:hover:not(:disabled) { border-color: var(--color-accent); color: var(--color-accent); }
-.btn-ghost { background: transparent; color: var(--color-accent); border-color: var(--color-divider); }
-.btn-ghost:hover:not(:disabled) { border-color: var(--color-accent); }
-.btn-block { width: 100%; }
+.btn-primary { color: var(--color-accent); border-color: var(--color-accent); }
+.btn-primary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
+.btn-primary:active:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }
+.btn-secondary { border-color: var(--color-divider); }
+.btn-secondary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.btn-secondary:active:not(:disabled) { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+.btn-ghost { color: var(--color-accent); padding-inline: 2.8px; }
+.btn-ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+.btn-ghost:active:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
 
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field > label { font-size: 12.5px; color: color-mix(in srgb, var(--color-text) 62%, transparent); }
