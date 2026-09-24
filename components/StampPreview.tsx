@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { fill, rank, type Scored, type TemplateIndex, type Values, type Kind } from "@/lib/stamp";
 import { asset } from "@/lib/paths";
+import { IconChevronLeft, IconChevronRight } from "@/components/Icons";
 
 type Props = {
   index: TemplateIndex[];
@@ -97,9 +98,10 @@ export default function StampPreview({
           aria-label="Предыдущий макет"
           onClick={() => step(-1)}
           disabled={usable.length < 2}
-          className="btn btn-secondary h-9 w-9 shrink-0 rounded-full p-0 disabled:opacity-40"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[var(--color-divider)] disabled:opacity-40"
+          style={{ background: "var(--color-surface)", boxShadow: "var(--shadow-sm)" }}
         >
-          ‹
+          <IconChevronLeft />
         </button>
 
         {markup ? (
@@ -120,9 +122,10 @@ export default function StampPreview({
           aria-label="Следующий макет"
           onClick={() => step(1)}
           disabled={usable.length < 2}
-          className="btn btn-secondary h-9 w-9 shrink-0 rounded-full p-0 disabled:opacity-40"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[var(--color-divider)] disabled:opacity-40"
+          style={{ background: "var(--color-surface)", boxShadow: "var(--shadow-sm)" }}
         >
-          ›
+          <IconChevronRight />
         </button>
       </div>
 
@@ -142,13 +145,13 @@ export default function StampPreview({
             title={`${v.tpl.title} · Ø${v.tpl.diameterMm} мм`}
             onClick={() => onChoose(v.tpl.id)}
             aria-pressed={v.tpl.id === chosen}
-            className="h-[54px] w-[54px] rounded-[10px] border-[1.5px] p-1"
+            className="grid h-[54px] w-[54px] place-items-center rounded-[10px] border-[1.5px] p-[6px]"
             style={{
               borderColor: v.tpl.id === chosen ? "var(--color-accent)" : "var(--color-divider)",
               background: "var(--color-surface)",
             }}
           >
-            <Thumb file={v.tpl.file} values={v.values} />
+            <StampThumb file={v.tpl.file} values={v.values} />
           </button>
         ))}
       </div>
@@ -156,7 +159,7 @@ export default function StampPreview({
   );
 }
 
-function Thumb({ file, values }: { file: string; values: Values }) {
+export function StampThumb({ file, values }: { file: string; values: Values }) {
   const [html, setHtml] = useState<{ html: string; box: string } | null>(null);
   useEffect(() => {
     let alive = true;

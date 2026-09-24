@@ -1,6 +1,7 @@
 "use client";
 
 import home from "@/content/home.json";
+import HeroMark from "@/components/HeroMark";
 
 /**
  * Оттиск в герое — ровно тот, что в прототипе главной: три кольца,
@@ -58,19 +59,8 @@ export default function HeroStamp() {
         <circle cx="266" cy="150" r="2.2" />
       </g>
 
-      {/* логотип в центре; если картинка не отдаётся — под ней остаётся подпись */}
-      <text
-        x="150"
-        y="155"
-        textAnchor="middle"
-        fontSize="13"
-        fontWeight="600"
-        fill="currentColor"
-        fontFamily="Inter, sans-serif"
-      >
-        ЛП
-      </text>
-      <image href={home.logo} x="98" y="120" width="104" height="62" preserveAspectRatio="xMidYMid meet" />
+      {/* знак в центре — тем же цветом, что и краска оттиска */}
+      <HeroMark x={124} y={128} size={52} />
     </svg>
   );
 }

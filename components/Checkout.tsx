@@ -3,6 +3,9 @@
 import { useState } from "react";
 import catalog from "@/content/catalog.json";
 import texts from "@/content/checkout.json";
+import { StampThumb } from "@/components/StampPreview";
+import { IconArrowLeft, IconChevronRight, IconPin, IconShield } from "@/components/Icons";
+import type { Values } from "@/lib/stamp";
 
 type Props = {
   kindTitle: string;
@@ -12,13 +15,16 @@ type Props = {
   mountName: string;
   mountCost: number;
   urgency: "rush" | "calm";
+  /** макет и данные для миниатюры в «Вашем заказе» — как в макете */
+  thumbFile?: string;
+  thumbValues?: Values;
   onBack: () => void;
 };
 
 const money = (n: number) => `${n.toLocaleString("ru-RU")} ₽`;
 
 export default function Checkout({
-  kindTitle, layoutTitle, total, ownLayout, mountName, mountCost, urgency, onBack,
+  kindTitle, layoutTitle, total, ownLayout, mountName, mountCost, urgency, thumbFile, thumbValues, onBack,
 }: Props) {
   const [delivery, setDelivery] = useState("courier");
   const [addr, setAddr] = useState("");
@@ -42,8 +48,13 @@ export default function Checkout({
     >
       <section className="card" style={{ padding: "clamp(16px,2vw,22px)" }}>
         <div className="mb-3 flex items-center gap-3">
-          <button type="button" onClick={onBack} className="text-[13px] text-[var(--color-accent)]">
-            {texts.back}
+          <button
+            type="button"
+            onClick={onBack}
+            className="inline-flex items-center gap-[6px] text-[13px] text-[var(--color-accent)]"
+          >
+            <IconArrowLeft />
+            {texts.back.replace(/^←\s*/, "")}
           </button>
           <span className="h-[14px] w-px bg-[var(--color-divider)]" />
           <span className="text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]">
@@ -78,10 +89,15 @@ export default function Checkout({
 
             <div className="mt-[15px]">
               {delivery === "pickup" && (
-                <div className="rounded-[11px] border border-[var(--color-divider)] p-3">
-                  <div className="text-[13.5px] font-semibold">{texts.pickup.name}</div>
-                  <div className="mt-1 text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">
-                    {texts.pickup.address}
+                <div className="flex items-center gap-3 rounded-[11px] border border-[var(--color-divider)] p-3">
+                  <span style={{ color: "var(--color-accent)" }}>
+                    <IconPin />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-[13.5px] font-semibold">{texts.pickup.name}</div>
+                    <div className="mt-1 text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">
+                      {texts.pickup.address}
+                    </div>
                   </div>
                 </div>
               )}
@@ -129,7 +145,11 @@ export default function Checkout({
                     onClick={() => setPvz(((pvz ?? -1) + 1) % catalog.pvz.length)}
                     className="flex w-full items-center justify-between rounded-[11px] border-[1.5px] border-[var(--color-divider)] p-3 text-left hover:border-[var(--color-accent)]"
                   >
-                    <span>
+                    <span className="flex min-w-0 items-center gap-3">
+                      <span style={{ color: "var(--color-accent)" }}>
+                        <IconPin />
+                      </span>
+                      <span className="min-w-0">
                       <span
                         className="block text-[13.5px]"
                         style={{ color: pvz === null ? "var(--color-accent)" : "var(--color-text)" }}
@@ -141,8 +161,11 @@ export default function Checkout({
                           {catalog.pvz[pvz].note}
                         </span>
                       )}
+                      </span>
                     </span>
-                    <span className="text-[color-mix(in_srgb,var(--color-text)_45%,transparent)]">›</span>
+                    <span className="text-[color-mix(in_srgb,var(--color-text)_45%,transparent)]">
+                      <IconChevronRight size={16} />
+                    </span>
                   </button>
                 </div>
               )}
@@ -168,7 +191,12 @@ export default function Checkout({
         <section className="card sticky top-5 self-start" style={{ padding: "clamp(16px,2vw,22px)" }}>
           <h2 className="m-0 mb-3 text-[16px] font-semibold">{texts.summaryTitle}</h2>
           <div className="mb-3 flex items-center gap-3">
-            <div className="h-16 w-16 rounded-[12px] border border-[var(--color-divider)] p-[7px]" />
+            <div
+              className="grid h-16 w-16 flex-none place-items-center rounded-[12px] border border-[var(--color-divider)] p-[7px]"
+              style={{ color: "var(--ink)" }}
+            >
+              {thumbFile && thumbValues && <StampThumb file={thumbFile} values={thumbValues} />}
+            </div>
             <div className="min-w-0">
               <div className="truncate text-[14px] font-semibold">{kindTitle}</div>
               <div className="truncate text-[12px] text-[color-mix(in_srgb,var(--color-text)_52%,transparent)]">
@@ -209,8 +237,9 @@ export default function Checkout({
           >
             {texts.cta} · {money(grand)}
           </button>
-          <p className="mt-2 text-[11.5px] text-[color-mix(in_srgb,var(--color-text)_55%,transparent)]">
-            🛡 {texts.legal}
+          <p className="mt-3 flex items-center gap-[7px] text-[11.5px] leading-[1.45] text-[color-mix(in_srgb,var(--color-text)_55%,transparent)]">
+            <IconShield />
+            {texts.legal}
           </p>
         </section>
       </div>

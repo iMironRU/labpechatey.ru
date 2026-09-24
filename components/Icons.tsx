@@ -50,3 +50,28 @@ export const IconCross = ({ size = 11, width = 2.4 }: Props) => (
     <path d="M6 6l12 12M18 6L6 18" />
   </svg>
 );
+
+export const IconChevronLeft = ({ size = 17, width = 1.9 }: Props) => (
+  <svg {...base(size, width)}>
+    <path d="M15 18l-6-6 6-6" />
+  </svg>
+);
+
+export const IconChevronRight = ({ size = 17, width = 1.9 }: Props) => (
+  <svg {...base(size, width)}>
+    <path d="M9 6l6 6-6 6" />
+  </svg>
+);
+
+export const IconShield = ({ size = 15, width = 1.6 }: Props) => (
+  <svg {...base(size, width)} style={{ flex: "none" }}>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+  </svg>
+);
+
+export const IconPin = ({ size = 16, width = 1.7 }: Props) => (
+  <svg {...base(size, width)} style={{ flex: "none" }}>
+    <path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" />
+    <circle cx="12" cy="10" r="2.4" />
+  </svg>
+);

@@ -124,6 +124,8 @@ export default function Page() {
         mountName={mountItem ? `${mountItem.brand} ${mountItem.model}` : "подберём вручную"}
         mountCost={mountExtra}
         urgency={urgency}
+        thumbFile={currentTemplate?.tpl.file}
+        thumbValues={currentTemplate?.values}
         onBack={() => setScreen("build")}
       />
     );

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import home from "@/content/home.json";
+import { asset } from "@/lib/paths";
 
 /** Шапка сайта: липкая, с размытием фона и переключателем темы. */
 export default function SiteHeader() {
@@ -45,10 +46,11 @@ export default function SiteHeader() {
             </span>
           ) : (
             <img
-              src={home.logo}
+              src={asset(home.logo)}
               alt={home.brand}
               onError={() => setLogoFailed(true)}
               // на узких экранах логотип и телефон вместе не влезали — логотип уступает
+              className="dark-invert"
               style={{ height: 40, width: "auto", maxWidth: "min(42vw, 220px)", objectFit: "contain" }}
             />
           )}
