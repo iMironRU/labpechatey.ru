@@ -44,7 +44,7 @@ export default function SourceLine({
       </div>
 
       {open && (
-        <div className="card grid gap-2 p-3" style={{ gridTemplateColumns: "1fr 1fr" }}>
+        <div className="card grid gap-2 p-3" style={{ gridTemplateColumns: "1fr 1fr", boxShadow: "var(--shadow-sm)" }}>
           {SOURCES.map((s) => (
             <button
               key={s.id}

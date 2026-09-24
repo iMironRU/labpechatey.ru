@@ -63,6 +63,11 @@ body {
     var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body);
+  /* базовая типографика дизайн-системы: без неё неразмеченный текст
+     наследовал 16px браузера вместо 15 из макета */
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -97,12 +102,19 @@ body {
   .btn-ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
   .btn-ghost:active:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
 
-  .field { display: flex; flex-direction: column; gap: 6px; }
-  .field > label { font-size: 12.5px; color: color-mix(in srgb, var(--color-text) 62%, transparent); }
+  /* формы — как в дизайн-системе: подпись блоком, 12px, 70%, отступ 5 */
+  .field { display: block; }
+  .field > label {
+    display: block; font-size: 12px; margin-bottom: 5px;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
+  /* поле ввода — из дизайн-системы: 36px минимум, отступы 6/10, радиус 8 */
   .input {
-    width: 100%; padding: 11px 12px; border-radius: 11px;
-    border: 1px solid var(--color-divider); background: var(--color-surface);
-    color: var(--color-text); font: inherit; font-size: 14px;
+    width: 100%; min-height: 36px; padding: 6px 10px;
+    font: inherit; font-size: 14px;
+    color: var(--color-text); caret-color: var(--color-accent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-divider); border-radius: 8px;
   }
   .input:focus { outline: 2px solid var(--color-accent); outline-offset: -1px; }
   .input:disabled { opacity: .45; }
@@ -130,7 +142,14 @@ body {
   :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
   /* Карточка-секция: базовый блок обоих экранов */
+  /* .card — как в дизайн-системе: радиус 8, без рамки, тень ставится
+     по месту. Панели экранов конструктора и чекаута — это .panel:
+     в макете у них рамка, радиус 16 и тень заданы прямо в разметке. */
   .card {
+    display: flex; flex-direction: column; gap: 5.6px;
+    padding: 8.4px; border-radius: 8px; background: var(--color-surface);
+  }
+  .panel {
     background: var(--color-surface);
     border: 1px solid var(--color-divider);
     border-radius: 16px;

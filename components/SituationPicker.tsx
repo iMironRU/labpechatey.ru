@@ -42,6 +42,7 @@ export default function SituationPicker({
             type="button"
             onClick={() => onPick(c.kind, c.sit)}
             className="card flex w-full cursor-pointer flex-col items-start gap-3 border-0 p-5 text-left transition-transform hover:-translate-y-0.5"
+            style={{ boxShadow: "var(--shadow-sm)" }}
           >
             <span
               className="grid h-10 w-10 place-items-center rounded-[10px]"

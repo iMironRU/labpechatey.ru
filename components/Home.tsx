@@ -118,6 +118,7 @@ export default function Home({ onPick, onStart }: {
                 type="button"
                 onClick={() => onPick(c.kind, c.sit)}
                 className="card flex w-full cursor-pointer flex-col items-start gap-3 border-0 p-[18px] text-left transition-transform hover:-translate-y-0.5"
+                style={{ boxShadow: "var(--shadow-sm)" }}
               >
                 <span
                   className="grid h-[38px] w-[38px] place-items-center rounded-[9px]"
@@ -209,7 +210,7 @@ export default function Home({ onPick, onStart }: {
               <span className="text-[13.5px] opacity-90">{home.rating.note}</span>
             </div>
             {home.reviews.map((r) => (
-              <div key={r.who} className="card flex flex-col gap-3 p-5">
+              <div key={r.who} className="card flex flex-col gap-3 p-5" style={{ boxShadow: "var(--shadow-sm)" }}>
                 <span className="inline-flex gap-[2px]" style={{ color: "var(--ink)" }}>
                   {[0, 1, 2, 3, 4].map((i) => (
                     <Star key={i} size={13} />

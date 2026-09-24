@@ -9,7 +9,7 @@ import Home from "@/components/Home";
 import SituationPicker from "@/components/SituationPicker";
 import SourceLine, { type SourceId } from "@/components/SourceLine";
 import HelpCard from "@/components/HelpCard";
-import { IconArrowLeft, IconArrowRight, IconCalendar, IconClock, IconCross } from "@/components/Icons";
+import { IconArrowLeft, IconArrowRight, IconCalendar, IconCheck, IconClock, IconCross } from "@/components/Icons";
 import SiteHeader from "@/components/SiteHeader";
 import catalog from "@/content/catalog.json";
 import texts from "@/content/constructor.json";
@@ -161,7 +161,7 @@ export default function Page() {
       style={{ maxWidth: 1180, padding: "clamp(20px,4vw,40px) clamp(16px,4vw,48px) max(clamp(20px,4vw,40px), 92px)" }}
     >
       {/* ——— шапка ——— */}
-      <section className="card">
+      <section className="panel">
         <div className="mb-3 flex items-center gap-3">
           <button
             type="button"
@@ -252,6 +252,8 @@ export default function Page() {
       {/* ——— реквизиты и превью ——— */}
       <div className="two-col">
         <div className="flex min-w-0 flex-col gap-3">
+        {/* в мобильном макете строки источника нет — там сразу реквизиты */}
+        <div className="max-[560px]:hidden">
         <SourceLine
           value={ownLayout ? "image" : "req"}
           open={showSource}
@@ -262,7 +264,8 @@ export default function Page() {
             else setOwnPicked(id === "image");
           }}
         />
-        <section className="card" style={{ padding: "clamp(16px,2vw,22px)" }}>
+        </div>
+        <section className="panel" style={{ padding: "clamp(16px,2vw,22px)" }}>
           <h2 className="m-0 text-[17px] font-semibold">{texts.requisites.title}</h2>
           <p className="mb-4 mt-1 text-[13px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">
             {texts.requisites.hint}
@@ -297,15 +300,21 @@ export default function Page() {
               className="mt-2 rounded-[11px] p-[14px]"
               style={{ background: "var(--ok-bg)", border: "1px solid color-mix(in srgb, var(--ok) 40%, transparent)" }}
             >
-              <div className="text-[12px] font-semibold uppercase" style={{ color: "var(--ok)" }}>
-                ✓ {texts.requisites.foundBadge}
+              <div
+                className="flex items-center gap-[7px] text-[12px] font-semibold uppercase tracking-[0.05em]"
+                style={{ color: "var(--ok)" }}
+              >
+                <IconCheck />
+                {texts.requisites.foundBadge}
               </div>
               <div className="mt-1 text-[16px] font-semibold">{org}</div>
               <div className="text-[13px] text-[color-mix(in_srgb,var(--color-text)_72%,transparent)]">
                 ИНН {inn} / {ogrn.length === 15 ? "ОГРНИП" : "ОГРН"} {ogrn} · {city}
               </div>
               <div className="mt-2 flex items-center gap-3">
-                <span className="text-[13px]">{texts.requisites.foundAsk}</span>
+                <span className="text-[13px]" style={{ color: "color-mix(in srgb, var(--color-text) 60%, transparent)" }}>
+                  {texts.requisites.foundAsk}
+                </span>
                 <button type="button" className="btn btn-ghost px-3 py-[7px] text-[13px]" onClick={() => setManual(true)}>
                   {texts.requisites.fixButton}
                 </button>
@@ -381,7 +390,7 @@ export default function Page() {
         </div>
 
         <section
-          className="card"
+          className="panel"
           style={{
             padding: "clamp(16px,2vw,22px)",
             background:

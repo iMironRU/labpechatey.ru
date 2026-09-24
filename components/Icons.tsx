@@ -141,3 +141,9 @@ export const IconSearch = ({ size = 16, width = 1.8 }: Props) => (
     <path d="M21 21l-4-4" />
   </svg>
 );
+
+export const IconCheck = ({ size = 14, width = 2.2 }: Props) => (
+  <svg {...base(size, width)}>
+    <path d="M5 12l5 5L20 6" />
+  </svg>
+);

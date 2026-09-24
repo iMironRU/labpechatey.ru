@@ -46,7 +46,7 @@ export default function Checkout({
       className="mx-auto flex w-full flex-1 flex-col gap-4"
       style={{ maxWidth: 1180, padding: "clamp(20px,4vw,40px) clamp(16px,4vw,48px)" }}
     >
-      <section className="card" style={{ padding: "clamp(16px,2vw,22px)" }}>
+      <section className="panel" style={{ padding: "clamp(16px,2vw,22px)" }}>
         <div className="mb-3 flex items-center gap-3">
           <button
             type="button"
@@ -61,7 +61,7 @@ export default function Checkout({
             {kindTitle} · {layoutTitle}
           </span>
         </div>
-        <h1 className="m-0 font-semibold" style={{ fontSize: "clamp(24px,3vw,34px)" }}>
+        <h1 className="m-0 font-semibold" style={{ fontSize: "clamp(24px,3vw,34px)", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
           {texts.title}
         </h1>
         <p className="mt-1 text-[13px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">
@@ -71,7 +71,7 @@ export default function Checkout({
 
       <div className="two-col">
         <div className="flex flex-col gap-4">
-          <section className="card flex-1" style={{ padding: "clamp(16px,2vw,22px)" }}>
+          <section className="panel flex-1" style={{ padding: "clamp(16px,2vw,22px)" }}>
             <h2 className="m-0 mb-3 text-[16px] font-semibold">{texts.deliveryTitle}</h2>
             <div className="grid grid-cols-3 gap-[10px]">
               {catalog.delivery.map((d) => (
@@ -172,7 +172,7 @@ export default function Checkout({
             </div>
           </section>
 
-          <section className="card" style={{ padding: "clamp(16px,2vw,22px)" }}>
+          <section className="panel" style={{ padding: "clamp(16px,2vw,22px)" }}>
             <h2 className="m-0 mb-3 text-[16px] font-semibold">{texts.payTitle}</h2>
             <div className="grid grid-cols-3 gap-[10px]">
               {catalog.pay.map((p) => (
@@ -188,7 +188,7 @@ export default function Checkout({
           </section>
         </div>
 
-        <section className="card sticky top-5 self-start" style={{ padding: "clamp(16px,2vw,22px)" }}>
+        <section className="panel sticky top-5 self-start" style={{ padding: "clamp(16px,2vw,22px)" }}>
           <h2 className="m-0 mb-3 text-[16px] font-semibold">{texts.summaryTitle}</h2>
           <div className="mb-3 flex items-center gap-3">
             <div
@@ -223,7 +223,9 @@ export default function Checkout({
           </div>
 
           <div className="mt-3 flex items-end justify-between border-t border-[var(--color-divider)] pt-3">
-            <span className="text-[13px]">{texts.grandTotal}</span>
+            <span className="text-[13px]" style={{ color: "color-mix(in srgb, var(--color-text) 60%, transparent)" }}>
+              {texts.grandTotal}
+            </span>
             <span className="text-[26px] font-semibold">
               {ownLayout ? "от " : ""}
               {money(grand)}

@@ -112,7 +112,7 @@ export default function MountsCatalog() {
 
 function MountCard({ m }: { m: Mount }) {
   return (
-    <div className="card flex flex-col gap-3 p-4">
+    <div className="card flex flex-col gap-3 p-4" style={{ boxShadow: "var(--shadow-sm)" }}>
       <div className="relative">
         <MountPhoto m={m} className="mount-photo--card" />
         <span
