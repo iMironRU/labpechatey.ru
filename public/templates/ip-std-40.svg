@@ -3,21 +3,21 @@
      xmlns:seal="https://rpk-seal.local/ns/1"
      viewBox="-21.0 -21.0 42.0 42.0" width="42.0mm" height="42.0mm">
 
-  <title>Компактный</title>
-  <desc>Раскладка compact из метода stampSvg прототипа «Конструктор — реквизиты», в миллиметрах.</desc>
+  <title>Стандарт ГОСТ</title>
+  <desc>Раскладка std из метода stampSvg прототипа «Конструктор — реквизиты», в миллиметрах.</desc>
 
   <metadata><seal:template version="2">{
  "version": 2,
- "id": "ooo-compact-40",
- "title": "Компактный",
+ "id": "ip-std-40",
+ "title": "Стандарт ГОСТ",
  "kinds": [
-  "ooo"
+  "ip"
  ],
  "diameterMm": 40,
  "frame": {
   "asset": "прототип «Конструктор — реквизиты», метод stampSvg",
   "freeRadiusMm": 18.78,
-  "innerRadiusMm": 9.6
+  "innerRadiusMm": 8.52
  },
  "defaults": {
   "font": "PT Sans",
@@ -27,7 +27,7 @@
   "overflow": "shrink"
  },
  "fields": {
-  "name": {
+  "label_ip": {
    "role": "top-arc",
    "kind": "arc",
    "size": 2.03,
@@ -39,7 +39,7 @@
    "size": 1.49,
    "minSize": 1.29
   },
-  "name_short": {
+  "fio": {
    "role": "center-name",
    "kind": "line",
    "size": 1.62,
@@ -56,21 +56,28 @@
 }</seal:template></metadata>
 
   <defs>
-    <path id="b_name" d="M -14.98 5.45 A 15.95 15.95 0 0 1 0 -15.95 A 15.95 15.95 0 0 1 14.98 5.45"/>
+    <path id="b_label_ip" d="M -14.98 5.45 A 15.95 15.95 0 0 1 0 -15.95 A 15.95 15.95 0 0 1 14.98 5.45"/>
     <path id="b_city" d="M -13.43 6.99 A 15.14 15.14 0 0 0 0 15.14 A 15.14 15.14 0 0 0 13.43 6.99"/>
+    <path id="b_micro" d="M -0.02 17.97 A 17.97 17.97 0 0 1 0 -17.97 A 17.97 17.97 0 0 1 0.02 17.97"/>
   </defs>
 
   <g id="s_frame" fill="none" stroke="currentColor">
     <circle cx="0" cy="0" r="19.73" stroke-width="0.41"/>
-    <circle cx="0" cy="0" r="10.0" stroke-width="0.18"/>
+    <circle cx="0" cy="0" r="18.78" stroke-width="0.15"/>
+    <circle cx="0" cy="0" r="8.92" stroke-width="0.18"/>
   </g>
   <g id="s_dots" fill="currentColor">
     <circle cx="-15.68" cy="0" r="0.3"/>
     <circle cx="15.68" cy="0" r="0.3"/>
   </g>
-  <g id="f_name">
+  <g id="s_micro">
+    <text font-size="0.88" letter-spacing="0.07" fill="currentColor">
+      <textPath href="#b_micro" startOffset="0">· лаборатория печатей · оренбург · гост · лазер 1000 dpi · лаборатория печатей · оренбург · гост · лазер 1000 dpi · лаборатория печатей · оренбург · гост · лазер 1000 dpi</textPath>
+    </text>
+  </g>
+  <g id="f_label_ip">
     <text font-size="2.03" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath href="#b_name" startOffset="50%"></textPath>
+      <textPath href="#b_label_ip" startOffset="50%"></textPath>
     </text>
   </g>
   <g id="f_city">
@@ -78,7 +85,7 @@
       <textPath href="#b_city" startOffset="50%"></textPath>
     </text>
   </g>
-  <g id="f_name_short">
+  <g id="f_fio">
     <text x="0" y="-0.54" font-size="1.62" font-weight="600" text-anchor="middle" fill="currentColor"></text>
   </g>
   <g id="f_inn">

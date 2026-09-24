@@ -137,51 +137,9 @@
   "fields": {
    "label_ip": {
     "kind": "arc",
-    "roomMm": 57.15,
-    "sizeMm": 2.1,
-    "minSizeMm": 1.8,
-    "comfort": 40,
-    "tight": 46,
-    "variable": false,
-    "fixedLen": null
-   },
-   "city": {
-    "kind": "arc",
-    "roomMm": 32.63,
-    "sizeMm": 1.9,
-    "minSizeMm": 1.8,
-    "comfort": 25,
-    "tight": 26,
-    "variable": true,
-    "fixedLen": null
-   },
-   "inn": {
-    "kind": "line",
-    "roomMm": 24.3,
-    "sizeMm": 2.4,
-    "minSizeMm": 1.8,
-    "comfort": 14,
-    "tight": 19,
-    "variable": false,
-    "fixedLen": 12
-   }
-  }
- },
- {
-  "id": "ip-double-40",
-  "title": "С двойным кольцом",
-  "file": "templates/ip-double-40.svg",
-  "kinds": [
-   "ip"
-  ],
-  "diameterMm": 40,
-  "font": "PT Sans",
-  "fields": {
-   "label_ip": {
-    "kind": "arc",
-    "roomMm": 66.45,
-    "sizeMm": 2.1,
-    "minSizeMm": 1.8,
+    "roomMm": 61.24,
+    "sizeMm": 2.03,
+    "minSizeMm": 1.7299999999999998,
     "comfort": 46,
     "tight": 54,
     "variable": false,
@@ -189,102 +147,40 @@
    },
    "city": {
     "kind": "arc",
-    "roomMm": 32.63,
-    "sizeMm": 1.9,
-    "minSizeMm": 1.8,
-    "comfort": 25,
-    "tight": 26,
+    "roomMm": 33.03,
+    "sizeMm": 1.49,
+    "minSizeMm": 1.29,
+    "comfort": 34,
+    "tight": 39,
     "variable": true,
     "fixedLen": null
    },
    "fio": {
     "kind": "line",
-    "roomMm": 19.66,
-    "sizeMm": 2.0,
-    "minSizeMm": 1.8,
-    "comfort": 14,
-    "tight": 16,
-    "variable": true,
-    "fixedLen": null
-   },
-   "inn": {
-    "kind": "line",
-    "roomMm": 19.1,
-    "sizeMm": 1.8,
-    "minSizeMm": 1.8,
-    "comfort": 15,
-    "tight": 15,
-    "variable": false,
-    "fixedLen": 12
-   }
-  }
- },
- {
-  "id": "ip-extended-40",
-  "title": "Расширенный",
-  "file": "templates/ip-extended-40.svg",
-  "kinds": [
-   "ip"
-  ],
-  "diameterMm": 40,
-  "font": "PT Sans",
-  "fields": {
-   "label_ip": {
-    "kind": "arc",
-    "roomMm": 66.45,
-    "sizeMm": 2.1,
-    "minSizeMm": 1.8,
-    "comfort": 46,
-    "tight": 54,
-    "variable": false,
-    "fixedLen": null
-   },
-   "ogrn": {
-    "kind": "arc",
-    "roomMm": 32.63,
-    "sizeMm": 1.9,
-    "minSizeMm": 1.8,
-    "comfort": 25,
-    "tight": 26,
-    "variable": false,
-    "fixedLen": 15
-   },
-   "fio": {
-    "kind": "line",
-    "roomMm": 19.1,
-    "sizeMm": 1.9,
-    "minSizeMm": 1.8,
-    "comfort": 14,
-    "tight": 15,
-    "variable": true,
-    "fixedLen": null
-   },
-   "inn": {
-    "kind": "line",
-    "roomMm": 19.66,
-    "sizeMm": 1.8,
-    "minSizeMm": 1.8,
+    "roomMm": 17.64,
+    "sizeMm": 1.62,
+    "minSizeMm": 1.32,
     "comfort": 16,
-    "tight": 16,
-    "variable": false,
-    "fixedLen": 12
-   },
-   "city": {
-    "kind": "line",
-    "roomMm": 18.4,
-    "sizeMm": 1.8,
-    "minSizeMm": 1.8,
-    "comfort": 15,
-    "tight": 15,
+    "tight": 20,
     "variable": true,
     "fixedLen": null
+   },
+   "inn": {
+    "kind": "line",
+    "roomMm": 17.36,
+    "sizeMm": 1.28,
+    "minSizeMm": 1.08,
+    "comfort": 20,
+    "tight": 24,
+    "variable": false,
+    "fixedLen": 12
    }
   }
  },
  {
-  "id": "ip-gost-40",
-  "title": "Стандарт ГОСТ",
-  "file": "templates/ip-gost-40.svg",
+  "id": "ip-full-40",
+  "title": "Расширенный",
+  "file": "templates/ip-full-40.svg",
   "kinds": [
    "ip"
   ],
@@ -293,9 +189,9 @@
   "fields": {
    "label_ip": {
     "kind": "arc",
-    "roomMm": 66.45,
-    "sizeMm": 2.1,
-    "minSizeMm": 1.8,
+    "roomMm": 61.24,
+    "sizeMm": 2.03,
+    "minSizeMm": 1.7299999999999998,
     "comfort": 46,
     "tight": 54,
     "variable": false,
@@ -303,31 +199,135 @@
    },
    "city": {
     "kind": "arc",
-    "roomMm": 32.63,
-    "sizeMm": 1.9,
-    "minSizeMm": 1.8,
-    "comfort": 25,
-    "tight": 26,
+    "roomMm": 33.03,
+    "sizeMm": 1.49,
+    "minSizeMm": 1.29,
+    "comfort": 34,
+    "tight": 39,
     "variable": true,
     "fixedLen": null
    },
    "fio": {
     "kind": "line",
-    "roomMm": 19.66,
-    "sizeMm": 2.0,
-    "minSizeMm": 1.8,
-    "comfort": 14,
-    "tight": 16,
+    "roomMm": 14.65,
+    "sizeMm": 1.62,
+    "minSizeMm": 1.32,
+    "comfort": 13,
+    "tight": 17,
     "variable": true,
     "fixedLen": null
    },
    "inn": {
     "kind": "line",
-    "roomMm": 19.1,
-    "sizeMm": 1.8,
-    "minSizeMm": 1.8,
-    "comfort": 15,
-    "tight": 15,
+    "roomMm": 14.32,
+    "sizeMm": 1.28,
+    "minSizeMm": 1.08,
+    "comfort": 17,
+    "tight": 20,
+    "variable": false,
+    "fixedLen": 12
+   }
+  }
+ },
+ {
+  "id": "ip-ring-40",
+  "title": "С двойным кольцом",
+  "file": "templates/ip-ring-40.svg",
+  "kinds": [
+   "ip"
+  ],
+  "diameterMm": 40,
+  "font": "PT Sans",
+  "fields": {
+   "label_ip": {
+    "kind": "arc",
+    "roomMm": 61.24,
+    "sizeMm": 2.03,
+    "minSizeMm": 1.7299999999999998,
+    "comfort": 46,
+    "tight": 54,
+    "variable": false,
+    "fixedLen": null
+   },
+   "city": {
+    "kind": "arc",
+    "roomMm": 33.03,
+    "sizeMm": 1.49,
+    "minSizeMm": 1.29,
+    "comfort": 34,
+    "tight": 39,
+    "variable": true,
+    "fixedLen": null
+   },
+   "fio": {
+    "kind": "line",
+    "roomMm": 15.65,
+    "sizeMm": 1.62,
+    "minSizeMm": 1.32,
+    "comfort": 14,
+    "tight": 18,
+    "variable": true,
+    "fixedLen": null
+   },
+   "inn": {
+    "kind": "line",
+    "roomMm": 15.34,
+    "sizeMm": 1.28,
+    "minSizeMm": 1.08,
+    "comfort": 18,
+    "tight": 21,
+    "variable": false,
+    "fixedLen": 12
+   }
+  }
+ },
+ {
+  "id": "ip-std-40",
+  "title": "Стандарт ГОСТ",
+  "file": "templates/ip-std-40.svg",
+  "kinds": [
+   "ip"
+  ],
+  "diameterMm": 40,
+  "font": "PT Sans",
+  "fields": {
+   "label_ip": {
+    "kind": "arc",
+    "roomMm": 61.24,
+    "sizeMm": 2.03,
+    "minSizeMm": 1.7299999999999998,
+    "comfort": 46,
+    "tight": 54,
+    "variable": false,
+    "fixedLen": null
+   },
+   "city": {
+    "kind": "arc",
+    "roomMm": 33.03,
+    "sizeMm": 1.49,
+    "minSizeMm": 1.29,
+    "comfort": 34,
+    "tight": 39,
+    "variable": true,
+    "fixedLen": null
+   },
+   "fio": {
+    "kind": "line",
+    "roomMm": 15.65,
+    "sizeMm": 1.62,
+    "minSizeMm": 1.32,
+    "comfort": 14,
+    "tight": 18,
+    "variable": true,
+    "fixedLen": null
+   },
+   "inn": {
+    "kind": "line",
+    "roomMm": 15.34,
+    "sizeMm": 1.28,
+    "minSizeMm": 1.08,
+    "comfort": 18,
+    "tight": 21,
     "variable": false,
     "fixedLen": 12
    }
@@ -343,53 +343,11 @@
   "diameterMm": 40,
   "font": "PT Sans",
   "fields": {
-   "name_short": {
-    "kind": "arc",
-    "roomMm": 57.15,
-    "sizeMm": 2.1,
-    "minSizeMm": 1.8,
-    "comfort": 40,
-    "tight": 46,
-    "variable": true,
-    "fixedLen": null
-   },
-   "city": {
-    "kind": "arc",
-    "roomMm": 32.63,
-    "sizeMm": 1.9,
-    "minSizeMm": 1.8,
-    "comfort": 25,
-    "tight": 26,
-    "variable": true,
-    "fixedLen": null
-   },
-   "inn": {
-    "kind": "line",
-    "roomMm": 24.3,
-    "sizeMm": 2.4,
-    "minSizeMm": 1.8,
-    "comfort": 14,
-    "tight": 19,
-    "variable": false,
-    "fixedLen": 12
-   }
-  }
- },
- {
-  "id": "ooo-double-40",
-  "title": "С двойным кольцом",
-  "file": "templates/ooo-double-40.svg",
-  "kinds": [
-   "ooo"
-  ],
-  "diameterMm": 40,
-  "font": "PT Sans",
-  "fields": {
    "name": {
     "kind": "arc",
-    "roomMm": 66.45,
-    "sizeMm": 2.1,
-    "minSizeMm": 1.8,
+    "roomMm": 61.24,
+    "sizeMm": 2.03,
+    "minSizeMm": 1.7299999999999998,
     "comfort": 46,
     "tight": 54,
     "variable": true,
@@ -397,102 +355,40 @@
    },
    "city": {
     "kind": "arc",
-    "roomMm": 32.63,
-    "sizeMm": 1.9,
-    "minSizeMm": 1.8,
-    "comfort": 25,
-    "tight": 26,
+    "roomMm": 33.03,
+    "sizeMm": 1.49,
+    "minSizeMm": 1.29,
+    "comfort": 34,
+    "tight": 39,
     "variable": true,
     "fixedLen": null
    },
    "name_short": {
     "kind": "line",
-    "roomMm": 19.66,
-    "sizeMm": 2.0,
-    "minSizeMm": 1.8,
-    "comfort": 14,
-    "tight": 16,
-    "variable": true,
-    "fixedLen": null
-   },
-   "inn": {
-    "kind": "line",
-    "roomMm": 19.1,
-    "sizeMm": 1.8,
-    "minSizeMm": 1.8,
-    "comfort": 15,
-    "tight": 15,
-    "variable": false,
-    "fixedLen": 12
-   }
-  }
- },
- {
-  "id": "ooo-extended-40",
-  "title": "Расширенный",
-  "file": "templates/ooo-extended-40.svg",
-  "kinds": [
-   "ooo"
-  ],
-  "diameterMm": 40,
-  "font": "PT Sans",
-  "fields": {
-   "name": {
-    "kind": "arc",
-    "roomMm": 66.45,
-    "sizeMm": 2.1,
-    "minSizeMm": 1.8,
-    "comfort": 46,
-    "tight": 54,
-    "variable": true,
-    "fixedLen": null
-   },
-   "ogrn": {
-    "kind": "arc",
-    "roomMm": 32.63,
-    "sizeMm": 1.9,
-    "minSizeMm": 1.8,
-    "comfort": 25,
-    "tight": 26,
-    "variable": false,
-    "fixedLen": 15
-   },
-   "name_short": {
-    "kind": "line",
-    "roomMm": 19.1,
-    "sizeMm": 1.9,
-    "minSizeMm": 1.8,
-    "comfort": 14,
-    "tight": 15,
-    "variable": true,
-    "fixedLen": null
-   },
-   "inn": {
-    "kind": "line",
-    "roomMm": 19.66,
-    "sizeMm": 1.8,
-    "minSizeMm": 1.8,
+    "roomMm": 17.64,
+    "sizeMm": 1.62,
+    "minSizeMm": 1.32,
     "comfort": 16,
-    "tight": 16,
-    "variable": false,
-    "fixedLen": 12
-   },
-   "city": {
-    "kind": "line",
-    "roomMm": 18.4,
-    "sizeMm": 1.8,
-    "minSizeMm": 1.8,
-    "comfort": 15,
-    "tight": 15,
+    "tight": 20,
     "variable": true,
     "fixedLen": null
+   },
+   "inn": {
+    "kind": "line",
+    "roomMm": 17.36,
+    "sizeMm": 1.28,
+    "minSizeMm": 1.08,
+    "comfort": 20,
+    "tight": 24,
+    "variable": false,
+    "fixedLen": 12
    }
   }
  },
  {
-  "id": "ooo-gost-40",
-  "title": "Стандарт ГОСТ",
-  "file": "templates/ooo-gost-40.svg",
+  "id": "ooo-full-40",
+  "title": "Расширенный",
+  "file": "templates/ooo-full-40.svg",
   "kinds": [
    "ooo"
   ],
@@ -501,9 +397,9 @@
   "fields": {
    "name": {
     "kind": "arc",
-    "roomMm": 66.45,
-    "sizeMm": 2.1,
-    "minSizeMm": 1.8,
+    "roomMm": 61.24,
+    "sizeMm": 2.03,
+    "minSizeMm": 1.7299999999999998,
     "comfort": 46,
     "tight": 54,
     "variable": true,
@@ -511,31 +407,135 @@
    },
    "city": {
     "kind": "arc",
-    "roomMm": 32.63,
-    "sizeMm": 1.9,
-    "minSizeMm": 1.8,
-    "comfort": 25,
-    "tight": 26,
+    "roomMm": 33.03,
+    "sizeMm": 1.49,
+    "minSizeMm": 1.29,
+    "comfort": 34,
+    "tight": 39,
     "variable": true,
     "fixedLen": null
    },
    "name_short": {
     "kind": "line",
-    "roomMm": 19.66,
-    "sizeMm": 2.0,
-    "minSizeMm": 1.8,
-    "comfort": 14,
-    "tight": 16,
+    "roomMm": 14.65,
+    "sizeMm": 1.62,
+    "minSizeMm": 1.32,
+    "comfort": 13,
+    "tight": 17,
     "variable": true,
     "fixedLen": null
    },
    "inn": {
     "kind": "line",
-    "roomMm": 19.1,
-    "sizeMm": 1.8,
-    "minSizeMm": 1.8,
-    "comfort": 15,
-    "tight": 15,
+    "roomMm": 14.32,
+    "sizeMm": 1.28,
+    "minSizeMm": 1.08,
+    "comfort": 17,
+    "tight": 20,
+    "variable": false,
+    "fixedLen": 12
+   }
+  }
+ },
+ {
+  "id": "ooo-ring-40",
+  "title": "С двойным кольцом",
+  "file": "templates/ooo-ring-40.svg",
+  "kinds": [
+   "ooo"
+  ],
+  "diameterMm": 40,
+  "font": "PT Sans",
+  "fields": {
+   "name": {
+    "kind": "arc",
+    "roomMm": 61.24,
+    "sizeMm": 2.03,
+    "minSizeMm": 1.7299999999999998,
+    "comfort": 46,
+    "tight": 54,
+    "variable": true,
+    "fixedLen": null
+   },
+   "city": {
+    "kind": "arc",
+    "roomMm": 33.03,
+    "sizeMm": 1.49,
+    "minSizeMm": 1.29,
+    "comfort": 34,
+    "tight": 39,
+    "variable": true,
+    "fixedLen": null
+   },
+   "name_short": {
+    "kind": "line",
+    "roomMm": 15.65,
+    "sizeMm": 1.62,
+    "minSizeMm": 1.32,
+    "comfort": 14,
+    "tight": 18,
+    "variable": true,
+    "fixedLen": null
+   },
+   "inn": {
+    "kind": "line",
+    "roomMm": 15.34,
+    "sizeMm": 1.28,
+    "minSizeMm": 1.08,
+    "comfort": 18,
+    "tight": 21,
+    "variable": false,
+    "fixedLen": 12
+   }
+  }
+ },
+ {
+  "id": "ooo-std-40",
+  "title": "Стандарт ГОСТ",
+  "file": "templates/ooo-std-40.svg",
+  "kinds": [
+   "ooo"
+  ],
+  "diameterMm": 40,
+  "font": "PT Sans",
+  "fields": {
+   "name": {
+    "kind": "arc",
+    "roomMm": 61.24,
+    "sizeMm": 2.03,
+    "minSizeMm": 1.7299999999999998,
+    "comfort": 46,
+    "tight": 54,
+    "variable": true,
+    "fixedLen": null
+   },
+   "city": {
+    "kind": "arc",
+    "roomMm": 33.03,
+    "sizeMm": 1.49,
+    "minSizeMm": 1.29,
+    "comfort": 34,
+    "tight": 39,
+    "variable": true,
+    "fixedLen": null
+   },
+   "name_short": {
+    "kind": "line",
+    "roomMm": 15.65,
+    "sizeMm": 1.62,
+    "minSizeMm": 1.32,
+    "comfort": 14,
+    "tight": 18,
+    "variable": true,
+    "fixedLen": null
+   },
+   "inn": {
+    "kind": "line",
+    "roomMm": 15.34,
+    "sizeMm": 1.28,
+    "minSizeMm": 1.08,
+    "comfort": 18,
+    "tight": 21,
     "variable": false,
     "fixedLen": 12
    }
