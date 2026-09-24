@@ -9,6 +9,8 @@
   --color-divider: color-mix(in srgb, #191b26 13%, transparent);
   --color-accent: #2f4fce;
   --ink: #2a49c6;
+  --preview-dim: 0.42;
+  --preview-stripe: 3%;
   --color-accent-100: #1e2a74;
   --color-accent-300: #2f4fce;
   --color-accent-800: #dde3fb;
@@ -30,6 +32,8 @@
   --color-divider: color-mix(in srgb, #e9e9ed 16%, transparent);
   --color-accent: #5f78e6;
   --ink: #7a90f2;
+  --preview-dim: 0.66;
+  --preview-stripe: 2%;
   --color-accent-100: #eef1ff;
   --color-accent-300: #b9c4fb;
   --color-accent-800: #232a63;

@@ -117,7 +117,10 @@ export default function StampPreview({
         {markup ? (
           <svg
             viewBox={markup.box}
-            style={{ width: "min(300px, 92%)", height: "auto", color: "var(--ink)", opacity: filled ? 1 : 0.42 }}
+            style={{
+              width: "min(300px, 92%)", height: "auto", color: "var(--ink)",
+              opacity: filled ? 1 : "var(--preview-dim)" as unknown as number,
+            }}
             dangerouslySetInnerHTML={{ __html: markup.html }}
           />
         ) : (
@@ -161,6 +164,7 @@ export default function StampPreview({
               style={{
                 borderColor: v.tpl.id === chosen ? "var(--color-accent)" : "var(--color-divider)",
                 background: "var(--color-surface)",
+                opacity: filled ? 1 : ("var(--preview-dim)" as unknown as number),
               }}
             >
               <StampThumb file={v.tpl.file} values={v.values} />
