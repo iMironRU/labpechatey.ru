@@ -69,153 +69,159 @@ body {
 /* Кнопки — один в один из дизайн-системы хендоффа
    (_ds/nocturne-…/styles.css): primary у неё контурная, а не залитая;
    space-2 = 5.6px, space-3 * 1.2 = 10.08px, radius-md = 8px. */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  cursor: pointer; text-decoration: none;
-  font-family: var(--font-heading); font-weight: 600;
-  font-size: 14px; line-height: 1.2; color: var(--color-text);
-  background: transparent; border: 1px solid transparent;
-  padding: 5.6px 10.08px; border-radius: 8px;
-  transition: background .15s, border-color .15s, color .15s;
-}
-.btn:disabled { opacity: .45; cursor: not-allowed; }
-.btn-primary { color: var(--color-accent); border-color: var(--color-accent); }
-.btn-primary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
-.btn-primary:active:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }
-.btn-secondary { border-color: var(--color-divider); }
-.btn-secondary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
-.btn-secondary:active:not(:disabled) { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
-.btn-block { width: 100%; margin-top: 5.6px; }
-.btn-icon { width: 36px; height: 36px; padding: 0; }
-.btn-ghost { color: var(--color-accent); padding-inline: 2.8px; }
-.btn-ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
-.btn-ghost:active:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
-
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field > label { font-size: 12.5px; color: color-mix(in srgb, var(--color-text) 62%, transparent); }
-.input {
-  width: 100%; padding: 11px 12px; border-radius: 11px;
-  border: 1px solid var(--color-divider); background: var(--color-surface);
-  color: var(--color-text); font: inherit; font-size: 14px;
-}
-.input:focus { outline: 2px solid var(--color-accent); outline-offset: -1px; }
-.input:disabled { opacity: .45; }
-
-/* Селект: системный контрол выбивался из набора — тянулся во всю ширину
-   и рисовал собственную рамку. Свой стиль повторяет пилюли фильтров. */
-.select-wrap { position: relative; display: inline-flex; align-items: center; }
-.select-wrap > svg {
-  position: absolute; right: 10px; pointer-events: none;
-  color: color-mix(in srgb, var(--color-text) 45%, transparent);
-}
-.select {
-  appearance: none;
-  padding: 7px 30px 7px 13px;
-  font: inherit; font-size: 12.5px; line-height: 1.2;
-  color: var(--color-text);
-  background: var(--color-surface);
-  border: 1px solid var(--color-divider);
-  border-radius: 999px;
-  cursor: pointer;
-}
-.select:hover { border-color: var(--color-accent); }
-.select:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 1px; }
-
-:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
-
-/* Карточка-секция: базовый блок обоих экранов */
-.card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-divider);
-  border-radius: 16px;
-  box-shadow: var(--shadow-sm);
-  padding: clamp(16px, 2vw, 24px);
-}
-
-/* Двухколоночная сетка экранов. На узких — одна колонка:
-   minmax-сетка иначе режет текст по краю (грабли из брифа Апликон). */
-.two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr); gap: 16px; align-items: stretch; }
-/* дети сетки и флекса по умолчанию не сжимаются уже содержимого: лента
-   оснасток раздувала страницу до 694px на экране 375px */
-.two-col > * { min-width: 0; }
-@media (max-width: 860px) { .two-col { grid-template-columns: minmax(0, 1fr); } }
-
-/* Лейбл + значение в строку — тот же класс-страховка, что в Апликоне */
-.ap-2col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
-@media (max-width: 640px) { .ap-2col { grid-template-columns: 1fr !important; } }
-
-@keyframes spin { to { transform: rotate(360deg); } }
-.spinner {
-  width: 16px; height: 16px; border-radius: 999px;
-  border: 2px solid var(--color-divider); border-top-color: var(--color-accent);
-  animation: spin .7s linear infinite;
-}
-
-@keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-
-/* появление оттиска в герое — как в прототипе главной */
-@keyframes stampIn {
-  0% { opacity: 0; transform: scale(1.14) rotate(-3deg); }
-  55% { opacity: .5; }
-  100% { opacity: .9; transform: scale(1) rotate(-1.5deg); }
-}
-
-/* Снимки оснасток сняты на белом, поэтому подложка белая в обеих темах:
-   так фон фотографии совпадает с плашкой и предмет не висит в рамке.
-   Геометрия целиком здесь: утилиты Tailwind того же веса перебивались
-   правилами класса, и снимок вылезал за окно плитки. */
-.mount-photo { position: relative; display: block; overflow: hidden; border-radius: 10px; background: #fff; }
-.mount-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-.mount-photo--empty { display: grid; place-items: center;
-  color: color-mix(in srgb, var(--color-text) 28%, transparent);
-  background:
-    repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-text) 7%, transparent) 0 1px, transparent 1px 9px),
-    var(--color-surface);
-}
-/* карточка каталога: квадрат во всю ширину */
-.mount-photo--card { width: 100%; aspect-ratio: 1; }
-/* плитка конструктора: окно над полосой значков, на ховере раскрывается */
-.mount-photo--tile { position: absolute; inset: 0 0 30px; border-radius: 0; transition: inset .4s cubic-bezier(.2,.75,.2,1); }
-.group:hover .mount-photo--tile { inset: 0; }
-
-/* Нижние листы и панель итога — по макету «Конструктор — реквизиты (моб)»:
-   на ≤560px лента оснасток не помещается, поэтому выбор уезжает в лист. */
-@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-@keyframes sheetUp { from { transform: translateY(100%) } to { transform: none } }
-.sheet-backdrop { position: fixed; inset: 0; z-index: 65; background: rgba(10, 11, 18, .45); animation: fadeIn .2s ease; }
-.sheet {
-  position: fixed; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 390px; z-index: 70;
-  max-height: 88vh; overflow-y: auto;
-  background: var(--color-surface); border-top: 1px solid var(--color-divider);
-  border-radius: 20px 20px 0 0; box-shadow: var(--shadow-lg);
-  padding: 10px 16px calc(16px + env(safe-area-inset-bottom));
-  animation: sheetUp .28s cubic-bezier(.2, .8, .2, 1);
-}
-.sheet-handle {
-  width: 38px; height: 4px; border-radius: 999px; margin: 2px auto 14px;
-  background: color-mix(in srgb, var(--color-text) 18%, transparent);
-}
-.mcta { display: none; }
-@media (max-width: 560px) {
-  .mcta {
-    display: grid; position: fixed; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 390px; z-index: 60;
-    grid-template-columns: 1fr auto; align-items: center; gap: 12px;
-    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-    background: color-mix(in srgb, var(--color-bg) 94%, transparent);
-    backdrop-filter: blur(10px); border-top: 1px solid var(--color-divider);
+/* Примитивы дизайн-системы — в слое components, чтобы утилиты Tailwind
+   (они лежат в @layer utilities) могли их переопределять поштучно.
+   Без слоя правило класса выигрывало у text-[15px] и padding, и кнопки
+   выходили мельче макета. */
+@layer components {
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    cursor: pointer; text-decoration: none;
+    font-family: var(--font-heading); font-weight: 600;
+    font-size: 14px; line-height: 1.2; color: var(--color-text);
+    background: transparent; border: 1px solid transparent;
+    padding: 5.6px 10.08px; border-radius: 8px;
+    transition: background .15s, border-color .15s, color .15s;
   }
-}
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-primary { color: var(--color-accent); border-color: var(--color-accent); }
+  .btn-primary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
+  .btn-primary:active:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }
+  .btn-secondary { border-color: var(--color-divider); }
+  .btn-secondary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+  .btn-secondary:active:not(:disabled) { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+  .btn-block { width: 100%; margin-top: 5.6px; }
+  .btn-icon { width: 36px; height: 36px; padding: 0; }
+  .btn-ghost { color: var(--color-accent); padding-inline: 2.8px; }
+  .btn-ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+  .btn-ghost:active:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
 
-/* Логотип отрисован тёмной бирюзой (#004563) — на тёмном фоне он тонет,
-   поэтому в тёмной теме показываем его белым. */
-[data-theme="dark"] .dark-invert { filter: brightness(0) invert(1); }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field > label { font-size: 12.5px; color: color-mix(in srgb, var(--color-text) 62%, transparent); }
+  .input {
+    width: 100%; padding: 11px 12px; border-radius: 11px;
+    border: 1px solid var(--color-divider); background: var(--color-surface);
+    color: var(--color-text); font: inherit; font-size: 14px;
+  }
+  .input:focus { outline: 2px solid var(--color-accent); outline-offset: -1px; }
+  .input:disabled { opacity: .45; }
 
-/* Модальное окно по центру — для «Посмотреть все» в превью. */
-.modal {
-  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 70;
-  width: min(760px, 92vw); max-height: 86vh; overflow-y: auto;
-  background: var(--color-surface); border: 1px solid var(--color-divider);
-  border-radius: 16px; box-shadow: var(--shadow-lg); padding: 16px;
-  animation: fadeIn .2s ease;
+  /* Селект: системный контрол выбивался из набора — тянулся во всю ширину
+     и рисовал собственную рамку. Свой стиль повторяет пилюли фильтров. */
+  .select-wrap { position: relative; display: inline-flex; align-items: center; }
+  .select-wrap > svg {
+    position: absolute; right: 10px; pointer-events: none;
+    color: color-mix(in srgb, var(--color-text) 45%, transparent);
+  }
+  .select {
+    appearance: none;
+    padding: 7px 30px 7px 13px;
+    font: inherit; font-size: 12.5px; line-height: 1.2;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-divider);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .select:hover { border-color: var(--color-accent); }
+  .select:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 1px; }
+
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+  /* Карточка-секция: базовый блок обоих экранов */
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-divider);
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+    padding: clamp(16px, 2vw, 24px);
+  }
+
+  /* Двухколоночная сетка экранов. На узких — одна колонка:
+     minmax-сетка иначе режет текст по краю (грабли из брифа Апликон). */
+  .two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr); gap: 16px; align-items: stretch; }
+  /* дети сетки и флекса по умолчанию не сжимаются уже содержимого: лента
+     оснасток раздувала страницу до 694px на экране 375px */
+  .two-col > * { min-width: 0; }
+  @media (max-width: 860px) { .two-col { grid-template-columns: minmax(0, 1fr); } }
+
+  /* Лейбл + значение в строку — тот же класс-страховка, что в Апликоне */
+  .ap-2col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  @media (max-width: 640px) { .ap-2col { grid-template-columns: 1fr !important; } }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    width: 16px; height: 16px; border-radius: 999px;
+    border: 2px solid var(--color-divider); border-top-color: var(--color-accent);
+    animation: spin .7s linear infinite;
+  }
+
+  @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+  /* появление оттиска в герое — как в прототипе главной */
+  @keyframes stampIn {
+    0% { opacity: 0; transform: scale(1.14) rotate(-3deg); }
+    55% { opacity: .5; }
+    100% { opacity: .9; transform: scale(1) rotate(-1.5deg); }
+  }
+
+  /* Снимки оснасток сняты на белом, поэтому подложка белая в обеих темах:
+     так фон фотографии совпадает с плашкой и предмет не висит в рамке.
+     Геометрия целиком здесь: утилиты Tailwind того же веса перебивались
+     правилами класса, и снимок вылезал за окно плитки. */
+  .mount-photo { position: relative; display: block; overflow: hidden; border-radius: 10px; background: #fff; }
+  .mount-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  .mount-photo--empty { display: grid; place-items: center;
+    color: color-mix(in srgb, var(--color-text) 28%, transparent);
+    background:
+      repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-text) 7%, transparent) 0 1px, transparent 1px 9px),
+      var(--color-surface);
+  }
+  /* карточка каталога: квадрат во всю ширину */
+  .mount-photo--card { width: 100%; aspect-ratio: 1; }
+  /* плитка конструктора: окно над полосой значков, на ховере раскрывается */
+  .mount-photo--tile { position: absolute; inset: 0 0 30px; border-radius: 0; transition: inset .4s cubic-bezier(.2,.75,.2,1); }
+  .group:hover .mount-photo--tile { inset: 0; }
+
+  /* Нижние листы и панель итога — по макету «Конструктор — реквизиты (моб)»:
+     на ≤560px лента оснасток не помещается, поэтому выбор уезжает в лист. */
+  @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+  @keyframes sheetUp { from { transform: translateY(100%) } to { transform: none } }
+  .sheet-backdrop { position: fixed; inset: 0; z-index: 65; background: rgba(10, 11, 18, .45); animation: fadeIn .2s ease; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 390px; z-index: 70;
+    max-height: 88vh; overflow-y: auto;
+    background: var(--color-surface); border-top: 1px solid var(--color-divider);
+    border-radius: 20px 20px 0 0; box-shadow: var(--shadow-lg);
+    padding: 10px 16px calc(16px + env(safe-area-inset-bottom));
+    animation: sheetUp .28s cubic-bezier(.2, .8, .2, 1);
+  }
+  .sheet-handle {
+    width: 38px; height: 4px; border-radius: 999px; margin: 2px auto 14px;
+    background: color-mix(in srgb, var(--color-text) 18%, transparent);
+  }
+  .mcta { display: none; }
+  @media (max-width: 560px) {
+    .mcta {
+      display: grid; position: fixed; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 390px; z-index: 60;
+      grid-template-columns: 1fr auto; align-items: center; gap: 12px;
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+      background: color-mix(in srgb, var(--color-bg) 94%, transparent);
+      backdrop-filter: blur(10px); border-top: 1px solid var(--color-divider);
+    }
+  }
+
+  /* Логотип отрисован тёмной бирюзой (#004563) — на тёмном фоне он тонет,
+     поэтому в тёмной теме показываем его белым. */
+  [data-theme="dark"] .dark-invert { filter: brightness(0) invert(1); }
+
+  /* Модальное окно по центру — для «Посмотреть все» в превью. */
+  .modal {
+    position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 70;
+    width: min(760px, 92vw); max-height: 86vh; overflow-y: auto;
+    background: var(--color-surface); border: 1px solid var(--color-divider);
+    border-radius: 16px; box-shadow: var(--shadow-lg); padding: 16px;
+    animation: fadeIn .2s ease;
+  }
 }
