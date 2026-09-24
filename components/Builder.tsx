@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import KindSelector from "@/components/KindSelector";
 import Mounts from "@/components/Mounts";
 import StampPreview from "@/components/StampPreview";
-import SourceLine, { type SourceId } from "@/components/SourceLine";
 import SiteHeader from "@/components/SiteHeader";
 import HelpCard from "@/components/HelpCard";
 import { IconArrowLeft, IconArrowRight, IconCalendar, IconCheck, IconClock, IconCross } from "@/components/Icons";
@@ -16,7 +15,7 @@ import { useOrder } from "@/components/OrderState";
 export default function Builder() {
   const router = useRouter();
   const o = useOrder();
-  const { situation, sel, setSel, inn, setInn, reg, manual, setManual, org, setOrg, city, setCity, ogrn, setOgrn, urgency, setUrgency, mount, setMount, tpl, setTpl, index, variants, ownPicked, setOwnPicked, showSource, setShowSource, galleryToken, setGalleryToken, kindItem, ownLayout, sealKind, innCheck, ogrnCheck, editable, filled, values, diameter, mountItem, mountExtra, total, currentTemplate, money, onChoose, onVariants } = o;
+  const { situation, sel, setSel, inn, setInn, reg, manual, setManual, org, setOrg, city, setCity, ogrn, setOgrn, urgency, setUrgency, mount, setMount, tpl, setTpl, index, variants, ownPicked, setOwnPicked, kindItem, ownLayout, sealKind, innCheck, ogrnCheck, editable, filled, values, diameter, mountItem, mountExtra, total, currentTemplate, money, onChoose, onVariants } = o;
 
   return (
     <>
@@ -117,21 +116,8 @@ export default function Builder() {
       </section>
 
       {/* ——— реквизиты и превью ——— */}
-      <div className="two-col">
+      <div className="two-col two-col--preview">
         <div className="flex min-w-0 flex-col gap-3">
-        {/* в мобильном макете строки источника нет — там сразу реквизиты */}
-        <div className="max-[560px]:hidden">
-        <SourceLine
-          value={ownLayout ? "image" : "req"}
-          open={showSource}
-          onToggle={() => setShowSource((v) => !v)}
-          onPick={(id: SourceId) => {
-            setShowSource(false);
-            if (id === "gallery") { setOwnPicked(false); setGalleryToken((n) => n + 1); }
-            else setOwnPicked(id === "image");
-          }}
-        />
-        </div>
         <section className="panel">
           <h2 className="m-0 text-[17px] font-semibold">{texts.requisites.title}</h2>
           <p className="mb-4 mt-1 text-[13px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">
@@ -274,7 +260,6 @@ export default function Builder() {
             filled={filled}
             own={ownLayout}
             onOwn={setOwnPicked}
-            openGallery={galleryToken}
           />
           <Mounts diameterMm={diameter} value={mount} onChange={setMount} />
         </section>

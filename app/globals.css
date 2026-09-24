@@ -160,6 +160,8 @@ body {
   /* Двухколоночная сетка экранов. На узких — одна колонка:
      minmax-сетка иначе режет текст по краю (грабли из брифа Апликон). */
   .two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr); gap: 16px; align-items: stretch; }
+  /* на экране конструктора колонки другие: по замерам макета 480 и 684 */
+  .two-col--preview { grid-template-columns: minmax(0, 1fr) minmax(0, 1.425fr); }
   /* дети сетки и флекса по умолчанию не сжимаются уже содержимого: лента
      оснасток раздувала страницу до 694px на экране 375px */
   .two-col > * { min-width: 0; }

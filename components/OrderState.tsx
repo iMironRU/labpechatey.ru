@@ -34,8 +34,6 @@ function useOrderState() {
   const kindItem = catalog.kinds.find((k) => k.id === sel) ?? catalog.kinds[0];
   // «свой макет»: либо ситуация-копия, либо человек сам нажал загрузку
   const [ownPicked, setOwnPicked] = useState(false);
-  const [showSource, setShowSource] = useState(false);
-  const [galleryToken, setGalleryToken] = useState(0);
   const ownLayout = kindItem.copy || ownPicked;
   const sealKind: Kind = kindItem.ent === "ООО" ? "ooo" : "ip";
 
@@ -109,7 +107,7 @@ function useOrderState() {
   return {
     situation, sel, setSel, inn, setInn, reg, manual, setManual, org, setOrg, city, setCity,
     ogrn, setOgrn, urgency, setUrgency, mount, setMount, tpl, setTpl, index, variants,
-    ownPicked, setOwnPicked, showSource, setShowSource, galleryToken, setGalleryToken,
+    ownPicked, setOwnPicked,
     kindItem, ownLayout, sealKind, innCheck, ogrnCheck, editable, filled, values,
     diameter, mountItem, mountExtra, total, currentTemplate, money, onChoose, onVariants,
     pick, reset,

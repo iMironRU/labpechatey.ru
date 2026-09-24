@@ -16,8 +16,6 @@ type Props = {
   /** режим «свой макет» — вместо превью показываем загрузку файла */
   own: boolean;
   onOwn: (v: boolean) => void;
-  /** счётчик: меняется — открываем окно «все макеты» (из строки источника) */
-  openGallery?: number;
 };
 
 const cache = new Map<string, string>();
@@ -38,15 +36,11 @@ async function templateSvg(file: string) {
  * отрисовка. Иначе в ленте висят варианты с обрезанным текстом.
  */
 export default function StampPreview({
-  index, kind, values, chosen, onChoose, onVariants, filled, own, onOwn, openGallery = 0,
+  index, kind, values, chosen, onChoose, onVariants, filled, own, onOwn,
 }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [gallery, setGallery] = useState(false);
   const input = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (openGallery > 0) setGallery(true);
-  }, [openGallery]);
   const [usable, setUsable] = useState<Scored[]>([]);
   const [markup, setMarkup] = useState<{ html: string; box: string } | null>(null);
   const [notes, setNotes] = useState<string[]>([]);
