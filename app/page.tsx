@@ -6,6 +6,7 @@ import Mounts from "@/components/Mounts";
 import StampPreview from "@/components/StampPreview";
 import Checkout from "@/components/Checkout";
 import Home from "@/components/Home";
+import { IconArrowLeft, IconArrowRight, IconCalendar, IconClock, IconCross } from "@/components/Icons";
 import SiteHeader from "@/components/SiteHeader";
 import catalog from "@/content/catalog.json";
 import texts from "@/content/constructor.json";
@@ -16,14 +17,6 @@ import { forDiameter } from "@/lib/mounts";
 import { asset } from "@/lib/paths";
 
 // что понадобится принести — зависит от ситуации, с которой пришёл человек
-const BRING: Record<string, string> = {
-  ip: "лист записи ЕГРИП (или ОГРНИП) и паспорт",
-  ooo: "лист записи ЕГРЮЛ (или ОГРН) и паспорт руководителя",
-  doctor: "диплом или сертификат специалиста и паспорт",
-  lost: "старый оттиск или фото и документ на право",
-  stamp: "ничего — штамп изготавливаем без проверки прав",
-  fax: "образец подписи на белом листе",
-};
 
 export default function Page() {
   // состояние конструктора — см. design-ref/README.md, раздел State Management
@@ -151,22 +144,15 @@ export default function Page() {
               setInn(""); setOrg(""); setCity(""); setOgrn(""); setManual(false);
               setReg({ status: "idle" }); setTpl(null); setScreen("start");
             }}
-            className="text-[13px] text-[var(--color-accent)]"
+            className="inline-flex items-center gap-[6px] text-[13px] text-[var(--color-accent)]"
           >
-            {texts.breadcrumbRestart}
+            <IconArrowLeft />
+            {texts.breadcrumbRestart.replace(/^←\s*/, "")}
           </button>
           <span className="h-[14px] w-px bg-[var(--color-divider)]" />
           <span className="text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]">
             Печать · {kindItem.ent}
           </span>
-          {situation && (BRING as Record<string, string>)[situation] && (
-            <>
-              <span className="h-[14px] w-px bg-[var(--color-divider)] max-[560px]:hidden" />
-              <span className="min-w-0 truncate text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)] max-[560px]:hidden">
-                Понадобится: {(BRING as Record<string, string>)[situation]}
-              </span>
-            </>
-          )}
         </div>
 
         <div className="flex flex-wrap items-end justify-between gap-4">
@@ -182,13 +168,14 @@ export default function Page() {
                 type="button"
                 onClick={() => setUrgency(u)}
                 aria-pressed={urgency === u}
-                className="rounded-full px-[13px] py-[6px] text-[12.5px]"
+                className="inline-flex items-center gap-[6px] rounded-full px-[13px] py-[6px] text-[12.5px]"
                 style={
                   urgency === u
                     ? { background: "var(--color-surface)", boxShadow: "var(--shadow-sm)" }
                     : { color: "color-mix(in srgb, var(--color-text) 60%, transparent)" }
                 }
               >
+                {u === "rush" ? <IconClock /> : <IconCalendar />}
                 {u === "rush" ? texts.urgency.rush : texts.urgency.calm}
               </button>
             ))}
@@ -196,7 +183,7 @@ export default function Page() {
         </div>
 
         <div className="mt-[14px] flex flex-wrap items-end justify-between gap-4 border-t border-[var(--color-divider)] pt-4 max-[560px]:hidden">
-          <div className="flex flex-wrap gap-x-7 gap-y-3">
+          <div className="flex min-w-[220px] flex-1 flex-wrap gap-x-7 gap-y-[14px]">
             <PriceRow label={`${texts.price.stampRow} · ${currentTemplate?.tpl.title ?? "макет"}`} value={money(catalog.prices.stamp)} />
             <PriceRow
               label={`${texts.price.mountRow} · ${mountItem ? `${mountItem.brand} ${mountItem.model}` : "подберём"}`}
@@ -214,7 +201,7 @@ export default function Page() {
             )}
           </div>
 
-          <div className="flex items-center gap-4 max-[560px]:hidden">
+          <div className="flex items-center gap-[18px] max-[560px]:hidden">
             <div className="text-right">
               <div className="text-[11.5px] text-[color-mix(in_srgb,var(--color-text)_52%,transparent)]">
                 {texts.price.total}
@@ -230,7 +217,8 @@ export default function Page() {
               disabled={!filled}
               onClick={() => setScreen("checkout")}
             >
-              {texts.price.cta}
+              {texts.price.cta.replace(/\s*→$/, "")}
+              <IconArrowRight />
             </button>
           </div>
         </div>
@@ -408,27 +396,30 @@ function PriceRow({
   onClear?: () => void;
 }) {
   return (
-    <div className="flex items-center gap-2">
-      <div>
-        <div className="text-[11.5px] text-[color-mix(in_srgb,var(--color-text)_52%,transparent)]">{label}</div>
-        <div
+    <div className="flex flex-col gap-[3px]">
+      <span className="text-[11.5px] text-[color-mix(in_srgb,var(--color-text)_52%,transparent)]">{label}</span>
+      <span className="inline-flex items-center gap-[7px]">
+        <span
           className="text-[15px] font-semibold"
           style={muted ? { color: "color-mix(in srgb, var(--color-text) 55%, transparent)" } : undefined}
         >
           {value}
-        </div>
-      </div>
-      {onClear && (
-        <button
-          type="button"
-          aria-label="Убрать срочность"
-          onClick={onClear}
-          className="flex h-5 w-5 items-center justify-center rounded-full text-[11px]"
-          style={{ background: "color-mix(in srgb, var(--color-text) 9%, transparent)" }}
-        >
-          ✕
-        </button>
-      )}
+        </span>
+        {onClear && (
+          <button
+            type="button"
+            aria-label="Убрать срочность"
+            onClick={onClear}
+            className="grid h-5 w-5 flex-none place-items-center rounded-full"
+            style={{
+              background: "color-mix(in srgb, var(--color-text) 9%, transparent)",
+              color: "color-mix(in srgb, var(--color-text) 60%, transparent)",
+            }}
+          >
+            <IconCross />
+          </button>
+        )}
+      </span>
     </div>
   );
 }

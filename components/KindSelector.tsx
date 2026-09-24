@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import catalog from "@/content/catalog.json";
+import { IconChevronDown } from "@/components/Icons";
 
 type KindItem = (typeof catalog.kinds)[number];
 
@@ -109,7 +110,7 @@ export default function KindSelector({
           onClick={() => setOpen((v) => !v)}
           className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[8px] border border-[var(--color-divider)] text-[var(--color-accent)]"
         >
-          ⌄
+          <IconChevronDown />
         </button>
       </div>
 

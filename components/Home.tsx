@@ -3,6 +3,7 @@
 import home from "@/content/home.json";
 import HeroStamp from "@/components/HeroStamp";
 import MountsCatalog from "@/components/MountsCatalog";
+import { IconArrowRight } from "@/components/Icons";
 
 const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, transparent)`;
 
@@ -41,7 +42,8 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
             </p>
             <div className="mt-7 flex flex-wrap gap-3 max-[860px]:hidden">
               <button type="button" className="btn btn-primary px-[22px] py-3 text-[15px]" onClick={() => onPick("ip", "ip")}>
-                {home.hero.cta} →
+                {home.hero.cta}
+                <IconArrowRight />
               </button>
             </div>
           </div>
@@ -227,7 +229,8 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
             </p>
           </div>
           <button type="button" className="btn btn-primary px-[22px] py-3 text-[15px]" onClick={() => onPick("ip", "ip")}>
-            {home.final.cta} →
+            {home.final.cta}
+            <IconArrowRight />
           </button>
         </section>
       </div>
