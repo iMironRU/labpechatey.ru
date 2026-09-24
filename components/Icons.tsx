@@ -134,3 +134,10 @@ export const IconGrid = ({ size = 20, width = 1.7 }: Props) => (
     <rect x="14" y="14" width="7" height="7" rx="1" />
   </svg>
 );
+
+export const IconSearch = ({ size = 16, width = 1.8 }: Props) => (
+  <svg {...base(size, width)}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="M21 21l-4-4" />
+  </svg>
+);

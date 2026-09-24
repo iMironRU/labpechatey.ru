@@ -262,7 +262,7 @@ export default function Page() {
             else setOwnPicked(id === "image");
           }}
         />
-        <section className="card">
+        <section className="card" style={{ padding: "clamp(16px,2vw,22px)" }}>
           <h2 className="m-0 text-[17px] font-semibold">{texts.requisites.title}</h2>
           <p className="mb-4 mt-1 text-[13px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">
             {texts.requisites.hint}
@@ -306,7 +306,7 @@ export default function Page() {
               </div>
               <div className="mt-2 flex items-center gap-3">
                 <span className="text-[13px]">{texts.requisites.foundAsk}</span>
-                <button type="button" className="btn btn-ghost px-3 py-1.5 text-[13px]" onClick={() => setManual(true)}>
+                <button type="button" className="btn btn-ghost px-3 py-[7px] text-[13px]" onClick={() => setManual(true)}>
                   {texts.requisites.fixButton}
                 </button>
               </div>
@@ -383,6 +383,7 @@ export default function Page() {
         <section
           className="card"
           style={{
+            padding: "clamp(16px,2vw,22px)",
             background:
               "repeating-linear-gradient(45deg, color-mix(in srgb,var(--color-text) 3%,transparent) 0 1px, transparent 1px 13px), var(--color-surface)",
           }}

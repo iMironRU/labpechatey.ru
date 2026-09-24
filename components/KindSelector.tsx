@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import catalog from "@/content/catalog.json";
-import { IconChevronDown } from "@/components/Icons";
+import { IconChevronDown, IconSearch } from "@/components/Icons";
 
 type KindItem = (typeof catalog.kinds)[number];
 
@@ -45,13 +45,21 @@ export default function KindSelector({
 
   const panel = (
     <>
-      <input
-        className="input mb-2"
-        placeholder="Поиск: ИП, ООО, копия…"
-        value={query}
-        autoFocus
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      <div className="relative mb-2.5">
+        <span
+          className="pointer-events-none absolute left-[11px] top-1/2 -translate-y-1/2"
+          style={{ color: "color-mix(in srgb, var(--color-text) 45%, transparent)" }}
+        >
+          <IconSearch />
+        </span>
+        <input
+          className="input pl-[34px]"
+          placeholder="Поиск: ИП, ООО, копия…"
+          value={query}
+          autoFocus
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
       <div className="max-h-[320px] overflow-auto">
         {groups.map(({ ent, list }) =>
           list.length ? (
