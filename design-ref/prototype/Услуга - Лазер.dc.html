@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-157e783a-a620-454a-bd4d-d118bdfe4fed/styles.css">
+<script src="_ds/nocturne-157e783a-a620-454a-bd4d-d118bdfe4fed/_ds_bundle.js"></script>
+<style>
+:root{
+  --color-bg:#eef0f4; --color-surface:#fbfcfe; --color-text:#191b26;
+  --color-divider: color-mix(in srgb, #191b26 13%, transparent);
+  --color-accent:#2f4fce; --ink:#2a49c6;
+  --color-accent-100:#1e2a74; --color-accent-300:#2f4fce;
+  --color-accent-800:#dde3fb; --color-accent-900:#eef1ff;
+  --color-neutral-100:#2a2d3a; --color-neutral-700:#c7ccd8; --color-neutral-800:#e6e8f0;
+  --shadow-sm:0 0 0 1px rgba(25,27,38,.09);
+  --shadow-md:0 1px 2px rgba(25,27,38,.05), 0 8px 24px rgba(25,27,38,.09);
+}
+[data-theme="dark"]{
+  --color-bg:#161826; --color-surface:#232532; --color-text:#e9e9ed;
+  --color-divider: color-mix(in srgb, #e9e9ed 16%, transparent);
+  --color-accent:#5f78e6; --ink:#7a90f2;
+  --color-accent-100:#eef1ff; --color-accent-300:#b9c4fb;
+  --color-accent-800:#232a63; --color-accent-900:#191d45;
+  --color-neutral-100:#f3f5fe; --color-neutral-700:#595d6c; --color-neutral-800:#3f424d;
+  --shadow-sm:0 0 0 1px #3f424d;
+  --shadow-md:0 0 0 1px #4a4d5a, 0 6px 18px rgba(0,0,0,.5);
+}
+[data-accent="red"]{ --color-accent:#d4392e; --color-accent-300:#c23327; --color-accent-800:#f7ddda; --color-accent-900:#fdeeec; --color-accent-100:#7a1a12; --ink:#c23327; }
+[data-theme="dark"][data-accent="red"]{ --color-accent:#ef685b; --color-accent-300:#f19a90; --color-accent-800:#48201b; --color-accent-900:#301513; --color-accent-100:#ffe6e2; --ink:#f19a90; }
+a{ color:var(--color-accent); } a:hover{ color:var(--color-accent-300); }
+@media(max-width:860px){
+  [data-hero],[data-two]{ grid-template-columns:1fr !important; }
+  [data-navlinks],[data-hidemob]{ display:none !important; }
+}
+</style>
+</helmet>
+<div data-theme="{{ themeAttr }}" data-accent="{{ accentAttr }}" style="min-height:100%;background:radial-gradient(1150px 620px at 88% -160px, color-mix(in srgb, var(--color-accent) 13%, transparent), transparent 62%), var(--color-bg);color:var(--color-text);font-family:var(--font-body);">
+
+<header style="position:sticky;top:0;z-index:40;backdrop-filter:saturate(1.4) blur(10px);background:color-mix(in srgb, var(--color-bg) 82%, transparent);border-bottom:1px solid var(--color-divider);">
+  <div style="max-width:1200px;margin:0 auto;padding:12px clamp(18px,4vw,56px);display:flex;align-items:center;gap:22px;">
+    <a href="Главная.dc.html" style="display:flex;align-items:center;text-decoration:none;margin-right:auto;">
+      <img src="https://лабораторияпечатей.рф/img/logo_site.webp" alt="Лаборатория печатей" style="height:40px;width:auto;max-width:220px;object-fit:contain;">
+    </a>
+    <nav data-navlinks style="display:flex;align-items:center;gap:20px;">
+      <a href="Главная.dc.html#cat" style="color:inherit;text-decoration:none;font-size:14px;">Печати</a>
+      <a href="Главная.dc.html#cat" style="color:inherit;text-decoration:none;font-size:14px;">Штампы</a>
+      <a href="Главная.dc.html#tools" style="color:inherit;text-decoration:none;font-size:14px;">Оснастки</a>
+      <a href="Главная.dc.html#services" style="color:var(--color-accent);text-decoration:none;font-size:14px;">Услуги</a>
+      <a href="#footer" style="color:inherit;text-decoration:none;font-size:14px;">Контакты</a>
+    </nav>
+    <a href="tel:{{ phoneHref }}" style="font-family:var(--font-heading);font-weight:600;font-size:14.5px;color:inherit;text-decoration:none;white-space:nowrap;">{{ phoneText }}</a>
+    <button type="button" onClick="{{ toggleTheme }}" aria-label="Сменить тему" style="width:34px;height:34px;flex:none;border:1px solid var(--color-divider);border-radius:8px;display:grid;place-items:center;color:inherit;background:transparent;cursor:pointer;">
+      <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"></path></svg>
+      </sc-if>
+      <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 14.5A8 8 0 019.5 4 7.5 7.5 0 1020 14.5z"></path></svg>
+      </sc-if>
+    </button>
+  </div>
+</header>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 clamp(18px,4vw,56px);">
+
+  <div style="display:flex;gap:8px;overflow-x:auto;padding:18px 0 0;">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+      <button type="button" onClick="{{ t.go }}" style="flex:none;display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }};font:inherit;font-size:13.5px;cursor:pointer;white-space:nowrap;transition:border-color .15s;" style-hover="border-color:var(--color-accent);">
+        <span style="display:flex;width:16px;height:16px;">{{ t.icon }}</span>{{ t.title }}
+      </button>
+    </sc-for>
+  </div>
+
+  <section data-hero style="display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,4vw,64px);align-items:center;padding:clamp(34px,5vw,64px) 0 clamp(30px,4vw,52px);">
+    <div>
+      <span style="display:inline-flex;align-items:center;gap:9px;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-300);margin-bottom:18px;">
+        <span style="width:26px;height:1px;background:currentColor;"></span>{{ s.eyebrow }}
+      </span>
+      <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(32px,4.4vw,52px);line-height:1.06;letter-spacing:-.02em;margin:0;text-wrap:balance;">{{ s.h1 }}</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:48ch;margin:20px 0 0;color:color-mix(in srgb,var(--color-text) 78%, transparent);text-wrap:pretty;">{{ s.lead }}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:28px;margin-top:26px;">
+        <sc-for list="{{ s.facts }}" as="f" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <span style="font-family:var(--font-heading);font-weight:600;font-size:20px;">{{ f.v }}</span>
+            <span style="font-size:12.5px;color:color-mix(in srgb,var(--color-text) 62%, transparent);">{{ f.l }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;">
+        <a href="#order" class="btn btn-primary" style="font-size:15px;padding:12px 22px;">{{ s.cta }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h13M13 6l6 6-6 6"></path></svg></a>
+        <a href="#prices" class="btn btn-secondary" style="font-size:15px;padding:12px 22px;">Цены</a>
+      </div>
+    </div>
+    <div data-hidemob style="aspect-ratio:5/4;border-radius:16px;border:1px dashed var(--color-divider);background:color-mix(in srgb,var(--color-surface) 70%, transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:color-mix(in srgb,var(--color-text) 50%, transparent);">
+      <span style="display:flex;width:34px;height:34px;color:var(--ink);opacity:.7;">{{ s.iconBig }}</span>
+      <span style="font-size:13px;">{{ s.photo }}</span>
+    </div>
+  </section>
+
+  <section id="prices" style="scroll-margin-top:80px;">
+    <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(22px,2.6vw,30px);letter-spacing:-.015em;margin:0 0 6px;">Что можно заказать</h2>
+    <p style="font-size:15px;color:color-mix(in srgb,var(--color-text) 66%, transparent);margin:0 0 20px;">{{ s.pricesNote }}</p>
+    <div style="border-radius:14px;background:var(--color-surface);box-shadow:var(--shadow-sm);overflow:hidden;">
+      <sc-for list="{{ s.options }}" as="o" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px 24px;align-items:center;padding:16px 22px;border-top:{{ o.rule }};">
+          <div style="display:flex;flex-direction:column;gap:3px;min-width:0;">
+            <span style="font-family:var(--font-heading);font-weight:600;font-size:15.5px;">{{ o.t }}</span>
+            <span style="font-size:13px;line-height:1.45;color:color-mix(in srgb,var(--color-text) 64%, transparent);">{{ o.d }}</span>
+          </div>
+          <span data-hidemob style="font-size:13px;color:color-mix(in srgb,var(--color-text) 60%, transparent);white-space:nowrap;">{{ o.term }}</span>
+          <span style="font-family:var(--font-heading);font-weight:600;font-size:16px;white-space:nowrap;text-align:right;">{{ o.p }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="margin-top:clamp(40px,5vw,64px);border-radius:16px;background:var(--color-surface);box-shadow:var(--shadow-sm);padding:clamp(22px,3vw,32px) clamp(24px,3vw,38px);">
+    <span style="font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-300);">Как работаем</span>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:16px;margin-top:18px;">
+      <sc-for list="{{ s.steps }}" as="st" hint-placeholder-count="4">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-family:var(--font-heading);font-weight:600;font-size:14px;color:var(--ink);border:1px solid var(--ink);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none;">{{ st.n }}</span>
+          <div style="display:flex;flex-direction:column;gap:3px;">
+            <span style="font-family:var(--font-heading);font-weight:600;font-size:14.5px;">{{ st.t }}</span>
+            <span style="font-size:12.5px;line-height:1.45;color:color-mix(in srgb,var(--color-text) 65%, transparent);">{{ st.d }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-two style="margin-top:clamp(40px,5vw,64px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);align-items:start;">
+    <div>
+      <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(20px,2.3vw,26px);letter-spacing:-.01em;margin:0 0 16px;">{{ s.needTitle }}</h2>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <sc-for list="{{ s.need }}" as="n" hint-placeholder-count="3">
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.5;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.8" style="flex:none;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+            <span>{{ n }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ s.hasChips }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;">
+          <sc-for list="{{ s.chips }}" as="c" hint-placeholder-count="5">
+            <span style="padding:5px 11px;border-radius:999px;border:1px solid var(--color-divider);font-size:13px;">{{ c }}</span>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+    <div>
+      <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(20px,2.3vw,26px);letter-spacing:-.01em;margin:0 0 10px;">Частые вопросы</h2>
+      <sc-for list="{{ faq }}" as="q" hint-placeholder-count="3">
+        <div style="border-bottom:1px solid var(--color-divider);">
+          <button type="button" onClick="{{ q.toggle }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;background:transparent;border:0;color:inherit;font:inherit;font-family:var(--font-heading);font-weight:600;font-size:15px;text-align:left;cursor:pointer;">
+            {{ q.q }}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex:none;transition:transform .2s;transform:{{ q.rot }};"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+          <sc-if value="{{ q.open }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 74%, transparent);text-wrap:pretty;">{{ q.a }}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="order" style="scroll-margin-top:80px;margin-top:clamp(40px,5vw,64px);border-radius:18px;background:linear-gradient(180deg, color-mix(in srgb,var(--ink) 10%, var(--color-surface)), var(--color-surface));box-shadow:var(--shadow-sm);padding:clamp(26px,4vw,44px);">
+    <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+      <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(22px,2.8vw,32px);letter-spacing:-.015em;margin:0 0 8px;">{{ s.formTitle }}</h2>
+      <p style="font-size:15px;color:color-mix(in srgb,var(--color-text) 70%, transparent);margin:0 0 22px;max-width:56ch;">Перезвоним в течение 15 минут в рабочее время, уточним детали и назовём точную цену.</p>
+      <form onSubmit="{{ submit }}" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px;align-items:end;">
+        <label class="field" style="margin:0;"><span>Имя</span><input class="input" value="{{ name }}" onChange="{{ onName }}" placeholder="Как к вам обращаться"></label>
+        <label class="field" style="margin:0;"><span>Телефон</span><input class="input" type="tel" value="{{ tel }}" onChange="{{ onTel }}" placeholder="+7 (___) ___-__-__"></label>
+        <label style="display:flex;align-items:center;gap:10px;height:40px;padding:0 14px;border:1px dashed var(--color-divider);border-radius:8px;cursor:pointer;font-size:13.5px;color:color-mix(in srgb,var(--color-text) 72%, transparent);overflow:hidden;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="flex:none;"><path d="M21 12.5l-8.5 8.5a5 5 0 01-7-7L14 5.5a3.3 3.3 0 014.7 4.7L10.2 18.7a1.7 1.7 0 01-2.4-2.4L15.5 8.6"></path></svg>
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ fileLabel }}</span>
+          <input type="file" onChange="{{ onFile }}" style="display:none;">
+        </label>
+        <button type="submit" class="btn btn-primary" style="height:40px;font-size:14.5px;">Отправить заявку</button>
+      </form>
+      <p style="font-size:12px;color:color-mix(in srgb,var(--color-text) 55%, transparent);margin:14px 0 0;">Нажимая «Отправить», вы соглашаетесь с <a href="#">политикой конфиденциальности</a>.</p>
+    </sc-if>
+    <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:16px;align-items:flex-start;">
+        <span style="width:42px;height:42px;border-radius:50%;border:1px solid var(--ink);color:var(--ink);display:grid;place-items:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+        <div>
+          <h2 style="font-family:var(--font-heading);font-weight:600;font-size:24px;margin:0 0 6px;">Заявка принята</h2>
+          <p style="font-size:15px;margin:0;color:color-mix(in srgb,var(--color-text) 72%, transparent);">Перезвоним на {{ tel }} в течение 15 минут. <a href="#order" onClick="{{ reset }}">Отправить ещё одну</a></p>
+        </div>
+      </div>
+    </sc-if>
+  </section>
+
+  <section style="margin-top:clamp(40px,5vw,64px);">
+    <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(20px,2.3vw,26px);letter-spacing:-.01em;margin:0 0 16px;">Другие услуги</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:12px;">
+      <sc-for list="{{ others }}" as="o" hint-placeholder-count="4">
+        <button type="button" onClick="{{ o.go }}" style="text-align:left;font:inherit;color:inherit;background:transparent;border:1px solid var(--color-divider);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:border-color .15s;" style-hover="border-color:var(--color-accent);">
+          <span style="display:flex;width:22px;height:22px;color:var(--ink);">{{ o.icon }}</span>
+          <span style="font-family:var(--font-heading);font-weight:600;font-size:15.5px;">{{ o.title }}</span>
+          <span style="font-size:12.5px;line-height:1.45;color:color-mix(in srgb,var(--color-text) 66%, transparent);">{{ o.desc }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </section>
+</div>
+
+<footer id="footer" style="margin-top:clamp(46px,6vw,72px);border-top:1px solid var(--color-divider);background:color-mix(in srgb,var(--color-text) 3%, var(--color-bg));">
+  <div style="max-width:1200px;margin:0 auto;padding:24px clamp(18px,4vw,56px);display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:center;font-size:13px;color:color-mix(in srgb,var(--color-text) 60%, transparent);">
+    <span>© 2010–2026 Лаборатория печатей · Оренбург · 13 пунктов выдачи</span>
+    <a href="tel:{{ phoneHref }}" style="font-family:var(--font-heading);font-weight:600;font-size:16px;color:var(--color-text);text-decoration:none;">{{ phoneText }}</a>
+  </div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440&quot;,&quot;height&quot;:&quot;2600&quot;},&quot;service&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;fax&quot;,&quot;ecp&quot;,&quot;print&quot;,&quot;vector&quot;,&quot;laser&quot;],&quot;default&quot;:&quot;fax&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;label&quot;:&quot;Услуга&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;blue&quot;,&quot;red&quot;],&quot;default&quot;:&quot;blue&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Бренд&quot;,&quot;label&quot;:&quot;Акцент&quot;},&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Бренд&quot;,&quot;label&quot;:&quot;Тема по умолчанию&quot;},&quot;phone&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;+7 (3532) 60-60-60&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Контакты&quot;,&quot;label&quot;:&quot;Телефон&quot;}}">
+class Component extends DCLogic {
+  state = { theme: null, svc: null, faq: 0, name: '', tel: '', file: '', sent: false };
+
+  componentDidMount(){
+    const q = new URLSearchParams(location.search).get('s');
+    if (q && this.data()[q]) this.setState({ svc: q });
+  }
+  go(k){ const F = {fax:'Факсимиле',ecp:'Электронная подпись',print:'Полиграфия',vector:'Отрисовка по фото',laser:'Лазер'}; return () => { location.href = encodeURI('Услуга - ' + F[k] + '.dc.html'); }; }
+
+  data(){
+    return {
+      fax: {
+        title:'Факсимиле', desc:'Подпись-клише по вашему образцу.', icon:'M4 18c4-1 5-9 8-9s2 6 4 6 2-3 4-3',
+        eyebrow:'Факсимиле · подпись-клише', h1:'Факсимиле по вашей подписи за 1 час',
+        lead:'Пришлите фото подписи на белом листе — отрисуем её в вектор, согласуем макет и изготовим клише на лазере.',
+        facts:[{v:'от 690 ₽',l:'с оснасткой'},{v:'от 1 часа',l:'изготовление'},{v:'10 лет',l:'гарантия'}],
+        cta:'Заказать факсимиле', photo:'Фото: оттиски факсимиле',
+        pricesNote:'Цена включает отрисовку подписи и один круг правок.',
+        options:[
+          {t:'Факсимиле в автоматической оснастке',d:'Trodat 4912, оттиск до 47×18 мм',term:'1 час',p:'890 ₽'},
+          {t:'Карманное факсимиле',d:'Colop Pocket Stamp с защитной крышкой',term:'1 час',p:'990 ₽'},
+          {t:'Клише в вашу оснастку',d:'Заменим резину в имеющемся корпусе',term:'1 час',p:'690 ₽'},
+          {t:'Комплект: печать ИП + факсимиле',d:'Две оснастки, общий макет',term:'2 часа',p:'1 390 ₽'},
+        ],
+        steps:[{n:'1',t:'Фото подписи',d:'Отправьте в форме или в Telegram.'},{n:'2',t:'Отрисовка',d:'Переведём в вектор без потери штрихов.'},{n:'3',t:'Согласование',d:'Пришлём макет на утверждение.'},{n:'4',t:'Изготовление',d:'Лазер 1000 dpi, выдача в ПВЗ.'}],
+        needTitle:'Как сфотографировать подпись',
+        need:['Распишитесь чёрной ручкой на белом листе без клеток','Снимайте сверху при дневном свете, без тени и бликов','Можно прислать скан 300 dpi или 3–4 варианта подписи на выбор'],
+        faq:[
+          {q:'Факсимиле имеет юридическую силу?',a:'Да, если использование факсимиле предусмотрено договором или соглашением сторон (ст. 160 ГК РФ). Для кадровых и налоговых документов его применять нельзя.'},
+          {q:'Нужна ли доверенность, если заказывает не владелец подписи?',a:'Нет. Достаточно фото подписи. В пункте выдачи попросим назвать номер заказа.'},
+          {q:'Сколько служит клише?',a:'Резина рассчитана на 50–100 тысяч оттисков. Если оттиск станет нечётким раньше, переделаем по гарантии.'},
+        ],
+        formTitle:'Отправьте фото подписи', fileHint:'Прикрепить фото подписи',
+      },
+      ecp: {
+        title:'Электронная подпись', desc:'Выпуск и настройка ЭП для отчётности.', icon:['M12 3v10','M8 9l4 4 4-4','M5 19h14'],
+        eyebrow:'КЭП · токены · настройка', h1:'Электронная подпись для ИП и организаций',
+        lead:'Поможем получить КЭП в ФНС или аккредитованном УЦ, запишем на токен и настроим компьютер для отчётности, ЭДО и госзакупок.',
+        facts:[{v:'1 день',l:'от заявки до работы'},{v:'ФНС и УЦ',l:'сопровождаем выпуск'},{v:'на месте',l:'или удалённо'}],
+        cta:'Оставить заявку', photo:'Фото: токены Рутокен',
+        pricesNote:'КЭП руководителя и ИП выпускает ФНС бесплатно — мы берём только за токен и настройку.',
+        options:[
+          {t:'Токен Рутокен ЭЦП 3.0',d:'Сертифицирован ФСТЭК, подходит для ФНС',term:'сразу',p:'1 900 ₽'},
+          {t:'Настройка рабочего места',d:'КриптоПро, плагины, проверка подписи на сайтах',term:'1 час',p:'1 500 ₽'},
+          {t:'Подпись сотрудника + МЧД',d:'Выпуск в УЦ и оформление машиночитаемой доверенности',term:'1–2 дня',p:'от 2 500 ₽'},
+          {t:'Выезд специалиста',d:'В пределах Оренбурга',term:'в день заявки',p:'1 000 ₽'},
+        ],
+        steps:[{n:'1',t:'Заявка',d:'Уточним, для чего нужна подпись.'},{n:'2',t:'Документы',d:'Проверим паспорт, СНИЛС и ИНН.'},{n:'3',t:'Выпуск',d:'Запишем на приём в ФНС или УЦ.'},{n:'4',t:'Настройка',d:'Установим ПО и проверим подпись.'}],
+        needTitle:'Какие документы нужны',
+        need:['Паспорт владельца подписи','СНИЛС и ИНН физического лица','Для сотрудника — реквизиты организации и данные для МЧД'],
+        faq:[
+          {q:'Где получить подпись директора бесплатно?',a:'В налоговой инспекции или у доверенного лица ФНС. Мы подготовим токен и запишем на удобное время.'},
+          {q:'Подойдёт ли мой старый токен?',a:'Если он сертифицирован ФСТЭК или ФСБ и не поврежден — да. Проверим бесплатно.'},
+          {q:'Настраиваете удалённо?',a:'Да, через AnyDesk или RuDesktop. Стоимость та же, выезд не нужен.'},
+        ],
+        formTitle:'Заявка на электронную подпись', fileHint:'Прикрепить документы (необязательно)',
+      },
+      print: {
+        title:'Оперативная полиграфия', desc:'Визитки, бланки, печати за день.', icon:['M6 9V4h12v5','M6 18H4v-6h16v6h-2','M8 14h8v6H8z'],
+        eyebrow:'Цифровая печать · за день', h1:'Визитки, бланки и листовки за один день',
+        lead:'Печатаем небольшие тиражи на цифровой машине. Пришлите готовый макет или закажите дизайн — сделаем в фирменном стиле вашей печати.',
+        facts:[{v:'от 1 дня',l:'срок печати'},{v:'от 50 шт',l:'минимальный тираж'},{v:'от 500 ₽',l:'макет'}],
+        cta:'Рассчитать тираж', photo:'Фото: визитки и бланки',
+        pricesNote:'Цены за тираж без учёта дизайна. Точную стоимость назовём по макету.',
+        options:[
+          {t:'Визитки, 100 шт',d:'4+4, мелованный картон 300 г/м²',term:'1 день',p:'от 590 ₽'},
+          {t:'Фирменные бланки А4, 100 шт',d:'4+0, офисная бумага 80 г/м²',term:'1 день',p:'от 450 ₽'},
+          {t:'Листовки А5, 500 шт',d:'4+4, мелованная бумага 130 г/м²',term:'2 дня',p:'от 2 400 ₽'},
+          {t:'Наклейки и этикетки, лист А4',d:'Плоттерная резка по контуру',term:'1 день',p:'от 190 ₽'},
+        ],
+        steps:[{n:'1',t:'Макет',d:'Ваш файл или наш дизайн.'},{n:'2',t:'Проверка',d:'Проверим вылеты, цвета и шрифты.'},{n:'3',t:'Печать',d:'Цифровая печать и резка.'},{n:'4',t:'Выдача',d:'В любом из 13 пунктов.'}],
+        needTitle:'Требования к макету',
+        need:['PDF, CDR или AI, шрифты в кривых','Разрешение изображений не ниже 300 dpi, цвет CMYK','Вылеты 2 мм с каждой стороны, важный текст не ближе 3 мм к краю'],
+        faq:[
+          {q:'Можно без макета?',a:'Да. Дизайнер сделает визитку или бланк за 1 день, стоимость от 500 ₽.'},
+          {q:'Печатаете срочно?',a:'Визитки и бланки — в течение 3 часов при заказе до 14:00, доплата 30%.'},
+          {q:'Можно на своей бумаге?',a:'Да, если плотность до 350 г/м² и формат не больше SRA3.'},
+        ],
+        formTitle:'Рассчитать стоимость тиража', fileHint:'Прикрепить макет',
+      },
+      vector: {
+        title:'Отрисовка по фото', desc:'Векторизуем логотип или старый оттиск.', icon:['M4 16l5-5 4 4 3-3 4 4','M4 5h16v14H4z'],
+        eyebrow:'Векторизация · восстановление', h1:'Отрисуем логотип или оттиск по фотографии',
+        lead:'Восстановим печать по старому оттиску, переведём логотип из картинки в вектор. Файл пригоден для печати, гравировки и изготовления клише.',
+        facts:[{v:'от 250 ₽',l:'стоимость'},{v:'от 30 минут',l:'срок'},{v:'SVG · PDF · CDR',l:'форматы'}],
+        cta:'Отправить фото', photo:'Фото: оттиск до и после',
+        pricesNote:'Сложность оцениваем по фото. Итоговую цену сообщим до начала работы.',
+        options:[
+          {t:'Восстановление оттиска печати',d:'По фото или скану старого оттиска',term:'1 час',p:'350 ₽'},
+          {t:'Подпись для факсимиле',d:'Чистка и векторизация подписи',term:'30 минут',p:'250 ₽'},
+          {t:'Векторизация логотипа',d:'Точная отрисовка контуров и цветов',term:'1 день',p:'от 500 ₽'},
+          {t:'Срочно',d:'Работа вне очереди',term:'30 минут',p:'+200 ₽'},
+        ],
+        steps:[{n:'1',t:'Фото',d:'Пришлите снимок или скан.'},{n:'2',t:'Оценка',d:'Назовём цену и срок.'},{n:'3',t:'Отрисовка',d:'Покажем результат на согласование.'},{n:'4',t:'Файлы',d:'Отправим в нужных форматах.'}],
+        needTitle:'Как подготовить фото',
+        need:['Снимайте оттиск целиком, сверху, без перспективы','Дневной свет, без бликов и теней от телефона','Если есть несколько оттисков — пришлите все, соберём лучший вариант'],
+        faq:[
+          {q:'Можно восстановить печать без оттиска?',a:'Нужно хотя бы фото документа с печатью. Если оттиска нет совсем — соберём новую печать по реквизитам.'},
+          {q:'Отдаёте исходники?',a:'Да, файлы в SVG, PDF и CDR остаются у вас без дополнительной оплаты.'},
+          {q:'Если оттиск плохо читается?',a:'Восстановим по реквизитам из ЕГРЮЛ и сохраним исходное расположение элементов.'},
+        ],
+        formTitle:'Отправьте фото на оценку', fileHint:'Прикрепить фото или скан',
+      },
+      laser: {
+        title:'Лазерная резка и гравировка', desc:'По металлу, дереву, акрилу.', icon:['M12 2v7','M12 15v7','M2 12h7','M15 12h7'],
+        eyebrow:'Лазер · CO₂ и волоконный', h1:'Лазерная резка и гравировка',
+        lead:'Таблички, шильды, жетоны и сувениры на собственном оборудовании. Режем фанеру и акрил, гравируем по металлу, дереву, коже и стеклу.',
+        facts:[{v:'600×400 мм',l:'рабочее поле'},{v:'от 1 шт',l:'тираж'},{v:'от 300 ₽',l:'стоимость'}],
+        cta:'Рассчитать заказ', photo:'Фото: таблички и гравировка',
+        pricesNote:'Цена зависит от материала, площади и сложности. Рассчитаем по макету или эскизу.',
+        options:[
+          {t:'Таблички на дверь и фасад',d:'Акрил, композит, нержавеющая сталь',term:'1–2 дня',p:'от 690 ₽'},
+          {t:'Шильды и жетоны',d:'Гравировка на металле с серийными номерами',term:'1 день',p:'от 300 ₽'},
+          {t:'Гравировка на подарках',d:'Ручки, ежедневники, зажигалки, бокалы',term:'1 час',p:'от 400 ₽'},
+          {t:'Резка листовых материалов',d:'Фанера до 6 мм, акрил до 8 мм',term:'от 1 дня',p:'от 25 ₽/мин'},
+        ],
+        steps:[{n:'1',t:'Задача',d:'Эскиз, макет или образец.'},{n:'2',t:'Расчёт',d:'Подберём материал и назовём цену.'},{n:'3',t:'Макет',d:'Подготовим файл для лазера.'},{n:'4',t:'Производство',d:'Резка, гравировка, выдача.'}],
+        needTitle:'С чем работаем',
+        need:['Векторный макет в DXF, SVG, CDR или AI — или отрисуем сами','Можно принести свой предмет для гравировки','Серийная нумерация и QR-коды — без доплаты за переналадку'],
+        chips:['Нержавеющая сталь','Латунь','Анодированный алюминий','Фанера','Дерево','Акрил','Кожа','Стекло'],
+        faq:[
+          {q:'Гравируете на моём предмете?',a:'Да. Принесите предмет в любой пункт выдачи, заберём его в мастерскую и вернём с гравировкой.'},
+          {q:'Какой минимальный тираж?',a:'От одной штуки. На тираж от 50 штук скидка до 30%.'},
+          {q:'Гравировка стирается?',a:'Нет. Лазер меняет структуру поверхности, изображение не стирается при обычном использовании.'},
+        ],
+        formTitle:'Рассчитать стоимость', fileHint:'Прикрепить макет или эскиз',
+      },
+    };
+  }
+
+  renderVals(){
+    const st = this.state;
+    const R = React.createElement;
+    const ic = (d, size) => R('svg', { width:size||'100%', height:size||'100%', viewBox:'0 0 24 24', fill:'none', stroke:'currentColor', strokeWidth:1.5, strokeLinecap:'round', strokeLinejoin:'round' }, ...[].concat(d).map((p,i)=>R('path',{ key:i, d:p })));
+    const D = this.data();
+    const key = 'laser';
+    const cur = D[key];
+    const theme = st.theme != null ? st.theme : (this.props.defaultTheme === 'dark' ? 'dark' : 'light');
+    const dark = theme === 'dark';
+    const phoneText = this.props.phone || '+7 (3532) 60-60-60';
+    const keys = Object.keys(D);
+    return {
+      themeAttr: dark ? 'dark' : null,
+      accentAttr: this.props.accent === 'red' ? 'red' : null,
+      isDark: dark, isLight: !dark,
+      toggleTheme: () => this.setState({ theme: dark ? 'light' : 'dark' }),
+      phoneText, phoneHref: '+' + phoneText.replace(/[^0-9]/g,''),
+      tabs: keys.map(k => ({ title: D[k].title, icon: ic(D[k].icon), go: this.go(k),
+        border: k===key ? 'var(--color-accent)' : 'var(--color-divider)',
+        bg: k===key ? 'var(--color-accent-900)' : 'transparent',
+        color: k===key ? 'var(--color-accent-100)' : 'inherit' })),
+      s: Object.assign({}, cur, {
+        iconBig: ic(cur.icon),
+        hasChips: !!cur.chips, chips: cur.chips || [],
+        options: cur.options.map((o,i) => Object.assign({}, o, { rule: i ? '1px solid var(--color-divider)' : '0' })),
+      }),
+      faq: cur.faq.map((f,i) => ({ q:f.q, a:f.a, open: st.faq===i, rot: st.faq===i ? 'rotate(180deg)' : 'none',
+        toggle: () => this.setState({ faq: st.faq===i ? -1 : i }) })),
+      others: keys.filter(k => k!==key).map(k => ({ title:D[k].title, desc:D[k].desc, icon: ic(D[k].icon), go: this.go(k) })),
+      name: st.name, tel: st.tel,
+      onName: e => this.setState({ name: e.target.value }),
+      onTel: e => this.setState({ tel: e.target.value }),
+      onFile: e => this.setState({ file: (e.target.files[0]||{}).name || '' }),
+      fileLabel: st.file || cur.fileHint,
+      sent: st.sent, notSent: !st.sent,
+      submit: e => { e.preventDefault(); if (st.tel.trim()) this.setState({ sent: true }); },
+      reset: () => this.setState({ sent: false, name:'', file:'' }),
+    };
+  }
+}
+</script>
+</body>
+</html>

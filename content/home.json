@@ -7,23 +7,23 @@
  "nav": [
   {
    "label": "Печати",
-   "href": "#cat"
+   "href": "/#cat"
   },
   {
    "label": "Штампы",
-   "href": "#cat"
+   "href": "/#cat"
   },
   {
    "label": "Оснастки",
-   "href": "#constructor"
+   "href": "/#constructor"
   },
   {
    "label": "Услуги",
-   "href": "#services"
+   "href": "/#services"
   },
   {
    "label": "Контакты",
-   "href": "#footer"
+   "href": "/#footer"
   }
  ],
  "hero": {
@@ -137,27 +137,32 @@
   {
    "title": "Факсимиле",
    "desc": "Подпись-клише по вашему образцу.",
-   "icon": "sign"
+   "icon": "faksimile",
+   "slug": "faksimile"
   },
   {
    "title": "Электронная подпись",
    "desc": "Выпуск и настройка ЭП для отчётности.",
-   "icon": "esign"
+   "icon": "elektronnaya-podpis",
+   "slug": "elektronnaya-podpis"
   },
   {
    "title": "Оперативная полиграфия",
    "desc": "Визитки, бланки, печати за день.",
-   "icon": "print"
+   "icon": "poligrafiya",
+   "slug": "poligrafiya"
   },
   {
    "title": "Отрисовка по фото",
    "desc": "Векторизуем логотип или старый оттиск.",
-   "icon": "trace"
+   "icon": "otrisovka-po-foto",
+   "slug": "otrisovka-po-foto"
   },
   {
    "title": "Лазерная резка и гравировка",
    "desc": "По металлу, дереву, акрилу.",
-   "icon": "laser"
+   "icon": "lazernaya-rezka",
+   "slug": "lazernaya-rezka"
   }
  ],
  "rating": {
@@ -251,5 +256,6 @@
    "stock": "под заказ",
    "hot": false
   }
- ]
+ ],
+ "footerAnchor": "/#footer"
 }

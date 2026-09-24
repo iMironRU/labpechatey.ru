@@ -44,7 +44,7 @@ export default function SiteHeader({ onHome, onConstructor }: {
         className="mx-auto flex items-center gap-3 min-[861px]:gap-[22px]"
         style={{ maxWidth: 1200, padding: "12px clamp(18px,4vw,56px)" }}
       >
-        <a href="#top" onClick={onHome ? (e) => { e.preventDefault(); onHome(); } : undefined} className="mr-auto flex items-center gap-[11px] no-underline" style={{ color: "var(--color-text)" }}>
+        <a href="/" onClick={onHome ? (e) => { e.preventDefault(); onHome(); } : undefined} className="mr-auto flex items-center gap-[11px] no-underline" style={{ color: "var(--color-text)" }}>
           {logoFailed ? (
             <span className="text-[15px] font-semibold leading-[1.1]">
               Лаборатория
@@ -89,7 +89,7 @@ export default function SiteHeader({ onHome, onConstructor }: {
         )}
 
         <a
-          href="#footer"
+          href="/#footer"
           hidden={Boolean(onHome)}
           className="hidden items-center gap-[5px] whitespace-nowrap rounded-full border border-[var(--color-divider)] px-2.5 py-[5px] text-[12.5px] no-underline min-[861px]:flex"
           style={{ color: "inherit" }}

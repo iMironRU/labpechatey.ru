@@ -235,10 +235,10 @@
                   </sc-for>
                 </div>
               </div>
-              <div class="osn-info" style="position:absolute;left:0;right:0;bottom:0;z-index:2;background:var(--color-surface);padding:9px 11px 11px;height:62px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:flex-start;gap:5px;transition:opacity .3s ease;">
+              <div class="osn-info" style="position:absolute;left:0;right:0;bottom:0;z-index:2;background:var(--color-surface);padding:9px 11px 11px;display:flex;flex-direction:column;gap:5px;transition:opacity .3s ease;">
                 <span title="{{ o.name }}" style="display:block;font-size:13px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ o.name }}</span>
                 <sc-if value="{{ o.included }}" hint-placeholder-val="{{ true }}">
-                  <span style="font-size:12px;font-weight:600;line-height:17px;color:var(--ok);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Включена в стоимость</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--ok);">Включена в стоимость</span>
                 </sc-if>
                 <sc-if value="{{ o.discount }}" hint-placeholder-val="{{ false }}">
                   <span style="display:flex;align-items:baseline;gap:6px;"><span style="font-size:12px;color:color-mix(in srgb,var(--color-text) 45%,transparent);text-decoration:line-through;">{{ o.priceOld }}</span><span style="font-size:14px;font-weight:600;color:var(--color-accent);">{{ o.price }}</span></span>

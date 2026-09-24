@@ -34,6 +34,8 @@
   --shadow-lg:0 0 0 1px #6b6f80, 0 16px 40px rgba(0,0,0,.6);
 }
 @keyframes spin{ to{ transform:rotate(360deg) } }
+@keyframes sheetUp{ from{ transform:translateY(100%) } to{ transform:translateY(0) } }
+@keyframes fadeIn{ from{ opacity:0 } to{ opacity:1 } }
 .osn-tag,.osn-ic{ transition:transform .38s cubic-bezier(.2,.75,.2,1), opacity .28s ease; }
 .osn-tile:hover .osn-tag{ transform:translate(-12px,-14px); opacity:0; }
 .osn-tile:hover .osn-ic:nth-child(1){ transform:translate(-30px,18px); opacity:0; }
@@ -43,17 +45,23 @@
 .osn-name:hover .osn-full{ opacity:1; }
 .osn-tile:hover .osn-photo{ height:100% !important; }
 .osn-tile:hover .osn-info{ opacity:0; }
+[data-two]{ min-width:0; }
+[data-two] > section{ min-width:0; overflow:hidden; }
 @media(max-width:860px){
   [data-two]{ grid-template-columns:1fr !important; }
 }
+@media(max-width:560px){
+  [data-root]{ padding:12px 12px 92px !important; }
+  [data-desktop-cta]{ display:none !important; }
+  [data-mcta]{ display:grid !important; }
+}
 </style>
 </helmet>
-<div data-theme="{{ themeAttr }}" style="min-height:100%;background:radial-gradient(1150px 620px at 88% -160px, color-mix(in srgb, var(--color-accent) 13%, transparent), transparent 62%), var(--color-bg);color:var(--color-text);font-family:var(--font-body);padding:clamp(20px,4vw,40px) clamp(16px,4vw,48px);">
-<div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px;">
+<div data-root data-theme="{{ themeAttr }}" style="min-height:100%;background:radial-gradient(1150px 620px at 88% -160px, color-mix(in srgb, var(--color-accent) 13%, transparent), transparent 62%), var(--color-bg);color:var(--color-text);font-family:var(--font-body);padding:14px 13px 96px;">
+<div style="max-width:390px;margin:0 auto;display:flex;flex-direction:column;gap:13px;">
 
-  <sc-if value="{{ buildMode }}" hint-placeholder-val="{{ true }}">
   <!-- ===== БЛОК: ШАПКА ===== -->
-  <section style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:16px;box-shadow:var(--shadow-sm);padding:clamp(16px,2vw,24px);">
+  <section style="position:sticky;top:8px;z-index:30;background:var(--color-surface);border:1px solid var(--color-divider);border-radius:16px;box-shadow:var(--shadow-md);padding:clamp(16px,2vw,24px);">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
       <button type="button" style="display:inline-flex;align-items:center;gap:6px;background:transparent;border:0;padding:0;cursor:pointer;color:var(--color-accent);font-size:13px;font-family:var(--font-body);">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H6M11 18l-6-6 6-6"/></svg>Начать снова</button>
@@ -67,8 +75,9 @@
           <span style="width:30px;height:30px;flex:none;border:1px solid var(--color-divider);border-radius:8px;display:grid;place-items:center;color:var(--color-accent);"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
         </button>
         <sc-if value="{{ selOpen }}" hint-placeholder-val="{{ false }}">
-          <div onClick="{{ toggleSel }}" style="position:fixed;inset:0;z-index:40;"></div>
-          <div style="position:absolute;top:calc(100% + 10px);left:0;z-index:50;width:min(420px,86vw);background:var(--color-surface);border:1px solid var(--color-divider);border-radius:14px;box-shadow:var(--shadow-lg);padding:12px;">
+          <div onClick="{{ toggleSel }}" style="position:fixed;inset:0;z-index:55;background:rgba(10,11,18,.45);animation:fadeIn .2s ease;"></div>
+          <div style="position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:390px;z-index:60;max-height:82vh;overflow-y:auto;background:var(--color-surface);border-top:1px solid var(--color-divider);border-radius:20px 20px 0 0;box-shadow:var(--shadow-lg);padding:10px 14px calc(16px + env(safe-area-inset-bottom));animation:sheetUp .28s cubic-bezier(.2,.8,.2,1);">
+            <div style="width:38px;height:4px;border-radius:999px;background:color-mix(in srgb,var(--color-text) 18%,transparent);margin:2px auto 12px;"></div>
             <div style="position:relative;margin-bottom:10px;">
               <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:color-mix(in srgb,var(--color-text) 45%,transparent);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
               <input class="input" value="{{ selQuery }}" onInput="{{ onSelQuery }}" placeholder="Поиск: ИП, ООО, копия…" style="padding-left:34px;">
@@ -88,40 +97,52 @@
           </div>
         </sc-if>
       </div>
-      <div style="display:inline-flex;align-items:center;padding:3px;border:1px solid var(--color-divider);border-radius:999px;background:color-mix(in srgb,var(--color-text) 3%,transparent);white-space:nowrap;">
-        <button type="button" onClick="{{ setRush }}" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:12.5px;padding:6px 13px;border:0;border-radius:999px;cursor:pointer;background:{{ rushBg }};color:{{ rushColor }};box-shadow:{{ rushShadow }};">
+      <div style="display:flex;width:100%;align-items:center;padding:3px;border:1px solid var(--color-divider);border-radius:999px;background:color-mix(in srgb,var(--color-text) 3%,transparent);white-space:nowrap;">
+        <button type="button" onClick="{{ setRush }}" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font-body);font-size:12.5px;padding:8px 13px;border:0;border-radius:999px;cursor:pointer;background:{{ rushBg }};color:{{ rushColor }};box-shadow:{{ rushShadow }};">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>За час</button>
-        <button type="button" onClick="{{ setCalm }}" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:12.5px;padding:6px 13px;border:0;border-radius:999px;cursor:pointer;background:{{ calmBg }};color:{{ calmColor }};box-shadow:{{ calmShadow }};">
+        <button type="button" onClick="{{ setCalm }}" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font-body);font-size:12.5px;padding:8px 13px;border:0;border-radius:999px;cursor:pointer;background:{{ calmBg }};color:{{ calmColor }};box-shadow:{{ calmShadow }};">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 2v4M16 2v4M3 10h18M5 6h14a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z"/></svg>Не тороплюсь</button>
       </div>
     </div>
-    <div style="margin-top:14px;padding-top:16px;border-top:1px solid var(--color-divider);display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;">
-      <div style="display:flex;flex-wrap:wrap;gap:14px 28px;flex:1;min-width:220px;">
+  </section>
+
+  <div data-mcta onClick="{{ openCheckout }}" style="display:grid;position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:390px;z-index:60;grid-template-columns:1fr auto;align-items:center;gap:12px;cursor:pointer;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--color-bg) 94%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--color-divider);">
+    <div style="display:flex;flex-direction:column;line-height:1.15;">
+      <span style="font-size:11px;color:color-mix(in srgb,var(--color-text) 52%,transparent);">Итого · оплата при получении</span>
+      <span style="font-family:var(--font-heading);font-weight:600;font-size:20px;">{{ totalText }}</span>
+    </div>
+    <button type="button" onClick="{{ openCheckout }}" class="btn btn-primary" style="font-size:15px;padding:12px 22px;white-space:nowrap;">Оформить</button>
+  </div>
+
+  <sc-if value="{{ checkoutOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeCheckout }}" style="position:fixed;inset:0;z-index:65;background:rgba(10,11,18,.45);animation:fadeIn .2s ease;"></div>
+    <div style="position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:390px;z-index:70;max-height:88vh;overflow-y:auto;background:var(--color-surface);border-top:1px solid var(--color-divider);border-radius:20px 20px 0 0;box-shadow:var(--shadow-lg);padding:10px 16px calc(16px + env(safe-area-inset-bottom));animation:sheetUp .28s cubic-bezier(.2,.8,.2,1);">
+      <div style="width:38px;height:4px;border-radius:999px;background:color-mix(in srgb,var(--color-text) 18%,transparent);margin:2px auto 14px;"></div>
+      <div style="font-family:var(--font-heading);font-weight:600;font-size:18px;margin-bottom:13px;">Ваш заказ</div>
+      <div style="display:flex;flex-direction:column;gap:11px;">
         <sc-for list="{{ costRows }}" as="r" hint-placeholder-count="3">
-          <div style="display:flex;flex-direction:column;gap:3px;">
-            <span style="font-size:11.5px;color:color-mix(in srgb,var(--color-text) 52%,transparent);">{{ r.label }}</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <span style="font-size:13.5px;color:color-mix(in srgb,var(--color-text) 66%,transparent);">{{ r.label }}</span>
             <span style="display:inline-flex;align-items:center;gap:7px;">
-              <span style="font-size:15px;font-weight:600;color:{{ r.color }};">{{ r.value }}</span>
+              <span style="font-size:14px;font-weight:600;color:{{ r.color }};">{{ r.value }}</span>
               <sc-if value="{{ r.clearable }}" hint-placeholder-val="{{ false }}">
-                <button type="button" onClick="{{ r.onClear }}" aria-label="Убрать срочность" style="width:20px;height:20px;flex:none;border:0;border-radius:50%;background:color-mix(in srgb,var(--color-text) 9%,transparent);color:color-mix(in srgb,var(--color-text) 60%,transparent);cursor:pointer;display:grid;place-items:center;" style-hover="background:color-mix(in srgb,var(--color-accent) 15%,transparent);color:var(--color-accent);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                <button type="button" onClick="{{ r.onClear }}" aria-label="Убрать срочность" style="width:22px;height:22px;flex:none;border:0;border-radius:50%;background:color-mix(in srgb,var(--color-text) 9%,transparent);color:color-mix(in srgb,var(--color-text) 60%,transparent);cursor:pointer;display:grid;place-items:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
               </sc-if>
             </span>
           </div>
         </sc-for>
       </div>
-      <div style="display:flex;align-items:center;gap:18px;">
-        <div style="text-align:right;">
-          <div style="font-size:11.5px;color:color-mix(in srgb,var(--color-text) 52%,transparent);">Итого</div>
-          <div style="font-family:var(--font-heading);font-weight:600;font-size:26px;line-height:1.1;">{{ totalText }}</div>
-        </div>
-        <button type="button" onClick="{{ goCheckout }}" class="btn btn-primary" style="font-size:15px;padding:12px 20px;white-space:nowrap;">Оформить заказ
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--color-divider);">
+        <span style="font-size:13px;color:color-mix(in srgb,var(--color-text) 58%,transparent);">Итого · оплата при получении</span>
+        <span style="font-family:var(--font-heading);font-weight:600;font-size:24px;">{{ totalText }}</span>
       </div>
+      <a href="#" class="btn btn-primary btn-block" style="margin-top:14px;font-size:15px;padding:13px;">Оформить заказ
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
     </div>
-  </section>
+  </sc-if>
 
   <!-- ===== БЛОКИ: РЕКВИЗИТЫ + ЖИВОЕ ПРЕВЬЮ (вровень) ===== -->
-  <div data-two style="display:grid;grid-template-columns:1fr 0.92fr;gap:16px;align-items:stretch;">
+  <div data-two style="display:grid;grid-template-columns:1fr;gap:13px;align-items:stretch;">
 
     <!-- Реквизиты -->
     <section style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:16px;box-shadow:var(--shadow-sm);padding:clamp(16px,2vw,24px);">
@@ -174,7 +195,7 @@
 
     <!-- Живое превью -->
     <section style="background:repeating-linear-gradient(45deg, color-mix(in srgb,var(--color-text) 3%, transparent) 0 1px, transparent 1px 13px), var(--color-surface);border:1px solid var(--color-divider);border-radius:16px;box-shadow:var(--shadow-sm);padding:clamp(16px,2vw,22px);position:relative;">
-      <div data-swap style="min-height:430px;display:flex;flex-direction:column;">
+      <div data-swap style="min-height:360px;display:flex;flex-direction:column;">
       <sc-if value="{{ standardMode }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
         <span style="font-family:var(--font-heading);font-weight:600;font-size:15px;">{{ templateName }}</span>
@@ -189,15 +210,13 @@
         <button type="button" onClick="{{ next }}" aria-label="Следующий макет" style="width:36px;height:36px;flex:none;border:1px solid var(--color-divider);border-radius:50%;background:var(--color-surface);color:var(--color-text);cursor:pointer;display:grid;place-items:center;box-shadow:var(--shadow-sm);" style-hover="border-color:var(--color-accent);color:var(--color-accent);">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--color-divider);">
-        <div style="display:flex;gap:8px;overflow-x:auto;flex:1;padding-bottom:2px;">
-          <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
-            <button type="button" onClick="{{ t.pick }}" aria-label="{{ t.name }}" style="width:54px;height:54px;flex:none;border:1.5px solid {{ t.border }};border-radius:10px;background:var(--color-surface);cursor:pointer;padding:6px;color:{{ inkColor }};display:grid;place-items:center;">{{ t.el }}</button>
-          </sc-for>
-          <button type="button" onClick="{{ enableOwn }}" title="Загрузить свой макет" aria-label="Загрузить свой макет" style="width:54px;height:54px;flex:none;border:1.5px solid var(--color-divider);border-radius:10px;background:var(--color-surface);color:var(--color-accent);cursor:pointer;display:grid;place-items:center;" style-hover="border-color:var(--color-accent);background:color-mix(in srgb,var(--color-accent) 6%,transparent);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></button>
-        </div>
-        <button type="button" title="Посмотреть все" aria-label="Посмотреть все" style="width:54px;height:54px;flex:none;border:1.5px solid var(--color-divider);border-radius:10px;background:var(--color-surface);color:var(--color-text);cursor:pointer;display:grid;place-items:center;" style-hover="border-color:var(--color-accent);color:var(--color-accent);">
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:12px;padding-top:12px;border-top:1px solid var(--color-divider);">
+        <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
+          <button type="button" onClick="{{ t.pick }}" aria-label="{{ t.name }}" style="width:100%;aspect-ratio:1;border:1.5px solid {{ t.border }};border-radius:10px;background:var(--color-surface);cursor:pointer;padding:6px;color:{{ inkColor }};display:grid;place-items:center;">{{ t.el }}</button>
+        </sc-for>
+        <button type="button" onClick="{{ enableOwn }}" title="Загрузить свой макет" aria-label="Загрузить свой макет" style="width:100%;aspect-ratio:1;border:1.5px solid var(--color-divider);border-radius:10px;background:var(--color-surface);color:var(--color-accent);cursor:pointer;display:grid;place-items:center;" style-hover="border-color:var(--color-accent);background:color-mix(in srgb,var(--color-accent) 6%,transparent);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></button>
+        <button type="button" title="Посмотреть все" aria-label="Посмотреть все" style="width:100%;aspect-ratio:1;border:1.5px solid var(--color-divider);border-radius:10px;background:var(--color-surface);color:var(--color-text);cursor:pointer;display:grid;place-items:center;" style-hover="border-color:var(--color-accent);color:var(--color-accent);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
       </div>
       </sc-if>
@@ -217,13 +236,21 @@
       </sc-if>
       </div>
 
-      <!-- Подходящие оснастки -->
-      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--color-divider);">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px;">
-          <span style="font-family:var(--font-heading);font-weight:600;font-size:15px;">Подходящие оснастки</span>
-          <button type="button" style="background:transparent;border:0;padding:0;cursor:pointer;color:var(--color-accent);font-family:var(--font-body);font-size:13px;white-space:nowrap;">Посмотреть все</button>
+      <!-- Оснастка: сводка + шторка -->
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--color-divider);display:flex;align-items:center;gap:12px;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:11.5px;color:color-mix(in srgb,var(--color-text) 52%,transparent);">Оснастка</div>
+          <div style="font-family:var(--font-heading);font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ osnName }} · {{ osnPriceLabel }}</div>
         </div>
-        <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;">
+        <button type="button" onClick="{{ openOsn }}" class="btn btn-secondary" style="font-size:13px;padding:9px 14px;white-space:nowrap;">Изменить</button>
+      </div>
+
+      <sc-if value="{{ osnOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeOsn }}" style="position:fixed;inset:0;z-index:65;background:rgba(10,11,18,.45);animation:fadeIn .2s ease;"></div>
+        <div style="position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:390px;z-index:70;max-height:88vh;overflow-y:auto;background:var(--color-surface);border-top:1px solid var(--color-divider);border-radius:20px 20px 0 0;box-shadow:var(--shadow-lg);padding:10px 16px calc(16px + env(safe-area-inset-bottom));animation:sheetUp .28s cubic-bezier(.2,.8,.2,1);">
+          <div style="width:38px;height:4px;border-radius:999px;background:color-mix(in srgb,var(--color-text) 18%,transparent);margin:2px auto 14px;"></div>
+          <div style="font-family:var(--font-heading);font-weight:600;font-size:18px;margin-bottom:13px;">Подходящие оснастки</div>
+          <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;">
           <sc-for list="{{ osnastki }}" as="o" hint-placeholder-count="4">
             <button type="button" onClick="{{ o.pick }}" class="osn-tile" style="flex:none;width:152px;height:214px;position:relative;overflow:hidden;text-align:left;cursor:pointer;font-family:var(--font-body);color:inherit;background:var(--color-surface);border:1.5px solid {{ o.border }};border-radius:12px;">
               <div class="osn-photo" style="position:absolute;top:0;left:0;right:0;height:126px;z-index:1;overflow:hidden;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--color-text) 5%,transparent) 0 6px,transparent 6px 12px);display:grid;place-items:center;color:color-mix(in srgb,var(--color-text) 38%,transparent);transition:height .4s cubic-bezier(.2,.75,.2,1);">
@@ -235,10 +262,10 @@
                   </sc-for>
                 </div>
               </div>
-              <div class="osn-info" style="position:absolute;left:0;right:0;bottom:0;z-index:2;background:var(--color-surface);padding:9px 11px 11px;height:62px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:flex-start;gap:5px;transition:opacity .3s ease;">
+              <div class="osn-info" style="position:absolute;left:0;right:0;bottom:0;z-index:2;background:var(--color-surface);padding:9px 11px 11px;display:flex;flex-direction:column;gap:5px;transition:opacity .3s ease;">
                 <span title="{{ o.name }}" style="display:block;font-size:13px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ o.name }}</span>
                 <sc-if value="{{ o.included }}" hint-placeholder-val="{{ true }}">
-                  <span style="font-size:12px;font-weight:600;line-height:17px;color:var(--ok);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Включена в стоимость</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--ok);">Включена в стоимость</span>
                 </sc-if>
                 <sc-if value="{{ o.discount }}" hint-placeholder-val="{{ false }}">
                   <span style="display:flex;align-items:baseline;gap:6px;"><span style="font-size:12px;color:color-mix(in srgb,var(--color-text) 45%,transparent);text-decoration:line-through;">{{ o.priceOld }}</span><span style="font-size:14px;font-weight:600;color:var(--color-accent);">{{ o.price }}</span></span>
@@ -249,121 +276,18 @@
               </div>
             </button>
           </sc-for>
+          </div>
         </div>
-      </div>
+      </sc-if>
     </section>
 
   </div>
-  </sc-if>
-
-  <!-- ===== ЭКРАН: ОФОРМЛЕНИЕ ЗАКАЗА ===== -->
-  <sc-if value="{{ checkoutMode }}" hint-placeholder-val="{{ false }}">
-  <section style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:16px;box-shadow:var(--shadow-sm);padding:clamp(16px,2vw,24px);">
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:13px;">
-      <button type="button" onClick="{{ goBuild }}" style="display:inline-flex;align-items:center;gap:6px;background:transparent;border:0;padding:0;cursor:pointer;color:var(--color-accent);font-size:13px;font-family:var(--font-body);">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H6M11 18l-6-6 6-6"/></svg>Вернуться к конструктору</button>
-      <span style="width:1px;height:14px;background:var(--color-divider);"></span>
-      <span style="font-size:12.5px;color:color-mix(in srgb,var(--color-text) 50%, transparent);">{{ selLabel }} · {{ templateName }}</span>
-    </div>
-    <div style="font-family:var(--font-heading);font-weight:600;font-size:clamp(24px,3vw,34px);line-height:1.05;letter-spacing:-.02em;">Оформление заказа</div>
-    <p style="font-size:13px;color:color-mix(in srgb,var(--color-text) 62%, transparent);margin:6px 0 0;">Осталось указать, как доставить готовую печать и куда прислать чек.</p>
-  </section>
-
-  <div data-two style="display:grid;grid-template-columns:1fr 0.92fr;gap:16px;align-items:stretch;">
-    <!-- ЛЕВО: формы -->
-    <div style="display:flex;flex-direction:column;gap:16px;min-width:0;">
-
-      <!-- Способ получения -->
-      <section style="flex:1;background:var(--color-surface);border:1px solid var(--color-divider);border-radius:16px;box-shadow:var(--shadow-sm);padding:clamp(16px,2vw,22px);">
-        <div style="font-family:var(--font-heading);font-weight:600;font-size:16px;">Способ получения</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:13px;">
-          <sc-for list="{{ deliveryOpts }}" as="d" hint-placeholder-count="3">
-            <button type="button" onClick="{{ d.pick }}" style="display:flex;flex-direction:column;gap:6px;text-align:left;cursor:pointer;font-family:var(--font-body);color:inherit;border:1.5px solid {{ d.border }};background:{{ d.bg }};border-radius:12px;padding:13px 12px;min-height:104px;">
-              <span style="color:var(--color-accent);">{{ d.icon }}</span>
-              <b style="font-size:13.5px;font-weight:600;">{{ d.name }}</b>
-              <span style="font-size:11.5px;color:color-mix(in srgb,var(--color-text) 55%,transparent);line-height:1.35;">{{ d.eta }}</span>
-              <span style="font-size:12.5px;font-weight:600;color:{{ d.priceColor }};margin-top:2px;">{{ d.price }}</span>
-            </button>
-          </sc-for>
-        </div>
-        <sc-if value="{{ deliveryPickup }}" hint-placeholder-val="{{ true }}">
-          <div style="margin-top:15px;border:1px solid var(--color-divider);border-radius:11px;padding:13px;display:flex;gap:11px;align-items:flex-start;">
-            <span style="color:var(--color-accent);flex:none;margin-top:1px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
-            <div style="line-height:1.5;"><b style="font-size:13.5px;">Лаборатория печатей</b><div style="font-size:12.5px;color:color-mix(in srgb,var(--color-text) 62%,transparent);">г. Оренбург, ул. Пролетарская, 10 · пн–пт 9:00–19:00, сб 10:00–15:00</div></div>
-          </div>
-        </sc-if>
-        <sc-if value="{{ deliveryCourier }}" hint-placeholder-val="{{ false }}">
-          <div class="field" style="margin-top:15px;"><label>Адрес доставки</label><input class="input" value="{{ addr }}" onInput="{{ onAddr }}" placeholder="Город, улица, дом, квартира, индекс"></div>
-        </sc-if>
-        <sc-if value="{{ deliveryPost }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top:15px;">
-            <div style="font-size:12px;font-weight:600;color:color-mix(in srgb,var(--color-text) 55%,transparent);margin-bottom:8px;">Служба доставки</div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-              <sc-for list="{{ svcOpts }}" as="c" hint-placeholder-count="3">
-                <button type="button" onClick="{{ c.pick }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-family:var(--font-body);color:inherit;border:1.5px solid {{ c.border }};background:{{ c.bg }};border-radius:12px;padding:12px 8px;">
-                  <span style="color:var(--color-accent);">{{ c.icon }}</span>
-                  <b style="font-size:13px;font-weight:600;">{{ c.name }}</b>
-                </button>
-              </sc-for>
-            </div>
-            <button type="button" onClick="{{ pickPvz }}" style="display:flex;align-items:center;gap:11px;width:100%;text-align:left;cursor:pointer;font-family:var(--font-body);color:inherit;border:1.5px solid var(--color-divider);background:var(--color-surface);border-radius:11px;padding:12px 13px;margin-top:12px;" style-hover="border-color:var(--color-accent);">
-              <span style="color:var(--color-accent);flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
-              <span style="flex:1;display:flex;flex-direction:column;gap:1px;min-width:0;"><b style="font-size:13.5px;font-weight:600;color:{{ pvzTitleColor }};">{{ pvzBtnText }}</b><sc-if value="{{ pvzChosen }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;color:color-mix(in srgb,var(--color-text) 55%,transparent);">{{ pvzNote }}</span></sc-if></span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="color-mix(in srgb,var(--color-text) 45%,transparent)" stroke-width="1.9" style="flex:none;"><path d="M9 6l6 6-6 6"/></svg>
-            </button>
-          </div>
-        </sc-if>
-      </section>
-
-      <!-- Оплата -->
-      <section style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:16px;box-shadow:var(--shadow-sm);padding:clamp(16px,2vw,22px);">
-        <div style="font-family:var(--font-heading);font-weight:600;font-size:16px;">Оплата</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:13px;">
-          <sc-for list="{{ payOpts }}" as="p" hint-placeholder-count="3">
-            <button type="button" onClick="{{ p.pick }}" style="display:flex;flex-direction:column;gap:6px;text-align:left;cursor:pointer;font-family:var(--font-body);color:inherit;border:1.5px solid {{ p.border }};background:{{ p.bg }};border-radius:12px;padding:13px 12px;min-height:104px;">
-              <span style="color:var(--color-accent);">{{ p.icon }}</span>
-              <b style="font-size:13.5px;font-weight:600;">{{ p.name }}</b>
-              <span style="font-size:11.5px;color:color-mix(in srgb,var(--color-text) 55%,transparent);line-height:1.35;">{{ p.note }}</span>
-            </button>
-          </sc-for>
-        </div>
-      </section>
-
-    </div>
-
-    <!-- ПРАВО: сводка -->
-    <section style="background:var(--color-surface);border:1px solid var(--color-divider);border-radius:16px;box-shadow:var(--shadow-sm);padding:clamp(16px,2vw,22px);position:sticky;top:20px;">
-      <div style="font-family:var(--font-heading);font-weight:600;font-size:16px;">Ваш заказ</div>
-      <div style="display:flex;align-items:center;gap:13px;margin-top:13px;padding-bottom:14px;border-bottom:1px solid var(--color-divider);">
-        <div style="width:64px;height:64px;flex:none;border:1px solid var(--color-divider);border-radius:12px;padding:7px;color:var(--ink);display:grid;place-items:center;">{{ stampEl }}</div>
-        <div style="min-width:0;line-height:1.4;"><b style="font-size:14px;font-weight:600;">{{ selLabel }}</b><div style="font-size:12.5px;color:color-mix(in srgb,var(--color-text) 60%,transparent);">Макет · {{ templateName }}</div></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:11px;margin:14px 0;">
-        <sc-for list="{{ summaryItems }}" as="it" hint-placeholder-count="5">
-          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;">
-            <span style="display:flex;flex-direction:column;gap:1px;min-width:0;"><span style="font-size:13px;">{{ it.label }}</span><span style="font-size:11.5px;color:color-mix(in srgb,var(--color-text) 52%,transparent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ it.sub }}</span></span>
-            <span style="font-size:13.5px;font-weight:600;color:{{ it.col }};white-space:nowrap;">{{ it.value }}</span>
-          </div>
-        </sc-for>
-      </div>
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;padding-top:14px;border-top:1px solid var(--color-divider);">
-        <span style="font-size:13px;color:color-mix(in srgb,var(--color-text) 60%,transparent);">Итого к оплате</span>
-        <span style="font-family:var(--font-heading);font-weight:600;font-size:26px;line-height:1;">{{ grandTotalText }}</span>
-      </div>
-      <button type="button" class="btn btn-primary btn-block" style="margin-top:16px;font-size:15px;padding:13px 20px;justify-content:center;">{{ payBtnText }}</button>
-      <div style="display:flex;align-items:center;gap:7px;margin-top:12px;font-size:11.5px;color:color-mix(in srgb,var(--color-text) 55%,transparent);line-height:1.45;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="flex:none;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Права на печать проверим при получении. Данные защищены.
-      </div>
-    </section>
-  </div>
-  </sc-if>
 </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1180&quot;,&quot;height&quot;:&quot;620&quot;},&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Бренд&quot;,&quot;label&quot;:&quot;Тема по умолчанию&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;390&quot;,&quot;height&quot;:&quot;860&quot;},&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Бренд&quot;,&quot;label&quot;:&quot;Тема по умолчанию&quot;}}">
 class Component extends DCLogic {
-  state = { theme:null, inn:'', innStatus:'idle', org:'', city:'', ogrn:'', manual:false, urgency:'rush', tpl:0, osn:0, ownLayout:false, sel:'ip', selOpen:false, selQuery:'', screen:'build', delivery:'courier', addr:'', pay:'online', courierSvc:'cdek', pvz:null };
+  state = { theme:null, inn:'', innStatus:'idle', org:'', city:'', ogrn:'', manual:false, urgency:'rush', tpl:0, osn:0, ownLayout:false, sel:'ip', selOpen:false, selQuery:'', checkoutOpen:false, osnOpen:false };
   OPTS = [
     { id:'ip',       ent:'ИП',  label:'Печать для ИП',    title:'Печать для ИП',        note:'новая по реквизитам', kind:'new' },
     { id:'ip-copy',  ent:'ИП',  label:'Копия печати ИП',  title:'Копия печати для ИП',  note:'загрузите старый оттиск', kind:'copy', own:true },
@@ -381,26 +305,6 @@ class Component extends DCLogic {
     { id:'compact', name:'Компактный' },
     { id:'full', name:'Расширенный' },
     { id:'ring', name:'С двойным кольцом' },
-  ];
-  DELV = [
-    { id:'pickup',  name:'Самовывоз',    eta:'Сегодня из мастерской', price:'бесплатно', cost:0 },
-    { id:'courier', name:'Курьер',       eta:'Завтра, по городу',     price:'+ 300 ₽',   cost:300 },
-    { id:'post',    name:'Почта / СДЭК', eta:'3–7 дней по России',    price:'+ 250 ₽',   cost:250 },
-  ];
-  PAY = [
-    { id:'online',  name:'Онлайн картой',  note:'Чек придёт на email' },
-    { id:'receipt', name:'При получении',  note:'Наличными или картой' },
-    { id:'invoice', name:'По счёту',       note:'Счёт и закрывающие для ЮЛ' },
-  ];
-  COURIER = [
-    { id:'cdek',     name:'СДЭК' },
-    { id:'boxberry', name:'Boxberry' },
-    { id:'dpd',      name:'DPD' },
-  ];
-  PVZ = [
-    { addr:'ул. Пролетарская, 10', note:'Пн–сб, до 18:00' },
-    { addr:'пр. Гагарина, 27/2',   note:'ТЦ «Гулливер», ежедневно' },
-    { addr:'ул. Чкалова, 41',      note:'Ежедневно, до 20:00' },
   ];
   _t=null;
 
@@ -492,71 +396,15 @@ class Component extends DCLogic {
     ];
     if(s.ownLayout) costRows.push({ label:'Свой макет', value:'от '+fmt(ownNum), color:textC });
     const total=base+osnNum+rushNum+ownNum;
-    const dIcons={
-      pickup: ic(['M3 9l1-5h16l1 5','M4 9h16v10a1 1 0 01-1 1H5a1 1 0 01-1-1z','M9 20v-6h6v6']),
-      courier: ic(['M3 7h11v9H3z','M14 10h4l3 3v3h-7','M7.5 19a2 2 0 100-4 2 2 0 000 4','M17.5 19a2 2 0 100-4 2 2 0 000 4']),
-      post: ic(['M21 8l-9-5-9 5 9 5 9-5z','M3 8v9l9 5 9-5V8','M12 13v9']),
-    };
-    const delv=this.DELV.find(d=>d.id===s.delivery)||this.DELV[0];
-    const deliveryNum=delv.cost;
-    const grandTotal=total+deliveryNum;
-    const deliveryOpts=this.DELV.map(d=>({
-      name:d.name, eta:d.eta, price:d.price, icon:dIcons[d.id],
-      border: s.delivery===d.id?'var(--color-accent)':'var(--color-divider)',
-      bg: s.delivery===d.id?'color-mix(in srgb,var(--color-accent) 7%,transparent)':'var(--color-surface)',
-      priceColor: d.cost?'var(--color-text)':'var(--ok)',
-      pick:()=>this.setState({delivery:d.id}),
-    }));
-    const pIcons={
-      online: ic(['M2 7h20v10H2z','M2 11h20','M6 15h4']),
-      receipt: ic(['M6 2h9l3 3v17l-3-2-3 2-3-2-3 2V4a2 2 0 012-2z','M9 8h6','M9 12h6']),
-      invoice: ic(['M6 2h9l3 3v17l-3-2-3 2-3-2-3 2V4a2 2 0 012-2z','M9 8h6','M9 12h4','M9 16h2']),
-    };
-    const payOpts=this.PAY.map(p=>({
-      name:p.name, note:p.note, active:s.pay===p.id, icon:pIcons[p.id],
-      border: s.pay===p.id?'var(--color-accent)':'var(--color-divider)',
-      bg: s.pay===p.id?'color-mix(in srgb,var(--color-accent) 7%,transparent)':'var(--color-surface)',
-      dotBorder: s.pay===p.id?'var(--color-accent)':'color-mix(in srgb,var(--color-text) 30%,transparent)',
-      pick:()=>this.setState({pay:p.id}),
-    }));
-    const cIcons={
-      cdek: ic(['M21 8l-9-5-9 5 9 5 9-5z','M3 8v9l9 5 9-5V8']),
-      boxberry: ic(['M4 7h16v13H4z','M4 7l8-4 8 4','M12 3v18']),
-      dpd: ic(['M3 7h11v9H3z','M14 10h4l3 3v3h-7','M7.5 19a2 2 0 100-4 2 2 0 000 4','M17.5 19a2 2 0 100-4 2 2 0 000 4']),
-    };
-    const svcOpts=this.COURIER.map(c=>({
-      name:c.name, icon:cIcons[c.id],
-      border: s.courierSvc===c.id?'var(--color-accent)':'var(--color-divider)',
-      bg: s.courierSvc===c.id?'color-mix(in srgb,var(--color-accent) 7%,transparent)':'var(--color-surface)',
-      pick:()=>this.setState({courierSvc:c.id}),
-    }));
-    const pvzSel = s.pvz!=null ? this.PVZ[s.pvz] : null;
-    const summaryItems=[
-      { label:'Печать', sub:cur.title, value:fmt(base), col:textC },
-      { label:'Макет', sub:this.TPLS[s.tpl].name, value: s.ownLayout?('от '+fmt(ownNum)):'включён', col: s.ownLayout?textC:mutedC },
-      { label:'Оснастка', sub:osnCur.name, value: osnNum?('+ '+fmt(osnNum)):'в стоимости', col: osnNum?textC:mutedC },
-      { label:'Срочность', sub: s.urgency==='rush'?'Готово за час':'Без спешки', value: rushNum?('+ '+fmt(rushNum)):'бесплатно', col: rushNum?textC:mutedC },
-      { label:'Доставка', sub: delv.name, value: deliveryNum?('+ '+fmt(deliveryNum)):'бесплатно', col: deliveryNum?textC:mutedC },
-    ];
     return {
       costRows, totalText:(approx?'от ':'')+fmt(total),
+      checkoutOpen:s.checkoutOpen, openCheckout:()=>this.setState({checkoutOpen:true}), closeCheckout:()=>this.setState({checkoutOpen:false}),
+      osnOpen:s.osnOpen, openOsn:()=>this.setState({osnOpen:true}), closeOsn:()=>this.setState({osnOpen:false}),
+      osnName:osnCur.name, osnPriceLabel: osnNum?osnCur.price:'включена в стоимость',
       selLabel:cur.title, selCrumb:'Печать · '+cur.ent,
       selOpen:s.selOpen, toggleSel:()=>this.setState(p=>({selOpen:!p.selOpen, selQuery:''})),
       selQuery:s.selQuery, onSelQuery:(e)=>this.setState({selQuery:e.target.value}),
       selGroups,
-      buildMode: s.screen==='build', checkoutMode: s.screen==='checkout',
-      goCheckout:()=>this.setState({screen:'checkout', selOpen:false}), goBuild:()=>this.setState({screen:'build'}),
-      deliveryOpts, payOpts, summaryItems,
-      deliveryPickup: s.delivery==='pickup', deliveryCourier: s.delivery==='courier', deliveryPost: s.delivery==='post',
-      svcOpts,
-      pvzChosen: pvzSel!=null,
-      pvzBtnText: pvzSel ? pvzSel.addr : 'Выбрать пункт выдачи',
-      pvzNote: pvzSel ? pvzSel.note : '',
-      pvzTitleColor: pvzSel ? 'var(--color-text)' : 'var(--color-accent)',
-      pickPvz:()=>this.setState(p=>({ pvz: p.pvz==null?0:(p.pvz+1)%this.PVZ.length })),
-      addr:s.addr, onAddr:(e)=>this.setState({addr:e.target.value}),
-      grandTotalText:(approx?'от ':'')+fmt(grandTotal),
-      payBtnText:'Оформить заказ · '+(approx?'от ':'')+fmt(grandTotal),
       themeAttr: theme==='dark'?'dark':null,
       inn:s.inn, onInn:(e)=>this.onInnInput(e),
       innSearching:s.innStatus==='searching', innFound:s.innStatus==='found', innNotFound:s.innStatus==='notfound',
@@ -582,7 +430,7 @@ class Component extends DCLogic {
         return { name:o.name, tag:o.tag, tagBg:tg[0], tagColor:tg[1], price:o.price, priceOld:o.priceOld,
           chars:(o.chars||[]).map(k=>charDefs[k]).filter(Boolean),
           included:o.mode==='included', discount:o.mode==='discount', plain:o.mode==='plain',
-          border: s.osn===i?'var(--color-accent)':'var(--color-divider)', pick:()=>this.setState({osn:i}) };
+          border: s.osn===i?'var(--color-accent)':'var(--color-divider)', pick:()=>this.setState({osn:i, osnOpen:false}) };
       }),
       standardMode:!s.ownLayout, ownMode:s.ownLayout,
       enableOwn:()=>this.setState({ownLayout:true}), disableOwn:()=>this.setState({ownLayout:false}),

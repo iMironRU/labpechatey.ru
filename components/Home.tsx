@@ -2,6 +2,7 @@
 
 import home from "@/content/home.json";
 import HeroStamp from "@/components/HeroStamp";
+import Link from "next/link";
 import { IconArrowRight, IconCat } from "@/components/Icons";
 import { asset } from "@/lib/paths";
 
@@ -176,9 +177,11 @@ export default function Home({ onPick, onStart }: {
           </p>
           <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))" }}>
             {home.services.map((s) => (
-              <div
+              <Link
                 key={s.title}
-                className="flex flex-col gap-2.5 rounded-[12px] border border-[var(--color-divider)] p-[18px] transition-colors hover:border-[var(--color-accent)]"
+                href={`/uslugi/${s.slug}`}
+                className="flex flex-col gap-2.5 rounded-[12px] border border-[var(--color-divider)] p-[18px] no-underline transition-colors hover:border-[var(--color-accent)]"
+                style={{ color: "inherit" }}
               >
                 <span style={{ color: "var(--ink)" }}>
                   <IconCat name={s.icon} />
@@ -187,7 +190,7 @@ export default function Home({ onPick, onStart }: {
                 <span className="text-[12.5px] leading-[1.45]" style={{ color: muted(66) }}>
                   {s.desc}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         </section>

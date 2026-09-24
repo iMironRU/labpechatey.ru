@@ -116,7 +116,7 @@ export default function Builder() {
       </section>
 
       {/* ——— реквизиты и превью ——— */}
-      <div className="two-col two-col--preview">
+      <div className="two-col">
         <section className="panel">
           <h2 className="m-0 text-[17px] font-semibold">{texts.requisites.title}</h2>
           <p className="mb-4 mt-1 text-[13px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">

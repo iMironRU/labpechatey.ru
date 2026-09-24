@@ -161,7 +161,7 @@
   <p style="font-size:15px;color:color-mix(in srgb,var(--color-text) 66%, transparent);margin:0 0 24px;">Полный цикл: от дизайна до лазера — под одной крышей.</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:12px;">
     <sc-for list="{{ services }}" as="s" hint-placeholder-count="5">
-      <a href="{{ s.href }}" style="text-decoration:none;color:inherit;border:1px solid var(--color-divider);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s;" style-hover="border-color:var(--color-accent);">
+      <a href="#" style="text-decoration:none;color:inherit;border:1px solid var(--color-divider);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s;" style-hover="border-color:var(--color-accent);">
         <span style="color:var(--ink);">{{ s.icon }}</span>
         <span style="font-family:var(--font-heading);font-weight:600;font-size:15.5px;">{{ s.title }}</span>
         <span style="font-size:12.5px;line-height:1.45;color:color-mix(in srgb,var(--color-text) 66%, transparent);">{{ s.desc }}</span>
@@ -382,11 +382,11 @@ class Component extends DCLogic {
         { n:'4', t:'Выдача', d:'Один из 13 ПВЗ или доставка по России.' },
       ],
       services: [
-        { href:'Услуга - Факсимиле.dc.html', title:'Факсимиле', desc:'Подпись-клише по вашему образцу.', icon: ic('M4 18c4-1 5-9 8-9s2 6 4 6 2-3 4-3') },
-        { href:'Услуга - Электронная подпись.dc.html', title:'Электронная подпись', desc:'Выпуск и настройка ЭП для отчётности.', icon: ic(['M12 3v10','M8 9l4 4 4-4','M5 19h14']) },
-        { href:'Услуга - Полиграфия.dc.html', title:'Оперативная полиграфия', desc:'Визитки, бланки, печати за день.', icon: ic(['M6 9V4h12v5','M6 18H4v-6h16v6h-2','M8 14h8v6H8z']) },
-        { href:'Услуга - Отрисовка по фото.dc.html', title:'Отрисовка по фото', desc:'Векторизуем логотип или старый оттиск.', icon: ic(['M4 16l5-5 4 4 3-3 4 4','M4 5h16v14H4z']) },
-        { href:'Услуга - Лазер.dc.html', title:'Лазерная резка и гравировка', desc:'По металлу, дереву, акрилу.', icon: ic(['M12 2v7','M12 15v7','M2 12h7','M15 12h7']) },
+        { title:'Факсимиле', desc:'Подпись-клише по вашему образцу.', icon: ic('M4 18c4-1 5-9 8-9s2 6 4 6 2-3 4-3') },
+        { title:'Электронная подпись', desc:'Выпуск и настройка ЭП для отчётности.', icon: ic(['M12 3v10','M8 9l4 4 4-4','M5 19h14']) },
+        { title:'Оперативная полиграфия', desc:'Визитки, бланки, печати за день.', icon: ic(['M6 9V4h12v5','M6 18H4v-6h16v6h-2','M8 14h8v6H8z']) },
+        { title:'Отрисовка по фото', desc:'Векторизуем логотип или старый оттиск.', icon: ic(['M4 16l5-5 4 4 3-3 4 4','M4 5h16v14H4z']) },
+        { title:'Лазерная резка и гравировка', desc:'По металлу, дереву, акрилу.', icon: ic(['M12 2v7','M12 15v7','M2 12h7','M15 12h7']) },
       ],
       reviews: [
         { text:'Открыла ИП утром — к обеду печать уже была в пункте у дома. Собрала оттиск на сайте, ничего не перепутали.', who:'Марина, ИП' },
