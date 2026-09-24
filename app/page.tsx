@@ -156,10 +156,11 @@ export default function Page() {
     <>
     <SiteHeader onHome={() => setScreen("start")} />
     <main
-      className="mx-auto flex w-full flex-1 flex-col gap-4"
+      className="w-full flex-1"
       // снизу место под панель с итогом, она перекрывает контент
-      style={{ maxWidth: 1180, padding: "clamp(20px,4vw,40px) clamp(16px,4vw,48px) max(clamp(20px,4vw,40px), 92px)" }}
+      style={{ padding: "clamp(20px,4vw,40px) clamp(16px,4vw,48px) max(clamp(20px,4vw,40px), 92px)" }}
     >
+      <div className="mx-auto flex w-full flex-col gap-4" style={{ maxWidth: 1180 }}>
       {/* ——— шапка ——— */}
       <section className="panel">
         <div className="mb-3 flex items-center gap-3">
@@ -169,7 +170,7 @@ export default function Page() {
               setInn(""); setOrg(""); setCity(""); setOgrn(""); setManual(false);
               setReg({ status: "idle" }); setTpl(null); setScreen("start");
             }}
-            className="inline-flex items-center gap-[6px] text-[13px] text-[var(--color-accent)]"
+            className="inline-flex items-center gap-[6px] text-[13px] leading-[1.2] text-[var(--color-accent)]"
           >
             <IconArrowLeft />
             {texts.breadcrumbRestart.replace(/^←\s*/, "")}
@@ -180,7 +181,7 @@ export default function Page() {
           </span>
         </div>
 
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="flex flex-wrap items-end justify-between gap-[14px]">
           <KindSelector value={sel} onChange={(id) => { setSel(id); setTpl(null); }} />
 
           <div
@@ -193,7 +194,7 @@ export default function Page() {
                 type="button"
                 onClick={() => setUrgency(u)}
                 aria-pressed={urgency === u}
-                className="inline-flex items-center gap-[6px] rounded-full px-[13px] py-[6px] text-[12.5px]"
+                className="inline-flex items-center gap-[6px] rounded-full px-[13px] py-[6px] text-[12.5px] leading-[1.2]"
                 style={
                   urgency === u
                     ? { background: "var(--color-surface)", boxShadow: "var(--shadow-sm)" }
@@ -207,7 +208,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="mt-[14px] flex flex-wrap items-end justify-between gap-4 border-t border-[var(--color-divider)] pt-4 max-[560px]:hidden">
+        <div className="mt-[14px] flex flex-wrap items-end justify-between gap-5 border-t border-[var(--color-divider)] pt-4 max-[560px]:hidden">
           <div className="flex min-w-[220px] flex-1 flex-wrap gap-x-7 gap-y-[14px]">
             <PriceRow label={`${texts.price.stampRow} · ${currentTemplate?.tpl.title ?? "макет"}`} value={money(catalog.prices.stamp)} />
             <PriceRow
@@ -231,7 +232,7 @@ export default function Page() {
               <div className="text-[11.5px] text-[color-mix(in_srgb,var(--color-text)_52%,transparent)]">
                 {texts.price.total}
               </div>
-              <div className="text-[26px] font-semibold leading-tight">
+              <div className="text-[26px] font-semibold leading-[1.1]">
                 {ownLayout ? "от " : ""}
                 {money(total)}
               </div>
@@ -265,7 +266,7 @@ export default function Page() {
           }}
         />
         </div>
-        <section className="panel" style={{ padding: "clamp(16px,2vw,22px)" }}>
+        <section className="panel">
           <h2 className="m-0 text-[17px] font-semibold">{texts.requisites.title}</h2>
           <p className="mb-4 mt-1 text-[13px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">
             {texts.requisites.hint}
@@ -432,6 +433,7 @@ export default function Page() {
         >
           Оформить
         </button>
+      </div>
       </div>
     </main>
     {/* ситуация «Не знаю, помогите» открывает карточку сразу */}

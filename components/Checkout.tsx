@@ -42,16 +42,14 @@ export default function Checkout({
     (delivery === "post" && pvz !== null);
 
   return (
-    <main
-      className="mx-auto flex w-full flex-1 flex-col gap-4"
-      style={{ maxWidth: 1180, padding: "clamp(20px,4vw,40px) clamp(16px,4vw,48px)" }}
-    >
+    <main className="w-full flex-1" style={{ padding: "clamp(20px,4vw,40px) clamp(16px,4vw,48px)" }}>
+      <div className="mx-auto flex w-full flex-col gap-4" style={{ maxWidth: 1180 }}>
       <section className="panel" style={{ padding: "clamp(16px,2vw,22px)" }}>
         <div className="mb-3 flex items-center gap-3">
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex items-center gap-[6px] text-[13px] text-[var(--color-accent)]"
+            className="inline-flex items-center gap-[6px] text-[13px] leading-[1.2] text-[var(--color-accent)]"
           >
             <IconArrowLeft />
             {texts.back.replace(/^←\s*/, "")}
@@ -244,6 +242,7 @@ export default function Checkout({
             {texts.legal}
           </p>
         </section>
+      </div>
       </div>
     </main>
   );

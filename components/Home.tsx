@@ -269,12 +269,16 @@ export default function Home({ onPick, onStart }: {
           }}
         >
           <div className="flex flex-col gap-3">
-            <img
-              src={asset(home.logo)}
-              alt={home.brand}
-              className="dark-invert"
-              style={{ height: 38, width: "auto", maxWidth: 210, objectFit: "contain" }}
-            />
+            {/* в макете логотип лежит в строке-флексе: в колонке он растягивался
+                до max-width 210 и object-fit центрировал его внутри */}
+            <div className="flex items-center gap-2.5">
+              <img
+                src={asset(home.logo)}
+                alt={home.brand}
+                className="dark-invert"
+                style={{ height: 38, width: "auto", maxWidth: 210, objectFit: "contain" }}
+              />
+            </div>
             <span className="text-[13px] leading-[1.55]" style={{ color: muted(60) }}>
               {home.footer.about}
             </span>

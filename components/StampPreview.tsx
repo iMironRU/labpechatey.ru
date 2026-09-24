@@ -96,7 +96,9 @@ export default function StampPreview({
   };
 
   return (
-    <div className="flex flex-col gap-3">
+    // в макете блок превью не ниже 430px, иначе карточка «подпрыгивает»
+    // при смене макета и выглядит мельче соседней колонки
+    <div className="flex min-h-[430px] flex-col gap-3">
       {!own && (
       <>
       <div className="flex items-baseline justify-between gap-3">
@@ -106,7 +108,7 @@ export default function StampPreview({
         </span>
       </div>
 
-      <div className="flex items-center justify-center gap-3" style={{ minHeight: 330 }}>
+      <div className="flex flex-1 items-center justify-center gap-3">
         <button
           type="button"
           aria-label="Предыдущий макет"
