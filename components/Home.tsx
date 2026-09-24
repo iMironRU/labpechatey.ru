@@ -2,7 +2,6 @@
 
 import home from "@/content/home.json";
 import HeroStamp from "@/components/HeroStamp";
-import MountsCatalog from "@/components/MountsCatalog";
 import { IconArrowRight, IconCat } from "@/components/Icons";
 
 const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, transparent)`;
@@ -160,19 +159,26 @@ export default function Home({ onPick, onStart }: {
         </section>
 
 
-        <MountsCatalog />
-
         {/* ——— услуги ——— */}
-        <section id="services" className="mt-[clamp(46px,6vw,72px)]">
-          <h2 className="m-0 text-[clamp(22px,2.6vw,30px)] font-semibold">{home.servicesTitle}</h2>
-          <p className="mb-5 mt-2 text-[15px]" style={{ color: muted(68) }}>
+        {/* ——— услуги ——— */}
+        <section id="services" className="mt-[clamp(46px,6vw,72px)]" style={{ scrollMarginTop: 80 }}>
+          <h2 className="m-0 mb-1.5 font-semibold" style={{ fontSize: "clamp(24px,3vw,34px)", letterSpacing: "-0.015em" }}>
+            {home.servicesTitle}
+          </h2>
+          <p className="mb-6 mt-0 text-[15px]" style={{ color: muted(66) }}>
             {home.servicesLead}
           </p>
-          <div className="grid gap-3.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 220px), 1fr))" }}>
+          <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))" }}>
             {home.services.map((s) => (
-              <div key={s.title} className="card flex flex-col gap-2 p-5">
-                <span className="text-[15px] font-semibold">{s.title}</span>
-                <span className="text-[13px] leading-[1.5]" style={{ color: muted(65) }}>
+              <div
+                key={s.title}
+                className="flex flex-col gap-2.5 rounded-[12px] border border-[var(--color-divider)] p-[18px] transition-colors hover:border-[var(--color-accent)]"
+              >
+                <span style={{ color: "var(--ink)" }}>
+                  <IconCat name={s.icon} />
+                </span>
+                <span className="text-[15.5px] font-semibold">{s.title}</span>
+                <span className="text-[12.5px] leading-[1.45]" style={{ color: muted(66) }}>
                   {s.desc}
                 </span>
               </div>

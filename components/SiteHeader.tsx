@@ -11,7 +11,10 @@ import { IconArrowLeft } from "@/components/Icons";
  * Шапка. На экранах конструктора она короткая — как в макете
  * «Конструктор.dc.html»: логотип, «На главную», телефон и переключатель темы.
  */
-export default function SiteHeader({ onHome }: { onHome?: () => void } = {}) {
+export default function SiteHeader({ onHome, onConstructor }: {
+  onHome?: () => void;
+  onConstructor?: () => void;
+} = {}) {
   const [dark, setDark] = useState(false);
   // логотип лежит на стороннем домене: если не отдастся, показываем текст
   const [logoFailed, setLogoFailed] = useState(false);
@@ -63,11 +66,17 @@ export default function SiteHeader({ onHome }: { onHome?: () => void } = {}) {
         </a>
 
         <nav className="hidden items-center gap-5 min-[861px]:flex" hidden={Boolean(onHome)}>
-          {home.nav.map((n) => (
-            <a key={n.label} href={n.href} className="text-[14px] no-underline" style={{ color: "inherit" }}>
-              {n.label}
-            </a>
-          ))}
+          {home.nav.map((n) =>
+            n.href === "#constructor" ? (
+              <button key={n.label} type="button" onClick={onConstructor} className="text-[14px]">
+                {n.label}
+              </button>
+            ) : (
+              <a key={n.label} href={n.href} className="text-[14px] no-underline" style={{ color: "inherit" }}>
+                {n.label}
+              </a>
+            ),
+          )}
         </nav>
 
         {onHome && (

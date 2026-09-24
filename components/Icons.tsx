@@ -99,6 +99,10 @@ const CAT_SHAPES: Record<string, Shape[]> = {
   help: [{ p: "M12 17h.01M9.1 9a3 3 0 015.8 1c0 2-3 2.5-3 4" }, { c: [12, 12, 9] }],
   upload: [{ p: "M12 16V4M7 9l5-5 5 5" }, { p: "M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" }],
   gallery: [{ p: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" }],
+  esign: [{ p: "M12 3v10" }, { p: "M8 9l4 4 4-4" }, { p: "M5 19h14" }],
+  print: [{ p: "M6 9V4h12v5" }, { p: "M6 18H4v-6h16v6h-2" }, { p: "M8 14h8v6H8z" }],
+  trace: [{ p: "M4 16l5-5 4 4 3-3 4 4" }, { p: "M4 5h16v14H4z" }],
+  laser: [{ p: "M12 2v7" }, { p: "M12 15v7" }, { p: "M2 12h7" }, { p: "M15 12h7" }],
 };
 
 export const IconCat = ({ name, size = 22 }: { name: string; size?: number }) => (

@@ -116,7 +116,7 @@ export default function Page() {
   if (screen === "start") {
     return (
       <>
-        <SiteHeader />
+        <SiteHeader onConstructor={() => setScreen("choose")} />
         <Home onPick={pick} onStart={() => setScreen("choose")} />
       </>
     );
