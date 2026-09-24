@@ -17,6 +17,7 @@
   --ok-bg: #e2f4ea;
   --warn: #9a5a10;
   --warn-bg: #fbeed7;
+  --font-heading-weight: 500;
   --shadow-sm: 0 0 0 1px rgba(25, 27, 38, .09);
   --shadow-md: 0 1px 2px rgba(25, 27, 38, .05), 0 8px 24px rgba(25, 27, 38, .09);
   --shadow-lg: 0 2px 4px rgba(25, 27, 38, .07), 0 18px 48px rgba(25, 27, 38, .14);
@@ -77,7 +78,7 @@ body {
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     cursor: pointer; text-decoration: none;
-    font-family: var(--font-heading); font-weight: 600;
+    font-family: var(--font-heading); font-weight: var(--font-heading-weight);
     font-size: 14px; line-height: 1.2; color: var(--color-text);
     background: transparent; border: 1px solid transparent;
     padding: 5.6px 10.08px; border-radius: 8px;

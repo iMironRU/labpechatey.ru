@@ -287,11 +287,18 @@ export default function Home({ onPick, onStart }: {
               >
                 {col.title}
               </span>
-              {col.items.map((it) => (
-                <span key={it} className="text-[13.5px]" style={{ color: muted(72) }}>
-                  {it}
-                </span>
-              ))}
+              {/* «Каталог» — ссылки полным цветом, «Как заказать» — просто текст */}
+              {col.items.map((it) =>
+                col.title === "Каталог" ? (
+                  <a key={it} href="#cat" className="text-[13.5px] no-underline" style={{ color: "inherit" }}>
+                    {it}
+                  </a>
+                ) : (
+                  <span key={it} className="text-[13.5px]" style={{ color: muted(72) }}>
+                    {it}
+                  </span>
+                ),
+              )}
             </div>
           ))}
 
@@ -319,7 +326,9 @@ export default function Home({ onPick, onStart }: {
           <span>{home.footer.legal}</span>
           <span className="flex flex-wrap gap-[18px]">
             {home.footer.links.map((l) => (
-              <span key={l}>{l}</span>
+              <a key={l} href="#footer" className="underline" style={{ color: "inherit" }}>
+                {l}
+              </a>
             ))}
           </span>
         </div>
