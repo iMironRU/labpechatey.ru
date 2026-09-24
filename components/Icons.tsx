@@ -85,6 +85,8 @@ const CAT_PATHS: Record<string, string[]> = {
   sign: ["M4 18c4-1 5-9 8-9s2 6 4 6 2-3 4-3"],
   question: ["M12 17h.01M9.1 9a3 3 0 015.8 1c0 2-3 2.5-3 4"],
   upload: ["M12 16V4M7 9l5-5 5 5", "M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"],
+  gallery: ["M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"],
+  help: ["M12 17h.01M9.1 9a3 3 0 015.8 1c0 2-3 2.5-3 4", "M21 12a9 9 0 11-18 0 9 9 0 0118 0"],
 };
 
 export const IconCat = ({ name, size = 20 }: { name: string; size?: number }) => (

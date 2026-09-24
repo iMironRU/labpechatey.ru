@@ -7,6 +7,8 @@ import StampPreview from "@/components/StampPreview";
 import Checkout from "@/components/Checkout";
 import Home from "@/components/Home";
 import SituationPicker from "@/components/SituationPicker";
+import SourceLine, { type SourceId } from "@/components/SourceLine";
+import HelpCard from "@/components/HelpCard";
 import { IconArrowLeft, IconArrowRight, IconCalendar, IconClock, IconCross } from "@/components/Icons";
 import SiteHeader from "@/components/SiteHeader";
 import catalog from "@/content/catalog.json";
@@ -40,6 +42,8 @@ export default function Page() {
   const kindItem = catalog.kinds.find((k) => k.id === sel) ?? catalog.kinds[0];
   // «свой макет»: либо ситуация-копия, либо человек сам нажал загрузку
   const [ownPicked, setOwnPicked] = useState(false);
+  const [showSource, setShowSource] = useState(false);
+  const [galleryToken, setGalleryToken] = useState(0);
   const ownLayout = kindItem.copy || ownPicked;
   const sealKind: Kind = kindItem.ent === "ООО" ? "ooo" : "ip";
 
@@ -123,6 +127,7 @@ export default function Page() {
       <>
         <SiteHeader onHome={() => setScreen("start")} />
         <SituationPicker onPick={pick} />
+        <HelpCard />
       </>
     );
   }
@@ -246,6 +251,17 @@ export default function Page() {
 
       {/* ——— реквизиты и превью ——— */}
       <div className="two-col">
+        <div className="flex min-w-0 flex-col gap-3">
+        <SourceLine
+          value={ownLayout ? "image" : "req"}
+          open={showSource}
+          onToggle={() => setShowSource((v) => !v)}
+          onPick={(id: SourceId) => {
+            setShowSource(false);
+            if (id === "gallery") { setOwnPicked(false); setGalleryToken((n) => n + 1); }
+            else setOwnPicked(id === "image");
+          }}
+        />
         <section className="card">
           <h2 className="m-0 text-[17px] font-semibold">{texts.requisites.title}</h2>
           <p className="mb-4 mt-1 text-[13px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">
@@ -362,6 +378,7 @@ export default function Page() {
             )}
           </div>
         </section>
+        </div>
 
         <section
           className="card"
@@ -380,6 +397,7 @@ export default function Page() {
             filled={filled}
             own={ownLayout}
             onOwn={setOwnPicked}
+            openGallery={galleryToken}
           />
           <Mounts diameterMm={diameter} value={mount} onChange={setMount} />
         </section>
@@ -406,6 +424,8 @@ export default function Page() {
         </button>
       </div>
     </main>
+    {/* ситуация «Не знаю, помогите» открывает карточку сразу */}
+    <HelpCard openOnMount={situation === "help"} />
     </>
   );
 }

@@ -94,7 +94,7 @@ export default function Mounts({
 
   const tiles = (onPick?: () => void) =>
     list.map((m, i) => (
-      <Tile key={m.id} m={m} extra={m.price - base} active={i === value}
+      <Tile key={m.id} m={m} extra={m.price - base} base={base} active={i === value}
         onClick={() => { onChange(i); onPick?.(); }} />
     ));
 
@@ -147,10 +147,11 @@ export default function Mounts({
 }
 
 function Tile({
-  m, extra, active, onClick,
+  m, extra, base, active, onClick,
 }: {
   m: Mount;
   extra: number;
+  base: number;
   active: boolean;
   onClick: () => void;
 }) {
@@ -207,11 +208,26 @@ function Tile({
         <div className="truncate text-[13px] font-semibold" title={`${m.brand} ${m.model}`}>
           {m.brand} {m.model}
         </div>
-        <div className="mt-1 text-[12px]">
+        {/* три вида цены из макета: входит в стоимость, со скидкой, обычная */}
+        <div className="mt-1">
           {extra === 0 ? (
-            <span style={{ color: "var(--ok)" }}>Включена в стоимость</span>
+            <span className="text-[12px] font-semibold" style={{ color: "var(--ok)" }}>
+              Включена в стоимость
+            </span>
+          ) : m.priceOld ? (
+            <span className="flex items-baseline gap-1.5">
+              <span
+                className="text-[12px] line-through"
+                style={{ color: "color-mix(in srgb, var(--color-text) 45%, transparent)" }}
+              >
+                + {(m.priceOld - base).toLocaleString("ru-RU")} ₽
+              </span>
+              <span className="text-[14px] font-semibold" style={{ color: "var(--color-accent)" }}>
+                + {extra.toLocaleString("ru-RU")} ₽
+              </span>
+            </span>
           ) : (
-            <span>+ {extra.toLocaleString("ru-RU")} ₽</span>
+            <span className="text-[14px] font-semibold">+ {extra.toLocaleString("ru-RU")} ₽</span>
           )}
         </div>
       </div>

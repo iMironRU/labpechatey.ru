@@ -16,6 +16,8 @@ export type Mount = {
   colors: string | null;
   kit: string | null;
   price: number;
+  /** цена до скидки — в прайсе её пока нет, поле под будущие акции */
+  priceOld?: number | null;
   note: string | null;
 };
 
