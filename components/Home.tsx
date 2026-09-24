@@ -8,7 +8,10 @@ import { IconArrowRight } from "@/components/Icons";
 const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, transparent)`;
 
 /** Главная страница: герой, шаги заказа, ситуации, доверие, услуги, отзывы, футер. */
-export default function Home({ onPick }: { onPick: (kind: string, situation: string) => void }) {
+export default function Home({ onPick, onStart }: {
+  onPick: (kind: string, situation: string) => void;
+  onStart: () => void;
+}) {
   return (
     <>
       <div id="top" className="mx-auto w-full" style={{ maxWidth: 1200, padding: "0 clamp(18px,4vw,56px)" }}>
@@ -41,7 +44,7 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
               {home.hero.lead}
             </p>
             <div className="mt-7 flex flex-wrap gap-3 max-[860px]:hidden">
-              <button type="button" className="btn btn-primary px-[22px] py-3 text-[15px]" onClick={() => onPick("ip", "ip")}>
+              <button type="button" className="btn btn-primary px-[22px] py-3 text-[15px]" onClick={onStart}>
                 {home.hero.cta}
                 <IconArrowRight />
               </button>
@@ -228,7 +231,7 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
               {home.final.lead}
             </p>
           </div>
-          <button type="button" className="btn btn-primary px-[22px] py-3 text-[15px]" onClick={() => onPick("ip", "ip")}>
+          <button type="button" className="btn btn-primary px-[22px] py-3 text-[15px]" onClick={onStart}>
             {home.final.cta}
             <IconArrowRight />
           </button>
@@ -296,14 +299,14 @@ export default function Home({ onPick }: { onPick: (kind: string, situation: str
             <path d="M6 3h3l2 5-2 1a12 12 0 006 6l1-2 5 2v3a2 2 0 01-2 2A16 16 0 014 5a2 2 0 012-2z" />
           </svg>
         </a>
-        <button type="button" className="btn btn-primary h-11 text-[14.5px]" onClick={() => onPick("ip", "ip")}>
+        <button type="button" className="btn btn-primary h-11 text-[14.5px]" onClick={onStart}>
           {home.stickyCta}
         </button>
         <button
           type="button"
           aria-label="Конструктор"
           className="btn btn-secondary h-11 w-11 p-0"
-          onClick={() => onPick("ip", "ip")}
+          onClick={onStart}
         >
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
             <circle cx="12" cy="12" r="8.5" />

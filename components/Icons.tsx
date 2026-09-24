@@ -75,3 +75,38 @@ export const IconPin = ({ size = 16, width = 1.7 }: Props) => (
     <circle cx="12" cy="10" r="2.4" />
   </svg>
 );
+
+/** Иконки карточек ситуаций — контуры из «Конструктор.dc.html». */
+const CAT_PATHS: Record<string, string[]> = {
+  guard: ["M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"],
+  refresh: ["M3 12a9 9 0 109-9 9 9 0 00-7 3.3M3 4v4h4"],
+  lines: ["M4 7h16", "M4 12h16", "M4 17h10"],
+  doctor: ["M12 3v6", "M9 6h6", "M6 21a6 6 0 0112 0"],
+  sign: ["M4 18c4-1 5-9 8-9s2 6 4 6 2-3 4-3"],
+  question: ["M12 17h.01M9.1 9a3 3 0 015.8 1c0 2-3 2.5-3 4"],
+  upload: ["M12 16V4M7 9l5-5 5 5", "M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"],
+};
+
+export const IconCat = ({ name, size = 20 }: { name: string; size?: number }) => (
+  <svg {...base(size, 1.6)} strokeLinecap="round" strokeLinejoin="round">
+    {(CAT_PATHS[name] ?? []).map((d, i) => (
+      <path key={i} d={d} />
+    ))}
+  </svg>
+);
+
+export const IconUpload = ({ size = 20, width = 1.7 }: Props) => (
+  <svg {...base(size, width)}>
+    <path d="M12 16V4M7 9l5-5 5 5" />
+    <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+  </svg>
+);
+
+export const IconGrid = ({ size = 20, width = 1.7 }: Props) => (
+  <svg {...base(size, width)}>
+    <rect x="3" y="3" width="7" height="7" rx="1" />
+    <rect x="14" y="3" width="7" height="7" rx="1" />
+    <rect x="3" y="14" width="7" height="7" rx="1" />
+    <rect x="14" y="14" width="7" height="7" rx="1" />
+  </svg>
+);

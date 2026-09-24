@@ -6,6 +6,7 @@ import Mounts from "@/components/Mounts";
 import StampPreview from "@/components/StampPreview";
 import Checkout from "@/components/Checkout";
 import Home from "@/components/Home";
+import SituationPicker from "@/components/SituationPicker";
 import { IconArrowLeft, IconArrowRight, IconCalendar, IconClock, IconCross } from "@/components/Icons";
 import SiteHeader from "@/components/SiteHeader";
 import catalog from "@/content/catalog.json";
@@ -21,7 +22,7 @@ import { asset } from "@/lib/paths";
 export default function Page() {
   // состояние конструктора — см. design-ref/README.md, раздел State Management
   // стартовый экран — первый: человек приходит с ситуацией, а не с типом печати
-  const [screen, setScreen] = useState<"start" | "build" | "checkout">("start");
+  const [screen, setScreen] = useState<"start" | "choose" | "build" | "checkout">("start");
   const [situation, setSituation] = useState<string | null>(null);
   const [sel, setSel] = useState("ip");
   const [inn, setInn] = useState("");
@@ -37,7 +38,9 @@ export default function Page() {
   const [variants, setVariants] = useState<Scored[]>([]);
 
   const kindItem = catalog.kinds.find((k) => k.id === sel) ?? catalog.kinds[0];
-  const ownLayout = kindItem.copy;
+  // «свой макет»: либо ситуация-копия, либо человек сам нажал загрузку
+  const [ownPicked, setOwnPicked] = useState(false);
+  const ownLayout = kindItem.copy || ownPicked;
   const sealKind: Kind = kindItem.ent === "ООО" ? "ooo" : "ip";
 
   useEffect(() => {
@@ -102,6 +105,7 @@ export default function Page() {
     setSel(kind);
     setSituation(sit);
     setTpl(null);
+    setOwnPicked(false);
     setScreen("build");
   };
 
@@ -109,13 +113,24 @@ export default function Page() {
     return (
       <>
         <SiteHeader />
-        <Home onPick={pick} />
+        <Home onPick={pick} onStart={() => setScreen("choose")} />
+      </>
+    );
+  }
+
+  if (screen === "choose") {
+    return (
+      <>
+        <SiteHeader onHome={() => setScreen("start")} />
+        <SituationPicker onPick={pick} />
       </>
     );
   }
 
   if (screen === "checkout") {
     return (
+      <>
+      <SiteHeader onHome={() => setScreen("start")} />
       <Checkout
         kindTitle={kindItem.title}
         layoutTitle={currentTemplate?.tpl.title ?? "Макет"}
@@ -128,10 +143,13 @@ export default function Page() {
         thumbValues={currentTemplate?.values}
         onBack={() => setScreen("build")}
       />
+      </>
     );
   }
 
   return (
+    <>
+    <SiteHeader onHome={() => setScreen("start")} />
     <main
       className="mx-auto flex w-full flex-1 flex-col gap-4"
       // снизу место под панель с итогом, она перекрывает контент
@@ -360,6 +378,8 @@ export default function Page() {
             onChoose={onChoose}
             onVariants={onVariants}
             filled={filled}
+            own={ownLayout}
+            onOwn={setOwnPicked}
           />
           <Mounts diameterMm={diameter} value={mount} onChange={setMount} />
         </section>
@@ -386,6 +406,7 @@ export default function Page() {
         </button>
       </div>
     </main>
+    </>
   );
 }
 

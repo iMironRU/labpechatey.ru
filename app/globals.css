@@ -210,3 +210,12 @@ body {
 /* Логотип отрисован тёмной бирюзой (#004563) — на тёмном фоне он тонет,
    поэтому в тёмной теме показываем его белым. */
 [data-theme="dark"] .dark-invert { filter: brightness(0) invert(1); }
+
+/* Модальное окно по центру — для «Посмотреть все» в превью. */
+.modal {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 70;
+  width: min(760px, 92vw); max-height: 86vh; overflow-y: auto;
+  background: var(--color-surface); border: 1px solid var(--color-divider);
+  border-radius: 16px; box-shadow: var(--shadow-lg); padding: 16px;
+  animation: fadeIn .2s ease;
+}

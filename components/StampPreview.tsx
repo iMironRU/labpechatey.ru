@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { fill, rank, type Scored, type TemplateIndex, type Values, type Kind } from "@/lib/stamp";
 import { asset } from "@/lib/paths";
-import { IconChevronLeft, IconChevronRight } from "@/components/Icons";
+import { IconChevronLeft, IconChevronRight, IconGrid, IconUpload } from "@/components/Icons";
 
 type Props = {
   index: TemplateIndex[];
@@ -13,6 +13,9 @@ type Props = {
   onChoose: (id: string) => void;
   onVariants?: (list: Scored[]) => void;
   filled: boolean;
+  /** режим «свой макет» — вместо превью показываем загрузку файла */
+  own: boolean;
+  onOwn: (v: boolean) => void;
 };
 
 const cache = new Map<string, string>();
@@ -33,8 +36,11 @@ async function templateSvg(file: string) {
  * отрисовка. Иначе в ленте висят варианты с обрезанным текстом.
  */
 export default function StampPreview({
-  index, kind, values, chosen, onChoose, onVariants, filled,
+  index, kind, values, chosen, onChoose, onVariants, filled, own, onOwn,
 }: Props) {
+  const [file, setFile] = useState<File | null>(null);
+  const [gallery, setGallery] = useState(false);
+  const input = useRef<HTMLInputElement>(null);
   const [usable, setUsable] = useState<Scored[]>([]);
   const [markup, setMarkup] = useState<{ html: string; box: string } | null>(null);
   const [notes, setNotes] = useState<string[]>([]);
@@ -85,6 +91,8 @@ export default function StampPreview({
 
   return (
     <div className="flex flex-col gap-3">
+      {!own && (
+      <>
       <div className="flex items-baseline justify-between gap-3">
         <span className="text-[15px] font-semibold">{current?.tpl.title ?? "Макет"}</span>
         <span className="text-[12px] text-[color-mix(in_srgb,var(--color-text)_48%,transparent)]">
@@ -137,24 +145,139 @@ export default function StampPreview({
         </ul>
       )}
 
-      <div className="flex flex-wrap gap-2 border-t border-[var(--color-divider)] pt-3">
-        {usable.map((v) => (
+      {/* ряд миниатюр: макеты, загрузка своего и «посмотреть все» — по макету */}
+      <div className="flex items-center gap-2 border-t border-[var(--color-divider)] pt-3">
+        <div className="flex flex-1 gap-2 overflow-x-auto pb-[2px]">
+          {usable.map((v) => (
+            <button
+              key={v.tpl.id}
+              type="button"
+              title={`${v.tpl.title} · Ø${v.tpl.diameterMm} мм`}
+              onClick={() => onChoose(v.tpl.id)}
+              aria-pressed={v.tpl.id === chosen}
+              className="grid h-[54px] w-[54px] flex-none place-items-center rounded-[10px] border-[1.5px] p-[6px]"
+              style={{
+                borderColor: v.tpl.id === chosen ? "var(--color-accent)" : "var(--color-divider)",
+                background: "var(--color-surface)",
+              }}
+            >
+              <StampThumb file={v.tpl.file} values={v.values} />
+            </button>
+          ))}
           <button
-            key={v.tpl.id}
             type="button"
-            title={`${v.tpl.title} · Ø${v.tpl.diameterMm} мм`}
-            onClick={() => onChoose(v.tpl.id)}
-            aria-pressed={v.tpl.id === chosen}
-            className="grid h-[54px] w-[54px] place-items-center rounded-[10px] border-[1.5px] p-[6px]"
-            style={{
-              borderColor: v.tpl.id === chosen ? "var(--color-accent)" : "var(--color-divider)",
-              background: "var(--color-surface)",
-            }}
+            title="Загрузить свой макет"
+            aria-label="Загрузить свой макет"
+            onClick={() => onOwn(true)}
+            className="grid h-[54px] w-[54px] flex-none place-items-center rounded-[10px] border-[1.5px] border-[var(--color-divider)] hover:border-[var(--color-accent)]"
+            style={{ background: "var(--color-surface)", color: "var(--color-accent)" }}
           >
-            <StampThumb file={v.tpl.file} values={v.values} />
+            <IconUpload />
           </button>
-        ))}
+        </div>
+        <button
+          type="button"
+          title="Посмотреть все"
+          aria-label="Посмотреть все"
+          onClick={() => setGallery(true)}
+          disabled={!usable.length}
+          className="grid h-[54px] w-[54px] flex-none place-items-center rounded-[10px] border-[1.5px] border-[var(--color-divider)] hover:border-[var(--color-accent)] disabled:opacity-40"
+          style={{ background: "var(--color-surface)" }}
+        >
+          <IconGrid />
+        </button>
       </div>
+      </>
+      )}
+
+      {/* режим «свой макет» */}
+      {own && (
+        <div className="flex flex-1 flex-col">
+          <input
+            ref={input}
+            type="file"
+            accept=".pdf,.png,.svg,.cdr,image/*"
+            className="hidden"
+            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          />
+          <button
+            type="button"
+            onClick={() => input.current?.click()}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => { e.preventDefault(); setFile(e.dataTransfer.files?.[0] ?? null); }}
+            className="flex w-full flex-1 flex-col items-center justify-center gap-[9px] rounded-[13px] border-[1.5px] border-dashed p-[18px]"
+            style={{ minHeight: 300, borderColor: "color-mix(in srgb, var(--color-accent) 55%, transparent)" }}
+          >
+            <span style={{ color: "var(--color-accent)" }}>
+              <IconUpload size={34} width={1.4} />
+            </span>
+            {file ? (
+              <>
+                <b className="max-w-full truncate text-[15px]">{file.name}</b>
+                <span className="text-center text-[12.5px] leading-[1.5] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
+                  {(file.size / 1024).toFixed(0)} КБ · нажмите, чтобы заменить файл
+                </span>
+              </>
+            ) : (
+              <>
+                <b className="text-[15px]">Загрузить свой макет</b>
+                <span className="text-center text-[12.5px] leading-[1.5] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
+                  Готовый файл оттиска — PDF, PNG, SVG или CDR.
+                  <br />
+                  Перетащите сюда или выберите на устройстве.
+                </span>
+              </>
+            )}
+          </button>
+          <div className="mt-3 flex items-center justify-between gap-[10px]">
+            <span className="text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_55%,transparent)]">
+              Хотите готовый шаблон?
+            </span>
+            <button type="button" className="btn btn-ghost px-3 py-[7px] text-[13px]" onClick={() => onOwn(false)}>
+              Выбрать стандартный
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* «Посмотреть все»: те же макеты крупнее */}
+      {gallery && (
+        <>
+          <div className="sheet-backdrop" onClick={() => setGallery(false)} />
+          <div className="modal" role="dialog" aria-label="Все макеты">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <span className="text-[17px] font-semibold">Все подходящие макеты</span>
+              <button type="button" className="btn btn-ghost px-3 py-[7px] text-[13px]" onClick={() => setGallery(false)}>
+                Закрыть
+              </button>
+            </div>
+            <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))" }}>
+              {usable.map((v) => (
+                <button
+                  key={v.tpl.id}
+                  type="button"
+                  onClick={() => { onChoose(v.tpl.id); setGallery(false); }}
+                  aria-pressed={v.tpl.id === chosen}
+                  className="flex flex-col items-center gap-2 rounded-[12px] border-[1.5px] p-3"
+                  style={{
+                    borderColor: v.tpl.id === chosen ? "var(--color-accent)" : "var(--color-divider)",
+                    background: "var(--color-surface)",
+                  }}
+                >
+                  <span className="grid h-[104px] w-[104px] place-items-center">
+                    <StampThumb file={v.tpl.file} values={v.values} />
+                  </span>
+                  <span className="text-center text-[12px] leading-[1.35]">{v.tpl.title}</span>
+                  <span className="text-[11.5px] text-[color-mix(in_srgb,var(--color-text)_52%,transparent)]">
+                    Ø{v.tpl.diameterMm} мм
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
     </div>
   );
 }

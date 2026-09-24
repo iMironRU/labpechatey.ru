@@ -2,10 +2,16 @@
 
 import { useEffect, useState } from "react";
 import home from "@/content/home.json";
+import texts from "@/content/constructor.json";
 import { asset } from "@/lib/paths";
+import { IconArrowLeft } from "@/components/Icons";
 
 /** Шапка сайта: липкая, с размытием фона и переключателем темы. */
-export default function SiteHeader() {
+/**
+ * Шапка. На экранах конструктора она короткая — как в макете
+ * «Конструктор.dc.html»: логотип, «На главную», телефон и переключатель темы.
+ */
+export default function SiteHeader({ onHome }: { onHome?: () => void } = {}) {
   const [dark, setDark] = useState(false);
   // логотип лежит на стороннем домене: если не отдастся, показываем текст
   const [logoFailed, setLogoFailed] = useState(false);
@@ -37,7 +43,7 @@ export default function SiteHeader() {
         className="mx-auto flex items-center gap-3 min-[861px]:gap-[22px]"
         style={{ maxWidth: 1200, padding: "12px clamp(18px,4vw,56px)" }}
       >
-        <a href="#top" className="mr-auto flex items-center gap-[11px] no-underline" style={{ color: "var(--color-text)" }}>
+        <a href="#top" onClick={onHome ? (e) => { e.preventDefault(); onHome(); } : undefined} className="mr-auto flex items-center gap-[11px] no-underline" style={{ color: "var(--color-text)" }}>
           {logoFailed ? (
             <span className="text-[15px] font-semibold leading-[1.1]">
               Лаборатория
@@ -56,7 +62,7 @@ export default function SiteHeader() {
           )}
         </a>
 
-        <nav className="hidden items-center gap-5 min-[861px]:flex">
+        <nav className="hidden items-center gap-5 min-[861px]:flex" hidden={Boolean(onHome)}>
           {home.nav.map((n) => (
             <a key={n.label} href={n.href} className="text-[14px] no-underline" style={{ color: "inherit" }}>
               {n.label}
@@ -64,8 +70,20 @@ export default function SiteHeader() {
           ))}
         </nav>
 
+        {onHome && (
+          <button
+            type="button"
+            onClick={onHome}
+            className="hidden items-center gap-[6px] text-[14px] min-[861px]:inline-flex"
+          >
+            <IconArrowLeft size={15} width={1.7} />
+            {texts.choose.backHome}
+          </button>
+        )}
+
         <a
           href="#footer"
+          hidden={Boolean(onHome)}
           className="hidden items-center gap-[5px] whitespace-nowrap rounded-full border border-[var(--color-divider)] px-2.5 py-[5px] text-[12.5px] no-underline min-[861px]:flex"
           style={{ color: "inherit" }}
         >
@@ -87,6 +105,7 @@ export default function SiteHeader() {
         <a
           href="https://t.me/"
           aria-label="Telegram"
+          hidden={Boolean(onHome)}
           className="hidden h-[34px] w-[34px] flex-none place-items-center rounded-[8px] border border-[var(--color-divider)] no-underline min-[861px]:grid"
           style={{ color: "inherit" }}
         >
