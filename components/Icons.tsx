@@ -76,24 +76,42 @@ export const IconPin = ({ size = 16, width = 1.7 }: Props) => (
   </svg>
 );
 
-/** Иконки карточек ситуаций — контуры из «Конструктор.dc.html». */
-const CAT_PATHS: Record<string, string[]> = {
-  guard: ["M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"],
-  refresh: ["M3 12a9 9 0 109-9 9 9 0 00-7 3.3M3 4v4h4"],
-  lines: ["M4 7h16", "M4 12h16", "M4 17h10"],
-  doctor: ["M12 3v6", "M9 6h6", "M6 21a6 6 0 0112 0"],
-  sign: ["M4 18c4-1 5-9 8-9s2 6 4 6 2-3 4-3"],
-  question: ["M12 17h.01M9.1 9a3 3 0 015.8 1c0 2-3 2.5-3 4"],
-  upload: ["M12 16V4M7 9l5-5 5 5", "M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"],
-  gallery: ["M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"],
-  help: ["M12 17h.01M9.1 9a3 3 0 015.8 1c0 2-3 2.5-3 4", "M21 12a9 9 0 11-18 0 9 9 0 0118 0"],
+/**
+ * Иконки карточек — контуры и размеры взяты из скриптов прототипов
+ * («Главная.dc.html», «Конструктор.dc.html»): 22×22, stroke 1.5.
+ */
+type Shape =
+  | { p: string }
+  | { c: [number, number, number] }
+  | { r: [number, number, number, number, number] };
+
+const CAT_SHAPES: Record<string, Shape[]> = {
+  guard: [{ p: "M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z" }],
+  "guard-check": [{ p: "M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z" }, { p: "M9 12l2 2 4-4" }],
+  house: [{ p: "M4 20V8l8-4 8 4v12" }, { p: "M9 20v-6h6v6" }],
+  doctor: [{ p: "M12 3v6" }, { p: "M9 6h6" }, { p: "M6 21a6 6 0 0112 0" }],
+  refresh: [{ p: "M3 12a9 9 0 109-9 9 9 0 00-7 3.3M3 4v4h4" }],
+  lines: [{ p: "M4 7h16" }, { p: "M4 12h16" }, { p: "M4 17h10" }],
+  sign: [{ p: "M4 18c4-1 5-9 8-9s2 6 4 6 2-3 4-3" }],
+  target: [{ c: [12, 12, 8] }, { c: [12, 12, 3] }],
+  card: [{ r: [3, 6, 18, 12, 2] }, { c: [12, 12, 2.5] }],
+  pin: [{ p: "M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" }, { c: [12, 10, 2.5] }],
+  help: [{ p: "M12 17h.01M9.1 9a3 3 0 015.8 1c0 2-3 2.5-3 4" }, { c: [12, 12, 9] }],
+  upload: [{ p: "M12 16V4M7 9l5-5 5 5" }, { p: "M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" }],
+  gallery: [{ p: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" }],
 };
 
-export const IconCat = ({ name, size = 20 }: { name: string; size?: number }) => (
-  <svg {...base(size, 1.6)} strokeLinecap="round" strokeLinejoin="round">
-    {(CAT_PATHS[name] ?? []).map((d, i) => (
-      <path key={i} d={d} />
-    ))}
+export const IconCat = ({ name, size = 22 }: { name: string; size?: number }) => (
+  <svg {...base(size, 1.5)} strokeLinecap="round" strokeLinejoin="round">
+    {(CAT_SHAPES[name] ?? []).map((sh, i) =>
+      "p" in sh ? (
+        <path key={i} d={sh.p} />
+      ) : "c" in sh ? (
+        <circle key={i} cx={sh.c[0]} cy={sh.c[1]} r={sh.c[2]} />
+      ) : (
+        <rect key={i} x={sh.r[0]} y={sh.r[1]} width={sh.r[2]} height={sh.r[3]} rx={sh.r[4]} />
+      ),
+    )}
   </svg>
 );
 

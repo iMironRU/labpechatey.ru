@@ -3,7 +3,7 @@
 import home from "@/content/home.json";
 import HeroStamp from "@/components/HeroStamp";
 import MountsCatalog from "@/components/MountsCatalog";
-import { IconArrowRight } from "@/components/Icons";
+import { IconArrowRight, IconCat } from "@/components/Icons";
 
 const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, transparent)`;
 
@@ -123,9 +123,7 @@ export default function Home({ onPick, onStart }: {
                   className="grid h-10 w-10 place-items-center rounded-[10px]"
                   style={{ background: "var(--color-accent-800)", color: "var(--color-accent-100)" }}
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z" />
-                  </svg>
+<IconCat name={c.icon} />
                 </span>
                 <span className="text-[18px] font-semibold leading-[1.14]">{c.title}</span>
                 <span className="flex-1 text-[13px] leading-[1.5]" style={{ color: muted(68) }}>
@@ -151,10 +149,7 @@ export default function Home({ onPick, onStart }: {
                 className="grid h-10 w-10 place-items-center rounded-[10px]"
                 style={{ background: "var(--color-accent-800)", color: "var(--color-accent-100)" }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="8" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
+<IconCat name={b.icon} />
               </span>
               <span className="text-[15px] font-semibold">{b.title}</span>
               <span className="text-[13px] leading-[1.5]" style={{ color: muted(65) }}>
