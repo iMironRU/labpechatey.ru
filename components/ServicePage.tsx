@@ -6,6 +6,7 @@ import services from "@/content/services.json";
 import home from "@/content/home.json";
 import SiteHeader from "@/components/SiteHeader";
 import { IconArrowRight, IconCat, IconCheck, IconChevronDown } from "@/components/Icons";
+import { sendLead } from "@/lib/api";
 
 const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, transparent)`;
 
@@ -258,7 +259,13 @@ export default function ServicePage({ slug }: { slug: string }) {
               </p>
 
               <form
-                onSubmit={(e) => { e.preventDefault(); if (tel.trim()) setSent(true); }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!tel.trim()) return;
+                  // без бэкенда уходит в никуда и просто показывает «принято»
+                  sendLead({ service: s.slug, name, phone: tel, file }).catch(() => {});
+                  setSent(true);
+                }}
                 className="grid items-end gap-3.5"
                 style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 220px), 1fr))" }}
               >

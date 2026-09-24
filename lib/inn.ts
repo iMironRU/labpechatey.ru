@@ -44,12 +44,12 @@ export function checkOgrn(v: string): { ok: boolean; kind?: "ooo" | "ip"; msg: s
 
 /**
  * Мок реестра: как в прототипе — задержка 850 мс, ИНН 5610100200 отдаёт
- * «не найдено». В проде сюда встанет DaData или API ФНС; запрос идёт
- * через прокси, потому что сайт статический и ключ на клиент не кладём.
+ * «не найдено». Боевой запрос идёт через бэкенд (lib/api.ts), потому что
+ * ключ DaData на клиенте держать нельзя.
  */
 const MOCK_NOT_FOUND = "5610100200";
 
-export function lookupInn(inn: string, signal?: AbortSignal): Promise<Registry> {
+export function lookupInnMock(inn: string, signal?: AbortSignal): Promise<Registry> {
   return new Promise((resolve, reject) => {
     const t = setTimeout(() => {
       if (inn === MOCK_NOT_FOUND) {

@@ -2,7 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import catalog from "@/content/catalog.json";
-import { checkInn, checkOgrn, lookupInn, type Registry } from "@/lib/inn";
+import { checkInn, checkOgrn, type Registry } from "@/lib/inn";
+import { lookupInn } from "@/lib/api";
 import { valuesFor, type Kind, type Scored, type TemplateIndex } from "@/lib/stamp";
 import { forDiameter } from "@/lib/mounts";
 import { asset } from "@/lib/paths";
