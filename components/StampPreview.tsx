@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fill, rank, type Scored, type TemplateIndex, type Values, type Kind } from "@/lib/stamp";
+import { fill, rank, LABELS, type Scored, type TemplateIndex, type Values, type Kind } from "@/lib/stamp";
 import { asset } from "@/lib/paths";
 import { IconChevronLeft, IconChevronRight, IconGrid, IconUpload } from "@/components/Icons";
 
@@ -75,8 +75,10 @@ export default function StampPreview({
       if (my !== token.current) return;
       const res = fill(text, pick.values, "var(--ink)");
       setMarkup({ html: res.svg.innerHTML, box: res.svg.getAttribute("viewBox") || "" });
-      setNotes([...pick.notes, ...res.notes, ...(pick.dropped.length
-        ? [`в этот макет не входит: ${pick.dropped.join(", ")}`] : [])]);
+      // из служебных заметок оставляем одну важную: какие данные не попадут
+      setNotes(pick.dropped.length
+        ? [`В этот макет не войдёт: ${pick.dropped.map((d) => LABELS[d] ?? d).join(", ")}`]
+        : []);
     })();
   }, [ranked, chosen, onChoose, onVariants]);
 
@@ -147,7 +149,7 @@ export default function StampPreview({
       {notes.length > 0 && (
         <ul className="m-0 list-none p-0 text-[12px] text-[color-mix(in_srgb,var(--color-text)_55%,transparent)]">
           {notes.map((n) => (
-            <li key={n}>— {n}</li>
+            <li key={n}>{n}</li>
           ))}
         </ul>
       )}

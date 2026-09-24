@@ -102,10 +102,9 @@ export function score(tpl: TemplateIndex, vals: Values): Omit<Scored, "tpl" | "v
     if (need <= f.roomMm) slack = Math.min(slack, (f.roomMm - need) / f.roomMm);
     else if (needMin <= f.roomMm) {
       if (verdict === "ok") verdict = "tight";
-      notes.push(`${key}: кегль придётся снизить до ${f.minSizeMm} мм`);
     } else {
       verdict = "bad";
-      notes.push(`${key}: не влезает даже при ${f.minSizeMm} мм`);
+      notes.push(`${LABELS[key] ?? key} не помещается`);
     }
   }
 
@@ -199,10 +198,10 @@ export function fill(svgText: string, vals: Values, color: string): Filled {
     }
     if (textEl.getComputedTextLength() > room) {
       grade = "bad";
-      notes.push(`${key}: не помещается даже при ${min} мм`);
+      notes.push(`${LABELS[key] ?? key} не помещается`);
     } else if (size < spec.size - 0.01) {
+      // кегль ужали — для ранжирования это «впритык», человеку говорить нечего
       if (grade === "ok") grade = "tight";
-      notes.push(`${key}: кегль уменьшен с ${spec.size} до ${size} мм`);
     }
   }
 
@@ -216,6 +215,23 @@ export const LEGAL_FORMS: Record<string, { full: string; short: string }> = {
   ao: { full: "Акционерное общество", short: "АО" },
   pao: { full: "Публичное акционерное общество", short: "ПАО" },
   nko: { full: "Некоммерческая организация", short: "НКО" },
+};
+
+/** Поля по-русски: ключи нужны движку, а показывать их человеку незачем. */
+export const LABELS: Record<string, string> = {
+  name: "полное наименование",
+  name_2: "продолжение наименования",
+  name_short: "краткое наименование",
+  fio: "ФИО",
+  label_ip: "надпись «Индивидуальный предприниматель»",
+  inn: "ИНН",
+  ogrn: "ОГРН",
+  kpp: "КПП",
+  city: "город",
+  address: "адрес",
+  position: "должность",
+  speciality: "специальность",
+  license: "номер лицензии",
 };
 
 export function valuesFor(
