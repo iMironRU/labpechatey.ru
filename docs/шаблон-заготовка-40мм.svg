@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Болванка шаблона печати Ø40 мм. Открыть в Illustrator, рисовать поверх.
+     Имена объектов (id) — договор с движком, см. docs/шаблоны-печатей-для-дизайнера.md -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-21 -21 42 42" width="42mm" height="42mm">
+
+  <defs>
+    <!-- базовые линии дуг: длинные дуги режем на две половины -->
+    <path id="b_name" d="M -13.97 -8.06 A 16.14 16.14 0 0 1 0 -16.14 A 16.14 16.14 0 0 1 13.97 -8.06"/>
+    <path id="b_city" d="M -13.55 6.87 A 15.19 15.19 0 0 0 0 15.19 A 15.19 15.19 0 0 0 13.55 6.87"/>
+  </defs>
+
+  <!-- статика: рамка -->
+  <g id="s_frame" fill="none" stroke="#000">
+    <circle cx="0" cy="0" r="19.73" stroke-width="0.41"/>
+    <circle cx="0" cy="0" r="18.78" stroke-width="0.15"/>
+    <circle cx="0" cy="0" r="8.92" stroke-width="0.18"/>
+  </g>
+
+  <!-- поля: текст внутри — рыба, на сайте он заменяется -->
+  <g id="f_name">
+    <text font-family="PT Sans" font-size="2.03" letter-spacing="0.05" text-anchor="middle" fill="#000">
+      <textPath href="#b_name" startOffset="50%">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ «РОМАШКА»</textPath>
+    </text>
+  </g>
+
+  <g id="f_city">
+    <text font-family="PT Sans" font-size="1.49" letter-spacing="0.08" text-anchor="middle" fill="#000">
+      <textPath href="#b_city" startOffset="50%">Г. ОРЕНБУРГ</textPath>
+    </text>
+  </g>
+
+  <g id="f_name_short">
+    <text x="0" y="-0.54" font-family="PT Sans" font-size="1.62" font-weight="600" text-anchor="middle" fill="#000">ООО «РОМАШКА»</text>
+  </g>
+
+  <g id="f_inn">
+    <text x="0" y="1.76" font-family="PT Sans" font-size="1.28" text-anchor="middle" fill="#000">ИНН 5610000000</text>
+  </g>
+</svg>
