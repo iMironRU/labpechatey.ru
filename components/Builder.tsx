@@ -117,7 +117,6 @@ export default function Builder() {
 
       {/* ——— реквизиты и превью ——— */}
       <div className="two-col two-col--preview">
-        <div className="flex min-w-0 flex-col gap-3">
         <section className="panel">
           <h2 className="m-0 text-[17px] font-semibold">{texts.requisites.title}</h2>
           <p className="mb-4 mt-1 text-[13px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">
@@ -240,7 +239,6 @@ export default function Builder() {
             )}
           </div>
         </section>
-        </div>
 
         <section
           className="panel"
