@@ -244,8 +244,6 @@ export default function Builder() {
           className="panel"
           style={{
             padding: "clamp(16px,2vw,22px)",
-            background:
-              "repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-text) var(--preview-stripe), transparent) 0 1px, transparent 1px 13px), var(--color-surface)",
           }}
         >
           <StampPreview

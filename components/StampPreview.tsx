@@ -114,11 +114,12 @@ export default function StampPreview({
           <IconChevronLeft />
         </button>
 
+        <div className="stamp-paper grid min-w-0 flex-1 place-items-center self-stretch p-3">
         {markup ? (
           <svg
             viewBox={markup.box}
             style={{
-              width: "min(300px, 92%)", height: "auto", color: "var(--ink)",
+              width: "min(300px, 92%)", height: "auto",
               opacity: filled ? 1 : "var(--preview-dim)" as unknown as number,
             }}
             dangerouslySetInnerHTML={{ __html: markup.html }}
@@ -129,6 +130,7 @@ export default function StampPreview({
             выберите печать большего диаметра.
           </p>
         )}
+        </div>
 
         <button
           type="button"
@@ -152,7 +154,7 @@ export default function StampPreview({
 
       {/* ряд миниатюр: макеты, загрузка своего и «посмотреть все» — по макету */}
       <div className="flex items-center gap-2 border-t border-[var(--color-divider)] pt-3">
-        <div className="flex flex-1 gap-2 overflow-x-auto pb-[2px]">
+        <div className="rail flex flex-1 gap-2 pb-[2px]">
           {usable.map((v) => (
             <button
               key={v.tpl.id}
@@ -160,10 +162,9 @@ export default function StampPreview({
               title={`${v.tpl.title} · Ø${v.tpl.diameterMm} мм`}
               onClick={() => onChoose(v.tpl.id)}
               aria-pressed={v.tpl.id === chosen}
-              className="grid h-[54px] w-[54px] flex-none place-items-center rounded-[10px] border-[1.5px] p-[6px]"
+              className="stamp-paper grid h-[54px] w-[54px] flex-none place-items-center rounded-[10px] border-[1.5px] p-[6px]"
               style={{
                 borderColor: v.tpl.id === chosen ? "var(--color-accent)" : "var(--color-divider)",
-                background: "var(--color-surface)",
                 opacity: filled ? 1 : ("var(--preview-dim)" as unknown as number),
               }}
             >
@@ -270,7 +271,7 @@ export default function StampPreview({
                     background: "var(--color-surface)",
                   }}
                 >
-                  <span className="grid h-[104px] w-[104px] place-items-center">
+                  <span className="stamp-paper grid h-[104px] w-[104px] place-items-center p-2">
                     <StampThumb file={v.tpl.file} values={v.values} />
                   </span>
                   <span className="text-center text-[12px] leading-[1.35]">{v.tpl.title}</span>
@@ -302,7 +303,7 @@ export function StampThumb({ file, values }: { file: string; values: Values }) {
   }, [file, values]);
   if (!html) return null;
   return (
-    <svg viewBox={html.box} className="h-full w-full" style={{ color: "var(--ink)" }}
+    <svg viewBox={html.box} className="h-full w-full"
       dangerouslySetInnerHTML={{ __html: html.html }} />
   );
 }

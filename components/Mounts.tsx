@@ -122,7 +122,7 @@ export default function Mounts({
           <div className="sheet" role="dialog" aria-label="Подходящие оснастки">
             <div className="sheet-handle" />
             <div className="mb-[13px] text-[18px] font-semibold">Подходящие оснастки</div>
-            <div className="flex gap-2.5 overflow-x-auto pb-1">{tiles(() => setSheet(false))}</div>
+            <div className="rail flex gap-2.5 pb-1">{tiles(() => setSheet(false))}</div>
           </div>
         </>
       )}
@@ -140,7 +140,7 @@ export default function Mounts({
         </a>
       </div>
 
-      <div className="flex min-w-0 gap-3 overflow-x-auto pb-1">{tiles()}</div>
+      <div className="rail flex min-w-0 gap-3 pb-1">{tiles()}</div>
     </div>
     </>
   );

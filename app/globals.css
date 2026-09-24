@@ -196,6 +196,22 @@ body {
      так фон фотографии совпадает с плашкой и предмет не висит в рамке.
      Геометрия целиком здесь: утилиты Tailwind того же веса перебивались
      правилами класса, и снимок вылезал за окно плитки. */
+  /* Ленты прокручиваются вбок, но полосу не показываем: в макете её нет,
+     а Chrome на некоторых системах рисует её постоянно и она занимает
+     целую строку под плитками. */
+  .rail { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+  .rail::-webkit-scrollbar { display: none; }
+
+  /* Полотно оттиска — «бумага»: светлое в обеих темах, краска на нём
+     всегда тёмно-синяя. На тёмном фоне краска сливалась с подложкой. */
+  .stamp-paper {
+    border-radius: 12px;
+    color: #2a49c6;
+    background:
+      repeating-linear-gradient(45deg, rgba(25, 27, 38, .05) 0 1px, transparent 1px 13px),
+      #fbfcfe;
+  }
+
   .mount-photo { position: relative; display: block; overflow: hidden; border-radius: 10px; background: #fff; }
   .mount-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
   .mount-photo--empty { display: grid; place-items: center;
