@@ -17,7 +17,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={inter.variable}>
+    <html lang="ru" className={inter.variable} suppressHydrationWarning>
+      <head>
+        {/* тему ставим до первой отрисовки: раньше атрибут появлялся в
+            useEffect, и при тёмной схеме страница успевала мигнуть белым */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(()=>{try{var s=localStorage.getItem('theme');" +
+              "var d=s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches;" +
+              "var e=document.documentElement;e.setAttribute('data-theme',d?'dark':'light');" +
+              "e.style.colorScheme=d?'dark':'light';}catch(e){}})()",
+          }}
+        />
+      </head>
       {/* Sticky footer: контент тянется, футер не всплывает на коротких страницах */}
       <body className="flex min-h-screen flex-col">
         {/* состояние заказа над маршрутами: переход между экранами его не теряет */}

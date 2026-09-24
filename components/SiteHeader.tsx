@@ -19,18 +19,16 @@ export default function SiteHeader({ onHome, onConstructor }: {
   // логотип лежит на стороннем домене: если не отдастся, показываем текст
   const [logoFailed, setLogoFailed] = useState(false);
 
-  // тему помним между визитами; до выбора идём за системной
+  // атрибут уже проставлен скриптом в <head> — здесь только читаем его
   useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    const isDark = saved ? saved === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-    setDark(isDark);
-    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+    setDark(document.documentElement.getAttribute("data-theme") === "dark");
   }, []);
 
   const toggle = () => {
     const next = !dark;
     setDark(next);
     document.documentElement.setAttribute("data-theme", next ? "dark" : "light");
+    document.documentElement.style.colorScheme = next ? "dark" : "light";
     localStorage.setItem("theme", next ? "dark" : "light");
   };
 
