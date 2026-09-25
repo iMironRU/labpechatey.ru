@@ -270,11 +270,12 @@ body {
      Край следующей видно, иначе лента не читается как лента. */
   .snap-rail {
     display: flex; gap: 12px; scroll-snap-type: x mandatory;
-    /* поля по краям, иначе первую и последнюю карточку нечем отцентровать */
-    padding-inline: 7%;
-    margin-inline: calc(-1 * clamp(16px, 4vw, 56px));
+    /* лента выходит за поля контейнера — поэтому его отступ возвращаем
+       своим padding-ом: от него же считается ширина карточки */
+    padding-inline: var(--rail-pad, 18px);
+    scroll-padding-inline: var(--rail-pad, 18px);
   }
-  .snap-rail > * { flex: 0 0 86%; scroll-snap-align: center; }
+  .snap-rail > * { flex: 0 0 var(--rail-card, 86%); scroll-snap-align: start; }
   @media (max-width: 560px) {
     .mcta {
       display: grid; position: fixed; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 390px; z-index: 60;

@@ -3,6 +3,7 @@
 import home from "@/content/home.json";
 import HeroStamp from "@/components/HeroStamp";
 import Link from "next/link";
+import Rail from "@/components/Rail";
 import { IconArrowRight, IconCat } from "@/components/Icons";
 import { asset } from "@/lib/paths";
 
@@ -112,7 +113,7 @@ export default function Home({ onPick, onStart }: {
           <p className="m-0 mb-[22px] text-[15px]" style={{ color: muted(66) }}>
             {home.catsLead}
           </p>
-          <div className="grid gap-3.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 258px), 1fr))" }}>
+          <Rail grid="grid gap-3.5" gridStyle={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 258px), 1fr))" }}>
             {home.cats.map((c) => (
               <button
                 key={c.sit}
@@ -140,7 +141,7 @@ export default function Home({ onPick, onStart }: {
                 </span>
               </button>
             ))}
-          </div>
+          </Rail>
         </section>
 
         {/* ——— почему мы ——— */}
@@ -148,7 +149,12 @@ export default function Home({ onPick, onStart }: {
           className="mt-[clamp(46px,6vw,72px)] rounded-2xl"
           style={{ background: "var(--color-surface)", boxShadow: "var(--shadow-sm)", padding: "clamp(24px,3vw,38px)" }}
         >
-          <div className="grid gap-[22px]" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 210px), 1fr))" }}>
+          <Rail
+            grid="grid gap-[22px]"
+            gridStyle={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 210px), 1fr))" }}
+            bleed="clamp(24px,3vw,38px)"
+            width="74%"
+          >
             {home.badges.map((b) => (
               <div key={b.title} className="flex flex-col gap-[9px]">
                 <span
@@ -163,7 +169,7 @@ export default function Home({ onPick, onStart }: {
                 </span>
               </div>
             ))}
-          </div>
+          </Rail>
         </section>
 
         {/* ——— услуги ——— */}
@@ -175,7 +181,7 @@ export default function Home({ onPick, onStart }: {
           <p className="mb-6 mt-0 text-[15px]" style={{ color: muted(66) }}>
             {home.servicesLead}
           </p>
-          <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))" }}>
+          <Rail grid="grid gap-3" gridStyle={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))" }} width="66%">
             {home.services.map((s) => (
               <Link
                 key={s.title}
@@ -192,7 +198,7 @@ export default function Home({ onPick, onStart }: {
                 </span>
               </Link>
             ))}
-          </div>
+          </Rail>
         </section>
 
         {/* ——— отзывы ——— */}

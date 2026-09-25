@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import home from "@/content/home.json";
+import Rail, { useCompact } from "@/components/Rail";
 import texts from "@/content/constructor.json";
 import { IconArrowRight, IconCat } from "@/components/Icons";
 
@@ -27,34 +28,7 @@ export default function SituationPicker({
 }) {
   const t = texts.choose;
   const [picked, setPicked] = useState<{ kind: string; sit: string } | null>(null);
-  const [compact, setCompact] = useState(false);
-  const rail = useRef<HTMLDivElement>(null);
-  const [at, setAt] = useState(0);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 560px)");
-    const sync = () => setCompact(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  // на ленте выбрана та карточка, что стоит по центру: отдельный тап не нужен
-  useEffect(() => {
-    const el = rail.current;
-    if (!el || !compact) return;
-    const sync = () => {
-      const card = el.firstElementChild as HTMLElement | null;
-      if (!card) return;
-      const step = card.offsetWidth + 12;
-      const i = Math.max(0, Math.min(t.cats.length - 1, Math.round(el.scrollLeft / step)));
-      setAt(i);
-      setPicked({ kind: t.cats[i].kind, sit: t.cats[i].sit });
-    };
-    sync();
-    el.addEventListener("scroll", sync, { passive: true });
-    return () => el.removeEventListener("scroll", sync);
-  }, [compact, t.cats]);
+  const compact = useCompact();
 
   const choose = (kind: string, sit: string) => {
     if (compact) setPicked({ kind, sit });
@@ -79,10 +53,11 @@ export default function SituationPicker({
         {t.lead}
       </p>
 
-      <div
-        ref={rail}
-        className={compact ? "rail snap-rail" : "grid gap-3.5"}
-        style={compact ? undefined : { gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))" }}
+      <Rail
+        grid="grid gap-3.5"
+        gridStyle={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))" }}
+        bleed="clamp(16px,4vw,56px)"
+        onIndex={(i) => setPicked({ kind: t.cats[i].kind, sit: t.cats[i].sit })}
       >
         {t.cats.map((c) => (
           <button
@@ -116,22 +91,7 @@ export default function SituationPicker({
             </span>
           </button>
         ))}
-      </div>
-
-      {compact && (
-        <div className="mt-3.5 flex justify-center gap-[6px]" aria-hidden>
-          {t.cats.map((c, i) => (
-            <span
-              key={c.sit}
-              className="h-[6px] rounded-full transition-all"
-              style={{
-                width: i === at ? 18 : 6,
-                background: i === at ? "var(--color-accent)" : muted(22),
-              }}
-            />
-          ))}
-        </div>
-      )}
+      </Rail>
 
       <div className="mt-4 flex flex-wrap gap-3">
         {t.quiet.map((q) => (
