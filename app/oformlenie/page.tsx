@@ -30,6 +30,20 @@ export default function CheckoutPage() {
         thumbFile={o.currentTemplate?.tpl.file}
         thumbValues={o.currentTemplate?.values}
         onBack={() => router.push("/konstruktor")}
+        onSubmit={(sent) => {
+          o.place({
+            kindTitle: o.kindItem.title,
+            layoutTitle: o.currentTemplate?.tpl.title ?? "Макет",
+            ownLayout: o.ownLayout,
+            mountName: o.mountItem ? `${o.mountItem.brand} ${o.mountItem.model}` : "подберём вручную",
+            mountCost: o.mountExtra,
+            urgency: o.urgency,
+            thumbFile: o.currentTemplate?.tpl.file,
+            thumbValues: o.currentTemplate?.values,
+            ...sent,
+          });
+          router.push("/zakaz");
+        }}
       />
     </>
   );

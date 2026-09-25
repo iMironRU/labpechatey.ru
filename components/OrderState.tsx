@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import catalog from "@/content/catalog.json";
 import { checkInn, checkOgrn, type Registry } from "@/lib/inn";
 import { lookupInn } from "@/lib/api";
-import { valuesFor, type Kind, type Scored, type TemplateIndex } from "@/lib/stamp";
+import { valuesFor, type Kind, type Scored, type TemplateIndex, type Values } from "@/lib/stamp";
 import { forDiameter } from "@/lib/mounts";
 import { asset } from "@/lib/paths";
 
@@ -16,6 +16,33 @@ import { asset } from "@/lib/paths";
  * между ними React-состояние сохраняется только если провайдер стоит в
  * layout — поэтому он здесь, а не на странице.
  */
+/** Оформленный заказ: то, что показываем на экране «Заказ принят». */
+export type Placed = {
+  number: string;
+  kindTitle: string;
+  layoutTitle: string;
+  ownLayout: boolean;
+  mountName: string;
+  mountCost: number;
+  urgency: "rush" | "calm";
+  delivery: string;
+  address: string;
+  pay: string;
+  total: number;
+  thumbFile?: string;
+  thumbValues?: Values;
+};
+
+const PLACED_KEY = "lp.placed";
+
+/** Номер заказа: дата плюс четыре цифры — человеку диктовать по телефону. */
+function orderNumber(): string {
+  const d = new Date();
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `ЛП-${p(d.getFullYear() % 100)}${p(d.getMonth() + 1)}${p(d.getDate())}-${
+    String(Math.floor(Math.random() * 9000) + 1000)}`;
+}
+
 function useOrderState() {
   // состояние конструктора — см. design-ref/README.md, раздел State Management
   const [situation, setSituation] = useState<string | null>(null);
@@ -34,6 +61,12 @@ function useOrderState() {
   const [tpl, setTpl] = useState<string | null>(null);
   const [index, setIndex] = useState<TemplateIndex[]>([]);
   const [variants, setVariants] = useState<Scored[]>([]);
+  // оформленный заказ переживает перезагрузку: экран «Заказ принят» часто
+  // обновляют или открывают из истории, и пустая страница там выглядит потерей
+  const [placed, setPlaced] = useState<Placed | null>(null);
+  // пока не прочитали sessionStorage, «заказа нет» и «заказ ещё не достали»
+  // неразличимы — а экран на этом решает, уводить человека или нет
+  const [restored, setRestored] = useState(false);
 
   const kindItem = catalog.kinds.find((k) => k.id === sel) ?? catalog.kinds[0];
   // «свой макет»: либо ситуация-копия, либо человек сам нажал загрузку
@@ -46,6 +79,14 @@ function useOrderState() {
       .then((r) => r.json())
       .then(setIndex)
       .catch(() => setIndex([]));
+  }, []);
+
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(PLACED_KEY);
+      if (saved) setPlaced(JSON.parse(saved) as Placed);
+    } catch { /* приватный режим — просто живём без восстановления */ }
+    setRestored(true);
   }, []);
 
   // поиск в реестре: запрос уходит, когда цифр хватает на ИНН
@@ -106,6 +147,13 @@ function useOrderState() {
     setMount(0);
   }, []);
 
+  const place = useCallback((order: Omit<Placed, "number">) => {
+    const full = { ...order, number: orderNumber() };
+    setPlaced(full);
+    try { sessionStorage.setItem(PLACED_KEY, JSON.stringify(full)); } catch { /* не страшно */ }
+    return full;
+  }, []);
+
   const reset = useCallback(() => {
     setInn(""); setOrg(""); setCity(""); setOgrn(""); setManual(false);
     setReg({ status: "idle" }); setTpl(null); setSituation(null); setOwnPicked(false);
@@ -117,7 +165,7 @@ function useOrderState() {
     ownPicked, setOwnPicked,
     kindItem, ownLayout, sealKind, innCheck, ogrnCheck, editable, filled, values,
     diameter, mountItem, mountExtra, total, currentTemplate, money, onChoose, onVariants,
-    pick, reset,
+    pick, reset, placed, place, restored,
   };
 }
 

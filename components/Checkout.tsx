@@ -19,12 +19,14 @@ type Props = {
   thumbFile?: string;
   thumbValues?: Values;
   onBack: () => void;
+  /** Оформление: куда везти и чем платить — остальное знает состояние заказа. */
+  onSubmit: (order: { delivery: string; address: string; pay: string; total: number }) => void;
 };
 
 const money = (n: number) => `${n.toLocaleString("ru-RU")} ₽`;
 
 export default function Checkout({
-  kindTitle, layoutTitle, total, ownLayout, mountName, mountCost, urgency, thumbFile, thumbValues, onBack,
+  kindTitle, layoutTitle, total, ownLayout, mountName, mountCost, urgency, thumbFile, thumbValues, onBack, onSubmit,
 }: Props) {
   const [delivery, setDelivery] = useState("courier");
   const [addr, setAddr] = useState("");
@@ -34,6 +36,15 @@ export default function Checkout({
 
   const deliveryItem = catalog.delivery.find((d) => d.id === delivery)!;
   const grand = total + deliveryItem.cost;
+
+  // куда везти — одной строкой для чека и экрана «Заказ принят»
+  const whereTo = () => {
+    if (delivery === "pickup") return texts.pickup.address;
+    if (delivery === "courier") return addr.trim();
+    const point = pvz !== null ? catalog.pvz[pvz] : null;
+    const name = catalog.courierServices.find((c) => c.id === service)?.name ?? "";
+    return point ? `${name}, ${point.addr}` : name;
+  };
 
   // кнопку держим неактивной, пока не ясно, куда везти
   const ready =
@@ -234,6 +245,7 @@ export default function Checkout({
             type="button"
             className="btn btn-primary btn-block mt-3 px-5 py-[13px] text-[15px]"
             disabled={!ready}
+            onClick={() => onSubmit({ delivery, address: whereTo(), pay, total: grand })}
           >
             {texts.cta} · {money(grand)}
           </button>
