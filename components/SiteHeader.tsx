@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import home from "@/content/home.json";
 import texts from "@/content/constructor.json";
 import { asset } from "@/lib/paths";
@@ -44,7 +45,7 @@ export default function SiteHeader({ onHome, onConstructor }: {
         className="mx-auto flex items-center gap-3 min-[861px]:gap-[22px]"
         style={{ maxWidth: 1200, padding: "12px clamp(18px,4vw,56px)" }}
       >
-        <a href="/" onClick={onHome ? (e) => { e.preventDefault(); onHome(); } : undefined} className="mr-auto flex items-center gap-[11px] no-underline" style={{ color: "var(--color-text)" }}>
+        <Link href="/" onClick={onHome ? (e) => { e.preventDefault(); onHome(); } : undefined} className="mr-auto flex items-center gap-[11px] no-underline" style={{ color: "var(--color-text)" }}>
           {logoFailed ? (
             <span className="text-[15px] font-semibold leading-[1.1]">
               Лаборатория
@@ -61,7 +62,7 @@ export default function SiteHeader({ onHome, onConstructor }: {
               style={{ height: 40, width: "auto", maxWidth: "min(42vw, 220px)", objectFit: "contain" }}
             />
           )}
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-5 min-[861px]:flex" hidden={Boolean(onHome)}>
           {home.nav.map((n) =>
@@ -70,9 +71,9 @@ export default function SiteHeader({ onHome, onConstructor }: {
                 {n.label}
               </button>
             ) : (
-              <a key={n.label} href={n.href} className="text-[14px] no-underline" style={{ color: "inherit" }}>
+              <Link key={n.label} href={n.href} className="text-[14px] no-underline" style={{ color: "inherit" }}>
                 {n.label}
-              </a>
+              </Link>
             ),
           )}
         </nav>
@@ -88,7 +89,7 @@ export default function SiteHeader({ onHome, onConstructor }: {
           </button>
         )}
 
-        <a
+        <Link
           href="/#footer"
           hidden={Boolean(onHome)}
           className="hidden items-center gap-[5px] whitespace-nowrap rounded-full border border-[var(--color-divider)] px-2.5 py-[5px] text-[12.5px] no-underline min-[861px]:flex"
@@ -99,7 +100,7 @@ export default function SiteHeader({ onHome, onConstructor }: {
             <circle cx="12" cy="10" r="2.4" />
           </svg>
           {home.pvz}
-        </a>
+        </Link>
 
         <a
           href={home.phoneHref}
