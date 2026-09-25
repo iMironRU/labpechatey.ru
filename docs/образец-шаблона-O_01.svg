@@ -36,15 +36,15 @@
    "minSize": 1.8,
    "maxSize": 2.48
   },
-  "name": {
-   "role": "name",
+  "label_ooo": {
+   "role": "label_ooo",
    "kind": "arc",
    "size": 2.13,
    "minSize": 1.8,
    "maxSize": 2.43
   },
-  "name_short": {
-   "role": "name_short",
+  "name_bare": {
+   "role": "name_bare",
    "kind": "line",
    "size": 2.33,
    "minSize": 1.8,
@@ -71,7 +71,7 @@
 
   <defs>
     <path id="b_city" d="M -7.91 14.94 A 16.90 16.90 0 0 0 0 16.90 A 16.90 16.90 0 0 0 7.91 14.94"/>
-    <path id="b_name" d="M -14.62 3.94 A 15.14 15.14 0 0 1 0 -15.14 A 15.14 15.14 0 0 1 14.62 3.94"/>
+    <path id="b_label_ooo" d="M -14.62 3.94 A 15.14 15.14 0 0 1 0 -15.14 A 15.14 15.14 0 0 1 14.62 3.94"/>
   </defs>
 
   <g id="s_frame" fill="currentColor" transform="scale(0.352778) translate(-58.235 -58.235)">
@@ -84,13 +84,13 @@
       <textPath xlink:href="#b_city" href="#b_city" startOffset="50%">РФ г.ОРЕНБУРГ</textPath>
     </text>
   </g>
-  <g id="f_name">   <!-- полное наименование -->
+  <g id="f_label_ooo">   <!-- надпись с организационно-правовой формой -->
     <text font-size="2.13" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath xlink:href="#b_name" href="#b_name" startOffset="50%">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ</textPath>
+      <textPath xlink:href="#b_label_ooo" href="#b_label_ooo" startOffset="50%">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ</textPath>
     </text>
   </g>
-  <g id="f_name_short">   <!-- краткое наименование -->
-    <text x="0" y="-0.86" font-size="2.33" text-anchor="middle" fill="currentColor">ООО «РОМАШКА»</text>
+  <g id="f_name_bare">   <!-- наименование без формы -->
+    <text x="0" y="-0.86" font-size="2.33" text-anchor="middle" fill="currentColor">«РОМАШКА»</text>
   </g>
   <g id="f_ogrn">   <!-- ОГРН или ОГРНИП -->
     <text x="0" y="7.66" font-size="1.78" text-anchor="middle" fill="currentColor">ОГРН 0123456789012</text>

@@ -16,6 +16,8 @@ export const DICT: Record<string, string> = {
   name_short: "краткое наименование",
   fio: "ФИО",
   label_ip: "надпись «Индивидуальный предприниматель»",
+  label_ooo: "надпись с организационно-правовой формой",
+  name_bare: "наименование без формы",
   inn: "ИНН",
   ogrn: "ОГРН или ОГРНИП",
   kpp: "КПП",
@@ -27,7 +29,8 @@ export const DICT: Record<string, string> = {
 };
 
 /** Имена из первого макета — понимаем, но просим переименовать. */
-const LEGACY: Record<string, string> = { tip: "name", region: "city", name: "name_short" };
+// в первом макете на дуге стоит форма, а в центре — само наименование
+const LEGACY: Record<string, string> = { tip: "label_ooo", region: "city", name: "name_bare" };
 
 export type Issue = { level: "error" | "warn" | "ok"; text: string };
 export type Field = {
@@ -122,6 +125,38 @@ function arcPath(r: number, span: number, top: boolean): string {
 
 const textOf = (el: Element) => (el.textContent || "").replace(/\s+/g, " ").trim();
 
+/**
+ * Кегли, заданные классами в `<style>`: так Illustrator экспортирует, если
+ * не переключить Styling на презентационные атрибуты. Без разбора этих правил
+ * у всех полей получается один и тот же размер, и оттиск выглядит не как макет.
+ */
+function classSizes(doc: Document): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const st of Array.from(doc.querySelectorAll("style"))) {
+    for (const rule of (st.textContent || "").matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+      const size = /font-size\s*:\s*([\d.]+)px/.exec(rule[2]);
+      if (!size) continue;
+      for (const sel of rule[1].split(",")) {
+        const cls = sel.trim().replace(/^\./, "");
+        if (cls) out[cls] = +size[1];
+      }
+    }
+  }
+  return out;
+}
+
+/** Кегль поля: сначала атрибут, потом класс — что найдётся раньше сверху вниз. */
+function fontSizePx(el: Element, byClass: Record<string, number>): number | null {
+  for (const n of [el, ...Array.from(el.querySelectorAll("*"))]) {
+    const attr = n.getAttribute("font-size");
+    if (attr) return parseFloat(attr);
+    for (const cls of (n.getAttribute("class") || "").split(/\s+/)) {
+      if (byClass[cls]) return byClass[cls];
+    }
+  }
+  return null;
+}
+
 export function convert(source: string): Parsed {
   const issues: Issue[] = [];
   const doc = new DOMParser().parseFromString(normalizeIds(source), "image/svg+xml");
@@ -193,7 +228,8 @@ export function convert(source: string): Parsed {
   }
   body.push("  </g>");
 
-  let innerMm = 8;
+  const sizes = classSizes(doc);
+  let innerMm = Infinity;
   for (const [rawKey, el] of Object.entries(fieldsRaw)) {
     const key = legacy ? LEGACY[rawKey] ?? rawKey : rawKey;
     if (!DICT[key]) {
@@ -202,8 +238,8 @@ export function convert(source: string): Parsed {
     }
     const pts = origins(el);
     const sample = textOf(el);
-    const sizeAttr = el.querySelector("[font-size]")?.getAttribute("font-size");
-    const size = sizeAttr ? +(+sizeAttr.replace("px", "") * PT_MM).toFixed(2) : 2.3;
+    const sizePx = fontSizePx(el, sizes);
+    const size = sizePx ? +(sizePx * PT_MM).toFixed(2) : 2.3;
     if (size < 1.8) {
       issues.push({ level: "warn", text: `Поле f_${rawKey}: кегль ${size} мм — меньше производственного минимума 1.8 мм.` });
     }
@@ -257,6 +293,8 @@ export function convert(source: string): Parsed {
   const ringMm = ring ? ring * PT_MM : vb[2] * PT_MM / 2 - 1;
   const diameterMm = Math.round(ringMm * 2);
   const half = +(ringMm + 1.1).toFixed(1);
+  // внутренний край: по самой нижней дуге, а если дуг нет — с отступом от кольца
+  const inner = Math.min(Number.isFinite(innerMm) ? innerMm : ringMm - 2.4, ringMm - 1);
 
   const meta = {
     version: 2,
@@ -264,7 +302,7 @@ export function convert(source: string): Parsed {
     title: "Макет от дизайнера",
     kinds: ["ooo"],
     diameterMm,
-    frame: { asset: "макет дизайнера", freeRadiusMm: +(ringMm - 0.6).toFixed(2), innerRadiusMm: +innerMm.toFixed(2) },
+    frame: { asset: "макет дизайнера", freeRadiusMm: +(ringMm - 0.6).toFixed(2), innerRadiusMm: +inner.toFixed(2) },
     defaults: { font: "PT Sans", case: "upper", tracking: 0.05, align: "middle", overflow: "shrink" },
     fields: metaFields,
   };

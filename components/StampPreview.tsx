@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fill, rank, LABELS, type Scored, type TemplateIndex, type Values, type Kind } from "@/lib/stamp";
+import { fill, rank, ensureFont, rootOf, LABELS, type Scored, type TemplateIndex, type Values, type Kind } from "@/lib/stamp";
 import { asset } from "@/lib/paths";
 import { IconChevronLeft, IconChevronRight, IconGrid, IconUpload } from "@/components/Icons";
 
@@ -42,7 +42,7 @@ export default function StampPreview({
   const [gallery, setGallery] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   const [usable, setUsable] = useState<Scored[]>([]);
-  const [markup, setMarkup] = useState<{ html: string; box: string } | null>(null);
+  const [markup, setMarkup] = useState<{ html: string; box: string; font: string } | null>(null);
   const [notes, setNotes] = useState<string[]>([]);
   const token = useRef(0);
 
@@ -51,6 +51,7 @@ export default function StampPreview({
   useEffect(() => {
     const my = ++token.current;
     (async () => {
+      await ensureFont();          // иначе меряем подстановочным шрифтом
       const list: Scored[] = [];
       for (const cand of ranked) {
         if (cand.verdict === "bad") continue;
@@ -74,7 +75,7 @@ export default function StampPreview({
       const text = await templateSvg(pick.tpl.file);
       if (my !== token.current) return;
       const res = fill(text, pick.values, "var(--ink)");
-      setMarkup({ html: res.svg.innerHTML, box: res.svg.getAttribute("viewBox") || "" });
+      setMarkup(rootOf(res.svg));
       // из служебных заметок оставляем одну важную: какие данные не попадут
       setNotes(pick.dropped.length
         ? [`В этот макет не войдёт: ${pick.dropped.map((d) => LABELS[d] ?? d).join(", ")}`]
@@ -120,6 +121,7 @@ export default function StampPreview({
         {markup ? (
           <svg
             viewBox={markup.box}
+            fontFamily={markup.font}
             style={{
               width: "min(300px, 92%)", height: "auto",
               opacity: filled ? 1 : "var(--preview-dim)" as unknown as number,
@@ -292,20 +294,21 @@ export default function StampPreview({
 }
 
 export function StampThumb({ file, values }: { file: string; values: Values }) {
-  const [html, setHtml] = useState<{ html: string; box: string } | null>(null);
+  const [html, setHtml] = useState<{ html: string; box: string; font: string } | null>(null);
   useEffect(() => {
     let alive = true;
     (async () => {
+      await ensureFont();
       const text = await templateSvg(file);
       if (!alive) return;
       const res = fill(text, values, "currentColor");
-      setHtml({ html: res.svg.innerHTML, box: res.svg.getAttribute("viewBox") || "" });
+      setHtml(rootOf(res.svg));
     })();
     return () => { alive = false; };
   }, [file, values]);
   if (!html) return null;
   return (
-    <svg viewBox={html.box} className="h-full w-full"
+    <svg viewBox={html.box} fontFamily={html.font} className="h-full w-full"
       dangerouslySetInnerHTML={{ __html: html.html }} />
   );
 }

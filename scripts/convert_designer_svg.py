@@ -29,7 +29,7 @@ OUT = Path(__file__).resolve().parent.parent / "docs" / "образец-шабл
 # что в макете дизайнера соответствует нашим ключам
 # рыба вместо исходной там, где у дизайнера текст был многострочным:
 # движок подставляет строку целиком и переносов не делает
-SAMPLE_OVERRIDE = {"name_short": "ООО «РОМАШКА»"}
+SAMPLE_OVERRIDE = {"name_bare": "«РОМАШКА»", "name_short": "ООО «РОМАШКА»"}
 
 # ключи словаря: как поле названо в макете, так и называется у нас.
 # По дуге оно или строкой — видно по разметке, по имени не гадаем.
@@ -39,6 +39,8 @@ DICT_KEYS = {
     "name_short": "краткое наименование",
     "fio": "ФИО",
     "label_ip": "надпись «Индивидуальный предприниматель»",
+    "label_ooo": "надпись с организационно-правовой формой",
+    "name_bare": "наименование без формы",
     "inn": "ИНН",
     "ogrn": "ОГРН или ОГРНИП",
     "kpp": "КПП",
@@ -49,7 +51,7 @@ DICT_KEYS = {
     "license": "номер лицензии",
 }
 # первый макет дизайнера назван по-своему — понимаем и его
-LEGACY = {"tip": "name", "region": "city", "name": "name_short"}
+LEGACY = {"tip": "label_ooo", "region": "city", "name": "name_bare"}
 
 
 def groups(svg: str, prefix: str) -> dict[str, str]:
@@ -178,7 +180,14 @@ def main() -> int:
 
     # кегли: берём из классов, переводим в миллиметры
     css = re.search(r"(?s)<style>(.*?)</style>", svg).group(1)
-    sizes = {c: float(v) * PT_MM for c, v in re.findall(r"\.(cls-\d+)[^{]*\{[^}]*font-size:\s*([\d.]+)px", css)}
+    # правило может перечислять несколько классов через запятую — кегль у всех
+    sizes = {}
+    for sel, decl in re.findall(r"(?s)([^{}]+)\{([^}]*)\}", css):
+        m = re.search(r"font-size:\s*([\d.]+)px", decl)
+        if not m:
+            continue
+        for cls in re.findall(r"\.([\w-]+)", sel):
+            sizes[cls] = float(m.group(1)) * PT_MM
     default_size = round(min(sizes.values()) if sizes else 2.3, 2)
 
     defs, body, meta_fields = [], [], {}

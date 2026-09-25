@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+/* PT Sans кладём с собой: шаблоны печатей набраны им, по его метрикам
+   считается ёмкость полей. Если положиться на системный, у посетителя без
+   PT Sans строки поедут и обрежутся. Лицензия SIL OFL. */
+@font-face {
+  font-family: "PT Sans";
+  src: url("/fonts/PT_Sans-Web-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: "PT Sans";
+  src: url("/fonts/PT_Sans-Web-Bold.ttf") format("truetype");
+  font-weight: 600 700;
+  font-display: block;
+}
+
 /* Токены из хендоффа дизайнера (design-ref/README.md, раздел Design Tokens).
    Светлая тема — по умолчанию, тёмная — по [data-theme="dark"]. */
 :root {

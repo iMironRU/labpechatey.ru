@@ -133,6 +133,29 @@ export type Filled = {
  * потом чуть поджимаем просвет. `textLength` не используем: Chrome
  * игнорирует его на textPath, и лишние буквы просто срезаются по краю.
  */
+/** Шрифт шаблонов должен быть загружен до замеров, иначе меряем подстановку. */
+export async function ensureFont(family = "PT Sans"): Promise<void> {
+  try {
+    await document.fonts.load(`16px "${family}"`);
+    await document.fonts.ready;
+  } catch {
+    /* нет FontFaceSet — меряем как есть */
+  }
+}
+
+/**
+ * Разметка для показа: наружу отдаём только содержимое, поэтому шрифт и
+ * viewBox с корня шаблона нужно перенести на свой <svg> — иначе оттиск
+ * рисуется шрифтом страницы и текст по дуге уезжает за кольцо.
+ */
+export function rootOf(svg: SVGSVGElement): { html: string; box: string; font: string } {
+  return {
+    html: svg.innerHTML,
+    box: svg.getAttribute("viewBox") || "",
+    font: svg.getAttribute("font-family") || "PT Sans, sans-serif",
+  };
+}
+
 export function fill(svgText: string, vals: Values, color: string): Filled {
   const doc = new DOMParser().parseFromString(svgText, "image/svg+xml");
   const svg = doc.documentElement as unknown as SVGSVGElement;
@@ -224,6 +247,8 @@ export const LABELS: Record<string, string> = {
   name_short: "краткое наименование",
   fio: "ФИО",
   label_ip: "надпись «Индивидуальный предприниматель»",
+  label_ooo: "надпись с организационно-правовой формой",
+  name_bare: "наименование без формы",
   inn: "ИНН",
   ogrn: "ОГРН",
   kpp: "КПП",
@@ -247,6 +272,10 @@ export function valuesFor(
     const form = LEGAL_FORMS[data.form || "ooo"] || LEGAL_FORMS.ooo;
     v.name = `${form.full} «${data.org}»`;
     v.name_short = `${form.short} «${data.org}»`;
+    // форма отдельно от наименования: так набрана классическая печать —
+    // «ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ» по дуге, «РОМАШКА» в центре
+    v.label_ooo = form.full;
+    v.name_bare = `«${data.org}»`;
   } else if (kind === "ip") {
     v.label_ip = "Индивидуальный предприниматель";
     v.fio = data.org;

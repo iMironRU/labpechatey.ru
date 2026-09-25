@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import { convert, type Parsed } from "@/lib/designer";
-import { fill, valuesFor } from "@/lib/stamp";
+import { fill, valuesFor, ensureFont } from "@/lib/stamp";
 import { asset } from "@/lib/paths";
+import { rootOf } from "@/lib/stamp";
 import { IconCheck, IconCross, IconUpload } from "@/components/Icons";
 
 const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, transparent)`;
@@ -27,7 +28,7 @@ const SAMPLE = {
 export default function DesignerPage() {
   const [res, setRes] = useState<Parsed | null>(null);
   const [name, setName] = useState("");
-  const [preview, setPreview] = useState<{ html: string; box: string } | null>(null);
+  const [preview, setPreview] = useState<{ html: string; box: string; font: string } | null>(null);
   const [notes, setNotes] = useState<string[]>([]);
   const input = useRef<HTMLInputElement>(null);
 
@@ -49,9 +50,10 @@ export default function DesignerPage() {
     setRes(parsed);
     if (!parsed.svg) { setPreview(null); return; }
     try {
+      await ensureFont();
       const values = valuesFor("ooo", SAMPLE);
       const filled = fill(parsed.svg, values, "var(--ink)");
-      setPreview({ html: filled.svg.innerHTML, box: filled.svg.getAttribute("viewBox") || "" });
+      setPreview(rootOf(filled.svg));
       setNotes(filled.notes);
     } catch {
       setPreview(null);
@@ -154,7 +156,8 @@ export default function DesignerPage() {
               <h2 className="m-0 mb-3 text-[17px] font-semibold">Примерка на реквизитах</h2>
               <div className="stamp-paper grid flex-1 place-items-center p-4">
                 {preview ? (
-                  <svg viewBox={preview.box} style={{ width: "min(320px, 92%)", height: "auto" }}
+                  <svg viewBox={preview.box} fontFamily={preview.font}
+                    style={{ width: "min(320px, 92%)", height: "auto" }}
                     dangerouslySetInnerHTML={{ __html: preview.html }} />
                 ) : (
                   <span className="text-[13px]" style={{ color: "#5b6070" }}>
