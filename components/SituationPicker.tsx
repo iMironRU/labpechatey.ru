@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import home from "@/content/home.json";
 import texts from "@/content/constructor.json";
 import { IconArrowRight, IconCat } from "@/components/Icons";
@@ -14,8 +14,9 @@ const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, tr
  *
  * На телефоне внизу стоит панель «позвонить · помощь · Продолжить» — она
  * есть в макете на обоих шагах конструктора. Раз в ней живёт «Продолжить»,
- * карточка на узком экране не уводит сразу, а выделяется: подтверждение
- * кнопкой. На широком, где панели нет, тап по карточке ведёт как раньше.
+ * карточки там не уводят сразу, а превращаются в ленту с прилипанием:
+ * листаешь — выбранная всегда над кнопкой, а не в трёх экранах от неё.
+ * На широком, где панели нет, сетка и тап по карточке ведут как раньше.
  */
 export default function SituationPicker({
   onPick,
@@ -27,6 +28,8 @@ export default function SituationPicker({
   const t = texts.choose;
   const [picked, setPicked] = useState<{ kind: string; sit: string } | null>(null);
   const [compact, setCompact] = useState(false);
+  const rail = useRef<HTMLDivElement>(null);
+  const [at, setAt] = useState(0);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 560px)");
@@ -35,6 +38,23 @@ export default function SituationPicker({
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
+
+  // на ленте выбрана та карточка, что стоит по центру: отдельный тап не нужен
+  useEffect(() => {
+    const el = rail.current;
+    if (!el || !compact) return;
+    const sync = () => {
+      const card = el.firstElementChild as HTMLElement | null;
+      if (!card) return;
+      const step = card.offsetWidth + 12;
+      const i = Math.max(0, Math.min(t.cats.length - 1, Math.round(el.scrollLeft / step)));
+      setAt(i);
+      setPicked({ kind: t.cats[i].kind, sit: t.cats[i].sit });
+    };
+    sync();
+    el.addEventListener("scroll", sync, { passive: true });
+    return () => el.removeEventListener("scroll", sync);
+  }, [compact, t.cats]);
 
   const choose = (kind: string, sit: string) => {
     if (compact) setPicked({ kind, sit });
@@ -59,7 +79,11 @@ export default function SituationPicker({
         {t.lead}
       </p>
 
-      <div className="grid gap-3.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))" }}>
+      <div
+        ref={rail}
+        className={compact ? "rail snap-rail" : "grid gap-3.5"}
+        style={compact ? undefined : { gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))" }}
+      >
         {t.cats.map((c) => (
           <button
             key={c.sit}
@@ -70,6 +94,7 @@ export default function SituationPicker({
             style={{
               boxShadow: "var(--shadow-sm)",
               border: picked?.sit === c.sit ? "1.5px solid var(--color-accent)" : "1.5px solid transparent",
+              scrollMarginInline: 0,
             }}
           >
             <span
@@ -93,15 +118,28 @@ export default function SituationPicker({
         ))}
       </div>
 
+      {compact && (
+        <div className="mt-3.5 flex justify-center gap-[6px]" aria-hidden>
+          {t.cats.map((c, i) => (
+            <span
+              key={c.sit}
+              className="h-[6px] rounded-full transition-all"
+              style={{
+                width: i === at ? 18 : 6,
+                background: i === at ? "var(--color-accent)" : muted(22),
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       <div className="mt-4 flex flex-wrap gap-3">
         {t.quiet.map((q) => (
           <button
             key={q.sit}
             type="button"
-            onClick={() => choose(q.kind, q.sit)}
-            aria-pressed={picked?.sit === q.sit}
-            className="flex min-w-[240px] flex-1 items-center gap-[13px] rounded-[12px] border border-dashed px-[17px] py-[15px] text-left transition-colors hover:border-[var(--color-accent)]"
-            style={{ borderColor: picked?.sit === q.sit ? "var(--color-accent)" : "var(--color-divider)" }}
+            onClick={() => onPick(q.kind, q.sit)}
+            className="flex min-w-[240px] flex-1 items-center gap-[13px] rounded-[12px] border border-dashed border-[var(--color-divider)] px-[17px] py-[15px] text-left transition-colors hover:border-[var(--color-accent)]"
           >
             <span
               className="grid h-[34px] w-[34px] flex-none place-items-center rounded-[9px]"
