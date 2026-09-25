@@ -180,14 +180,15 @@ def main() -> int:
 
     # кегли: берём из классов, переводим в миллиметры
     css = re.search(r"(?s)<style>(.*?)</style>", svg).group(1)
-    # правило может перечислять несколько классов через запятую — кегль у всех
-    sizes = {}
+    # правило перечисляет несколько классов через запятую — свойства у всех
+    rules: dict[str, dict[str, str]] = {}
     for sel, decl in re.findall(r"(?s)([^{}]+)\{([^}]*)\}", css):
-        m = re.search(r"font-size:\s*([\d.]+)px", decl)
-        if not m:
-            continue
+        props = dict(d.split(":", 1) for d in decl.split(";") if ":" in d)
+        props = {k.strip(): v.strip() for k, v in props.items()}
         for cls in re.findall(r"\.([\w-]+)", sel):
-            sizes[cls] = float(m.group(1)) * PT_MM
+            rules.setdefault(cls, {}).update(props)
+    sizes = {c: float(p["font-size"].rstrip("px")) * PT_MM
+             for c, p in rules.items() if "font-size" in p}
     default_size = round(min(sizes.values()) if sizes else 2.3, 2)
 
     defs, body, meta_fields = [], [], {}
@@ -196,10 +197,28 @@ def main() -> int:
     body.append(f'  <g id="s_frame" fill="currentColor" '
                 f'transform="scale({PT_MM:.6f}) translate({-cx0} {-cy0})">')
     for name, chunk in statics.items():
-        for d in re.findall(r'<path[^>]*\sd="([^"]+)"', chunk):
-            body.append(f'    <path d="{d}"/>   <!-- {name} -->')
+        for tag, attrs in re.findall(r"<(path|circle|ellipse|rect|polygon|polyline)([^>]*)>", chunk):
+            a = dict(re.findall(r'([\w-]+)="([^"]*)"', attrs))
+            # краска бывает и классом: тонкое кольцо у дизайнера — .cls-1
+            cls = rules.get(a.get("class", ""), {})
+            fill = a.get("fill", cls.get("fill"))
+            stroke = a.get("stroke", cls.get("stroke"))
+            width = a.get("stroke-width", cls.get("stroke-width", "")).rstrip("px")
+            if (stroke and stroke != "none") or fill == "none":
+                paint = 'fill="none" stroke="currentColor"'
+                if width:
+                    paint += f' stroke-width="{float(width) * PT_MM:.3f}"'
+            else:
+                paint = 'fill="currentColor"'
+            geom = " ".join(f'{k}="{v}"' for k, v in a.items()
+                            if k not in ("fill", "stroke", "stroke-width", "style", "class", "id"))
+            body.append(f'    <{tag} {geom} {paint}/>   <!-- {name} -->')
         # статика бывает и текстом — например звёздочки по бокам
         for t in re.findall(r"<text[^>]*>.*?</text>", chunk, re.S):
+            # класс уносит кегль: без него звёздочки рисуются умолчанием в 16
+            cls = rules.get((re.search(r'<text[^>]*class="([^"]*)"', t) or [None, ""])[1], {})
+            if "font-size" in cls:
+                t = t.replace("<text", f'<text font-size="{cls["font-size"].rstrip("px")}"', 1)
             t = re.sub(r'\sclass="[^"]*"', "", t)
             t = re.sub(r"\s+", " ", t).strip()
             body.append(f'    {t}   <!-- {name} -->')

@@ -75,9 +75,10 @@
   </defs>
 
   <g id="s_frame" fill="currentColor" transform="scale(0.352778) translate(-58.235 -58.235)">
-    <path d="M58.23,5.99c28.81,0,52.25,23.44,52.25,52.25s-23.44,52.25-52.25,52.25S5.99,87.04,5.99,58.24,29.43,5.99,58.23,5.99M58.23,4.66C28.65,4.66,4.66,28.65,4.66,58.24s23.99,53.57,53.57,53.57,53.58-23.99,53.58-53.57S87.82,4.66,58.23,4.66h0Z"/>   <!-- circle1 -->
-    <text transform="translate(89.91 93.19)"><tspan x="0" y="0">*</tspan></text>   <!-- stars -->
-    <text transform="translate(22.56 93.19)"><tspan x="0" y="0">*</tspan></text>   <!-- stars -->
+    <circle data-name="s_&amp;lt;circle2&amp;gt;" cx="58.24" cy="58.24" r="50.41" transform="translate(-2.35 114.02) rotate(-87.64)" fill="none" stroke="currentColor" stroke-width="0.268"/>   <!-- circle2 -->
+    <path d="M58.23,5.99c28.81,0,52.25,23.44,52.25,52.25s-23.44,52.25-52.25,52.25S5.99,87.04,5.99,58.24,29.43,5.99,58.23,5.99M58.23,4.66C28.65,4.66,4.66,28.65,4.66,58.24s23.99,53.57,53.57,53.57,53.58-23.99,53.58-53.57S87.82,4.66,58.23,4.66h0Z" fill="currentColor"/>   <!-- circle1 -->
+    <text font-size="9.65" transform="translate(89.91 93.19)"><tspan x="0" y="0">*</tspan></text>   <!-- stars -->
+    <text font-size="9.65" transform="translate(22.56 93.19)"><tspan x="0" y="0">*</tspan></text>   <!-- stars -->
   </g>
   <g id="f_city">   <!-- город -->
     <text font-size="2.18" letter-spacing="0.05" text-anchor="middle" fill="currentColor">

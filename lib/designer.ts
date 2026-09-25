@@ -126,33 +126,43 @@ function arcPath(r: number, span: number, top: boolean): string {
 const textOf = (el: Element) => (el.textContent || "").replace(/\s+/g, " ").trim();
 
 /**
- * Кегли, заданные классами в `<style>`: так Illustrator экспортирует, если
- * не переключить Styling на презентационные атрибуты. Без разбора этих правил
- * у всех полей получается один и тот же размер, и оттиск выглядит не как макет.
+ * Правила из `<style>`: так Illustrator экспортирует, если не переключить
+ * Styling на презентационные атрибуты. Без их разбора у всех полей получается
+ * один кегль, а кольцо с обводкой по классу заливается чёрным.
  */
-function classSizes(doc: Document): Record<string, number> {
-  const out: Record<string, number> = {};
+function classRules(doc: Document): Record<string, Record<string, string>> {
+  const out: Record<string, Record<string, string>> = {};
   for (const st of Array.from(doc.querySelectorAll("style"))) {
     for (const rule of (st.textContent || "").matchAll(/([^{}]+)\{([^}]*)\}/g)) {
-      const size = /font-size\s*:\s*([\d.]+)px/.exec(rule[2]);
-      if (!size) continue;
+      const decl: Record<string, string> = {};
+      for (const d of rule[2].split(";")) {
+        const i = d.indexOf(":");
+        if (i > 0) decl[d.slice(0, i).trim()] = d.slice(i + 1).trim();
+      }
       for (const sel of rule[1].split(",")) {
         const cls = sel.trim().replace(/^\./, "");
-        if (cls) out[cls] = +size[1];
+        if (cls) out[cls] = { ...out[cls], ...decl };
       }
     }
   }
   return out;
 }
 
-/** Кегль поля: сначала атрибут, потом класс — что найдётся раньше сверху вниз. */
-function fontSizePx(el: Element, byClass: Record<string, number>): number | null {
+/** Значение свойства: свой атрибут важнее класса, класса может и не быть. */
+function styleOf(el: Element, prop: string, rules: Record<string, Record<string, string>>): string | null {
+  const attr = el.getAttribute(prop);
+  if (attr) return attr;
+  for (const cls of (el.getAttribute("class") || "").split(/\s+/)) {
+    if (rules[cls]?.[prop]) return rules[cls][prop];
+  }
+  return null;
+}
+
+/** Кегль поля: сначала своё значение, потом у вложенных — что найдётся раньше. */
+function fontSizePx(el: Element, rules: Record<string, Record<string, string>>): number | null {
   for (const n of [el, ...Array.from(el.querySelectorAll("*"))]) {
-    const attr = n.getAttribute("font-size");
-    if (attr) return parseFloat(attr);
-    for (const cls of (n.getAttribute("class") || "").split(/\s+/)) {
-      if (byClass[cls]) return byClass[cls];
-    }
+    const v = styleOf(n, "font-size", rules);
+    if (v) return parseFloat(v);
   }
   return null;
 }
@@ -204,13 +214,20 @@ export function convert(source: string): Parsed {
   const body: string[] = [];
   const metaFields: Record<string, unknown> = {};
 
+  const rules = classRules(doc);
+
   // статика: контуры как есть, в миллиметры и currentColor
   body.push(`  <g id="s_frame" transform="scale(${PT_MM.toFixed(6)}) translate(${-cx0} ${-cy0})">`);
+  const SHAPES = "path, circle, ellipse, rect, polygon, polyline";
   for (const [name, el] of Object.entries(statics)) {
-    el.querySelectorAll("path, circle, ellipse, rect, polygon, polyline").forEach((sh) => {
-      const stroked = sh.getAttribute("stroke") && sh.getAttribute("stroke") !== "none";
-      const noFill = sh.getAttribute("fill") === "none";
-      const sw = sh.getAttribute("stroke-width");
+    // имя бывает и на самой фигуре — тонкое кольцо у дизайнера лежит
+    // отдельным <circle id="s_circle2">, без обёртки в группу
+    const shapes = [...(el.matches(SHAPES) ? [el] : []), ...Array.from(el.querySelectorAll(SHAPES))];
+    shapes.forEach((sh) => {
+      const stroke = styleOf(sh, "stroke", rules);
+      const stroked = stroke && stroke !== "none";
+      const noFill = styleOf(sh, "fill", rules) === "none";
+      const sw = styleOf(sh, "stroke-width", rules)?.replace("px", "") ?? null;
       const paint = stroked || noFill
         ? `fill="none" stroke="currentColor"${sw ? ` stroke-width="${(+sw * PT_MM).toFixed(3)}"` : ""}`
         : `fill="currentColor"`;
@@ -220,7 +237,14 @@ export function convert(source: string): Parsed {
         .join(" ");
       body.push(`    <${sh.nodeName} ${geom} ${paint}/>   <!-- ${name} -->`);
     });
-    el.querySelectorAll("text").forEach((t) => {
+    const texts = [...(el.matches("text") ? [el] : []), ...Array.from(el.querySelectorAll("text"))];
+    texts.forEach((t) => {
+      // класс уносит с собой кегль — переносим его в атрибут, иначе звёздочки
+      // и микротекст рисуются браузерным умолчанием в 16 единиц
+      for (const prop of ["font-size", "letter-spacing"]) {
+        const v = styleOf(t, prop, rules);
+        if (v) t.setAttribute(prop, v.replace("px", ""));
+      }
       t.removeAttribute("class");
       t.setAttribute("fill", "currentColor");
       body.push(`    ${new XMLSerializer().serializeToString(t)}   <!-- ${name} -->`);
@@ -228,7 +252,6 @@ export function convert(source: string): Parsed {
   }
   body.push("  </g>");
 
-  const sizes = classSizes(doc);
   let innerMm = Infinity;
   for (const [rawKey, el] of Object.entries(fieldsRaw)) {
     const key = legacy ? LEGACY[rawKey] ?? rawKey : rawKey;
@@ -238,7 +261,7 @@ export function convert(source: string): Parsed {
     }
     const pts = origins(el);
     const sample = textOf(el);
-    const sizePx = fontSizePx(el, sizes);
+    const sizePx = fontSizePx(el, rules);
     const size = sizePx ? +(sizePx * PT_MM).toFixed(2) : 2.3;
     if (size < 1.8) {
       issues.push({ level: "warn", text: `Поле f_${rawKey}: кегль ${size} мм — меньше производственного минимума 1.8 мм.` });
