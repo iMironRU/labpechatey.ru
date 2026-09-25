@@ -1,0 +1,224 @@
+#!/usr/bin/env python3
+"""Перевод макета дизайнера в наш формат шаблона.
+
+    python3 scripts/convert_designer_svg.py ~/Downloads/O_01.svg
+
+Дизайнер отдаёт файл из Illustrator: единицы в пунктах, центр в углу,
+цвет классами, а текст по дуге разобран на отдельные буквы. Скрипт
+достаёт из него геометрию как есть и пересобирает в наш вид:
+
+  — координаты переводятся в миллиметры, центр в 0,0;
+  — статика (кольца, звёзды) остаётся контурами, но красится currentColor;
+  — дуги восстанавливаются по положению букв: через точки их привязки
+    проводится окружность, из неё получается базовая линия b_<ключ>;
+  — поля становятся одним <text>, куда движок подставит данные.
+
+Результат — образец: дизайнеру видно на своём же макете, чего мы ждём.
+"""
+from __future__ import annotations
+
+import json
+import math
+import re
+import sys
+from pathlib import Path
+
+PT_MM = 25.4 / 72          # экспорт Illustrator в пунктах
+OUT = Path(__file__).resolve().parent.parent / "docs" / "образец-шаблона-O_01.svg"
+
+# что в макете дизайнера соответствует нашим ключам
+FIELD_MAP = {
+    "tip": ("name", "arc", "полная форма организации"),
+    "region": ("city", "arc", "город"),
+    "name": ("name_short", "line", "краткое наименование"),
+    "inn": ("inn", "line", "ИНН"),
+    "ogrn": ("ogrn", "line", "ОГРН"),
+}
+
+
+def groups(svg: str, prefix: str) -> dict[str, str]:
+    """Куски разметки по id вида f__tip_ / s__stars_.
+
+    Элемент бывает и самозакрывающимся (<path id="s_…"/>), и группой —
+    иначе поиск закрывающего тега проглатывал полдокумента.
+    """
+    out = {}
+    for m in re.finditer(rf'id="{prefix}__(\w+)_"', svg):
+        key = m.group(1)
+        start = svg.rfind("<", 0, m.start())
+        tag = re.match(r"<(\w+)", svg[start:]).group(1)
+        open_end = svg.index(">", start) + 1
+        if svg[open_end - 2] == "/":
+            out[key] = svg[start:open_end]
+            continue
+        depth, i = 0, start
+        while i < len(svg):
+            if svg.startswith(f"<{tag}", i):
+                depth += 1
+                i = svg.index(">", i)
+                if svg[i - 1] == "/":
+                    depth -= 1
+            elif svg.startswith(f"</{tag}", i):
+                depth -= 1
+                if depth == 0:
+                    i = svg.index(">", i) + 1
+                    break
+            i += 1
+        out[key] = svg[start:i]
+    return out
+
+
+def letters(chunk: str) -> list[tuple[float, float]]:
+    return [(float(m.group(1)), float(m.group(2)))
+            for m in re.finditer(r"translate\(([-\d.]+) ([-\d.]+)\)", chunk)]
+
+
+def fit_circle(pts: list[tuple[float, float]]) -> tuple[float, float, float]:
+    n = len(pts)
+    Sx = sum(p[0] for p in pts); Sy = sum(p[1] for p in pts)
+    Sxx = sum(p[0] ** 2 for p in pts); Syy = sum(p[1] ** 2 for p in pts)
+    Sxy = sum(p[0] * p[1] for p in pts)
+    A = [[Sxx, Sxy, Sx], [Sxy, Syy, Sy], [Sx, Sy, n]]
+    b = [-(sum(p[0] ** 3 for p in pts) + sum(p[0] * p[1] ** 2 for p in pts)),
+         -(sum(p[1] ** 3 for p in pts) + sum(p[0] ** 2 * p[1] for p in pts)),
+         -(Sxx + Syy)]
+
+    def det(M):
+        return (M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1])
+                - M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0])
+                + M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]))
+
+    D0 = det(A)
+    D, E, F = [det([[b[r] if k == c else A[r][c] for c in range(3)] for r in range(3)]) / D0
+               for k in range(3)]
+    cx, cy = -D / 2, -E / 2
+    return cx, cy, math.sqrt(cx * cx + cy * cy - F)
+
+
+def span_deg(pts, cx, cy) -> float:
+    """Угловой размах дуги с разворотом через 180°."""
+    angs = sorted(math.degrees(math.atan2(y - cy, x - cx)) % 360 for x, y in pts)
+    gaps = [(angs[(i + 1) % len(angs)] - a) % 360 for i, a in enumerate(angs)]
+    return 360 - max(gaps)
+
+
+def arc_path(r: float, span: float, top: bool) -> str:
+    """Дуга двумя половинами — иначе браузер выбирает не тот центр."""
+    a = math.radians(span / 2)
+    x, y = r * math.sin(a), r * math.cos(a)
+    if top:
+        return (f"M {-x:.2f} {-y:.2f} A {r:.2f} {r:.2f} 0 0 1 0 {-r:.2f}"
+                f" A {r:.2f} {r:.2f} 0 0 1 {x:.2f} {-y:.2f}")
+    return (f"M {-x:.2f} {y:.2f} A {r:.2f} {r:.2f} 0 0 0 0 {r:.2f}"
+            f" A {r:.2f} {r:.2f} 0 0 0 {x:.2f} {y:.2f}")
+
+
+def main() -> int:
+    src = Path(sys.argv[1] if len(sys.argv) > 1 else Path.home() / "Downloads/O_01.svg")
+    svg = src.read_text(encoding="utf-8", errors="ignore")
+    vb = [float(v) for v in re.search(r'viewBox="([^"]+)"', svg).group(1).split()]
+    cx0, cy0 = vb[2] / 2, vb[3] / 2          # центр монтажной области
+
+    statics = groups(svg, "s")
+    fields = groups(svg, "f")
+
+    # геометрия дуг из положения букв
+    arcs = {}
+    for key in ("tip", "region"):
+        pts = letters(fields[key])
+        cx, cy, r = fit_circle(pts)
+        arcs[key] = (r * PT_MM, span_deg(pts, cx, cy))
+
+    # кегли: берём из классов, переводим в миллиметры
+    css = re.search(r"(?s)<style>(.*?)</style>", svg).group(1)
+    sizes = {c: float(v) * PT_MM for c, v in re.findall(r"\.(cls-\d+)[^{]*\{[^}]*font-size:\s*([\d.]+)px", css)}
+    default_size = round(min(sizes.values()) if sizes else 2.3, 2)
+
+    defs, body, meta_fields = [], [], {}
+
+    # статика: контуры как есть, только в миллиметры и currentColor
+    body.append(f'  <g id="s_frame" fill="currentColor" '
+                f'transform="scale({PT_MM:.6f}) translate({-cx0} {-cy0})">')
+    for name, chunk in statics.items():
+        for d in re.findall(r'<path[^>]*\sd="([^"]+)"', chunk):
+            body.append(f'    <path d="{d}"/>   <!-- {name} -->')
+        # статика бывает и текстом — например звёздочки по бокам
+        for t in re.findall(r"<text[^>]*>.*?</text>", chunk, re.S):
+            t = re.sub(r'\sclass="[^"]*"', "", t)
+            t = re.sub(r"\s+", " ", t).strip()
+            body.append(f'    {t}   <!-- {name} -->')
+    body.append("  </g>")
+
+    for src_key, (key, kind, human) in FIELD_MAP.items():
+        chunk = fields.get(src_key)
+        if not chunk:
+            continue
+        if kind == "arc":
+            r, span = arcs[src_key]
+            top = src_key == "tip"
+            defs.append(f'    <path id="b_{key}" d="{arc_path(r, span, top)}"/>')
+            body.append(
+                f'  <g id="f_{key}">   <!-- {human} -->\n'
+                f'    <text font-size="{default_size}" letter-spacing="0.05" text-anchor="middle"'
+                f' fill="currentColor">\n'
+                f'      <textPath href="#b_{key}" startOffset="50%"></textPath>\n'
+                f"    </text>\n  </g>")
+            meta_fields[key] = {"role": key, "kind": "arc", "size": default_size,
+                                "minSize": 1.8, "maxSize": round(default_size + 0.3, 2)}
+        else:
+            m = re.search(r"translate\(([-\d.]+) ([-\d.]+)\)", chunk)
+            y = round((float(m.group(2)) - cy0) * PT_MM, 2)
+            body.append(
+                f'  <g id="f_{key}">   <!-- {human} -->\n'
+                f'    <text x="0" y="{y}" font-size="{default_size}" text-anchor="middle"'
+                f' fill="currentColor"></text>\n  </g>')
+            spec = {"role": key, "kind": "line", "size": default_size,
+                    "minSize": 1.8, "maxSize": round(default_size + 0.3, 2)}
+            if key == "inn":
+                spec["prefix"] = "ИНН "
+            if key == "ogrn":
+                spec["prefix"] = "ОГРН "
+            meta_fields[key] = spec
+
+    ring = max(float(x) for x in re.findall(r"a?(\d{2}\.\d+),\1", svg)) * PT_MM
+    meta = {
+        "version": 2,
+        "id": "ooo-o01-38",
+        "title": "Образец дизайнера O_01",
+        "kinds": ["ooo"],
+        "diameterMm": round(ring * 2),
+        "frame": {"asset": "O_01.svg, макет дизайнера",
+                  "freeRadiusMm": round(ring - 0.6, 2),
+                  "innerRadiusMm": round(arcs["tip"][0] - 2.4, 2)},
+        "defaults": {"font": "PT Sans", "case": "upper", "tracking": 0.05,
+                     "align": "middle", "overflow": "shrink"},
+        "fields": meta_fields,
+    }
+
+    half = round(ring + 1.1, 1)
+    out = f"""<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:seal="https://rpk-seal.local/ns/1"
+     viewBox="{-half} {-half} {half * 2} {half * 2}" width="{half * 2}mm" height="{half * 2}mm">
+
+  <title>{meta["title"]}</title>
+  <desc>Макет O_01 дизайнера, переведён в формат шаблона: миллиметры, центр 0,0,
+        дуги восстановлены по положению букв, поля — по словарю ключей.</desc>
+
+  <metadata><seal:template version="2">{json.dumps(meta, ensure_ascii=False, indent=1)}</seal:template></metadata>
+
+  <defs>
+{chr(10).join(defs)}
+  </defs>
+
+{chr(10).join(body)}
+</svg>
+"""
+    OUT.write_text(out, encoding="utf-8")
+    print(f"{OUT.name}: Ø{meta['diameterMm']} мм, полей {len(meta_fields)}, кегль {default_size} мм")
+    for k, (r, sp) in arcs.items():
+        print(f"   дуга {k}: радиус {r:.2f} мм, размах {sp:.0f}°")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:seal="https://rpk-seal.local/ns/1"
+     viewBox="-20.0 -20.0 40.0 40.0" width="40.0mm" height="40.0mm">
+
+  <title>Образец дизайнера O_01</title>
+  <desc>Макет O_01 дизайнера, переведён в формат шаблона: миллиметры, центр 0,0,
+        дуги восстановлены по положению букв, поля — по словарю ключей.</desc>
+
+  <metadata><seal:template version="2">{
+ "version": 2,
+ "id": "ooo-o01-38",
+ "title": "Образец дизайнера O_01",
+ "kinds": [
+  "ooo"
+ ],
+ "diameterMm": 38,
+ "frame": {
+  "asset": "O_01.svg, макет дизайнера",
+  "freeRadiusMm": 18.3,
+  "innerRadiusMm": 12.74
+ },
+ "defaults": {
+  "font": "PT Sans",
+  "case": "upper",
+  "tracking": 0.05,
+  "align": "middle",
+  "overflow": "shrink"
+ },
+ "fields": {
+  "name": {
+   "role": "name",
+   "kind": "arc",
+   "size": 2.33,
+   "minSize": 1.8,
+   "maxSize": 2.63
+  },
+  "city": {
+   "role": "city",
+   "kind": "arc",
+   "size": 2.33,
+   "minSize": 1.8,
+   "maxSize": 2.63
+  },
+  "name_short": {
+   "role": "name_short",
+   "kind": "line",
+   "size": 2.33,
+   "minSize": 1.8,
+   "maxSize": 2.63
+  },
+  "inn": {
+   "role": "inn",
+   "kind": "line",
+   "size": 2.33,
+   "minSize": 1.8,
+   "maxSize": 2.63,
+   "prefix": "ИНН "
+  },
+  "ogrn": {
+   "role": "ogrn",
+   "kind": "line",
+   "size": 2.33,
+   "minSize": 1.8,
+   "maxSize": 2.63,
+   "prefix": "ОГРН "
+  }
+ }
+}</seal:template></metadata>
+
+  <defs>
+    <path id="b_name" d="M -14.62 3.94 A 15.14 15.14 0 0 1 0 -15.14 A 15.14 15.14 0 0 1 14.62 3.94"/>
+    <path id="b_city" d="M -7.91 14.94 A 16.90 16.90 0 0 0 0 16.90 A 16.90 16.90 0 0 0 7.91 14.94"/>
+  </defs>
+
+  <g id="s_frame" fill="currentColor" transform="scale(0.352778) translate(-58.235 -58.235)">
+    <path d="M58.23,5.99c28.81,0,52.25,23.44,52.25,52.25s-23.44,52.25-52.25,52.25S5.99,87.04,5.99,58.24,29.43,5.99,58.23,5.99M58.23,4.66C28.65,4.66,4.66,28.65,4.66,58.24s23.99,53.57,53.57,53.57,53.58-23.99,53.58-53.57S87.82,4.66,58.23,4.66h0Z"/>   <!-- circle1 -->
+    <text transform="translate(89.91 93.19)"><tspan x="0" y="0">*</tspan></text>   <!-- stars -->
+    <text transform="translate(22.56 93.19)"><tspan x="0" y="0">*</tspan></text>   <!-- stars -->
+  </g>
+  <g id="f_name">   <!-- полная форма организации -->
+    <text font-size="2.33" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
+      <textPath href="#b_name" startOffset="50%"></textPath>
+    </text>
+  </g>
+  <g id="f_city">   <!-- город -->
+    <text font-size="2.33" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
+      <textPath href="#b_city" startOffset="50%"></textPath>
+    </text>
+  </g>
+  <g id="f_name_short">   <!-- краткое наименование -->
+    <text x="0" y="-0.86" font-size="2.33" text-anchor="middle" fill="currentColor"></text>
+  </g>
+  <g id="f_inn">   <!-- ИНН -->
+    <text x="0" y="-4.17" font-size="2.33" text-anchor="middle" fill="currentColor"></text>
+  </g>
+  <g id="f_ogrn">   <!-- ОГРН -->
+    <text x="0" y="7.66" font-size="2.33" text-anchor="middle" fill="currentColor"></text>
+  </g>
+</svg>
