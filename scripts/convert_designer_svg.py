@@ -31,13 +31,25 @@ OUT = Path(__file__).resolve().parent.parent / "docs" / "образец-шабл
 # движок подставляет строку целиком и переносов не делает
 SAMPLE_OVERRIDE = {"name_short": "ООО «РОМАШКА»"}
 
-FIELD_MAP = {
-    "tip": ("name", "arc", "полная форма организации"),
-    "region": ("city", "arc", "город"),
-    "name": ("name_short", "line", "краткое наименование"),
-    "inn": ("inn", "line", "ИНН"),
-    "ogrn": ("ogrn", "line", "ОГРН"),
+# ключи словаря: как поле названо в макете, так и называется у нас.
+# По дуге оно или строкой — видно по разметке, по имени не гадаем.
+DICT_KEYS = {
+    "name": "полное наименование",
+    "name_2": "продолжение наименования",
+    "name_short": "краткое наименование",
+    "fio": "ФИО",
+    "label_ip": "надпись «Индивидуальный предприниматель»",
+    "inn": "ИНН",
+    "ogrn": "ОГРН или ОГРНИП",
+    "kpp": "КПП",
+    "city": "город",
+    "address": "адрес",
+    "position": "должность",
+    "speciality": "специальность",
+    "license": "номер лицензии",
 }
+# первый макет дизайнера назван по-своему — понимаем и его
+LEGACY = {"tip": "name", "region": "city", "name": "name_short"}
 
 
 def groups(svg: str, prefix: str) -> dict[str, str]:
@@ -184,10 +196,14 @@ def main() -> int:
             body.append(f'    {t}   <!-- {name} -->')
     body.append("  </g>")
 
-    for src_key, (key, kind, human) in FIELD_MAP.items():
-        chunk = fields.get(src_key)
-        if not chunk:
+    legacy = "tip" in fields          # старая схема имён целиком
+    for src_key, chunk in fields.items():
+        key = LEGACY.get(src_key, src_key) if legacy else src_key
+        if key not in DICT_KEYS:
+            print(f"   пропущено: f_{src_key} — нет такого ключа в словаре")
             continue
+        human = DICT_KEYS[key]
+        kind = "arc" if src_key in arcs else "line"
         if kind == "arc":
             r, span = arcs[src_key]
             top = src_key == "tip"

@@ -29,19 +29,19 @@
   "overflow": "shrink"
  },
  "fields": {
-  "name": {
-   "role": "name",
-   "kind": "arc",
-   "size": 2.13,
-   "minSize": 1.8,
-   "maxSize": 2.43
-  },
   "city": {
    "role": "city",
    "kind": "arc",
    "size": 2.18,
    "minSize": 1.8,
    "maxSize": 2.48
+  },
+  "name": {
+   "role": "name",
+   "kind": "arc",
+   "size": 2.13,
+   "minSize": 1.8,
+   "maxSize": 2.43
   },
   "name_short": {
    "role": "name_short",
@@ -50,14 +50,6 @@
    "minSize": 1.8,
    "maxSize": 2.63
   },
-  "inn": {
-   "role": "inn",
-   "kind": "line",
-   "size": 2.33,
-   "minSize": 1.8,
-   "maxSize": 2.63,
-   "prefix": "ИНН "
-  },
   "ogrn": {
    "role": "ogrn",
    "kind": "line",
@@ -65,13 +57,21 @@
    "minSize": 1.8,
    "maxSize": 2.08,
    "prefix": "ОГРН "
+  },
+  "inn": {
+   "role": "inn",
+   "kind": "line",
+   "size": 2.33,
+   "minSize": 1.8,
+   "maxSize": 2.63,
+   "prefix": "ИНН "
   }
  }
 }</seal:template></metadata>
 
   <defs>
-    <path id="b_name" d="M -14.62 3.94 A 15.14 15.14 0 0 1 0 -15.14 A 15.14 15.14 0 0 1 14.62 3.94"/>
     <path id="b_city" d="M -7.91 14.94 A 16.90 16.90 0 0 0 0 16.90 A 16.90 16.90 0 0 0 7.91 14.94"/>
+    <path id="b_name" d="M -14.62 3.94 A 15.14 15.14 0 0 1 0 -15.14 A 15.14 15.14 0 0 1 14.62 3.94"/>
   </defs>
 
   <g id="s_frame" fill="currentColor" transform="scale(0.352778) translate(-58.235 -58.235)">
@@ -79,23 +79,23 @@
     <text transform="translate(89.91 93.19)"><tspan x="0" y="0">*</tspan></text>   <!-- stars -->
     <text transform="translate(22.56 93.19)"><tspan x="0" y="0">*</tspan></text>   <!-- stars -->
   </g>
-  <g id="f_name">   <!-- полная форма организации -->
-    <text font-size="2.13" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath xlink:href="#b_name" href="#b_name" startOffset="50%">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ</textPath>
-    </text>
-  </g>
   <g id="f_city">   <!-- город -->
     <text font-size="2.18" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
       <textPath xlink:href="#b_city" href="#b_city" startOffset="50%">РФ г.ОРЕНБУРГ</textPath>
     </text>
   </g>
+  <g id="f_name">   <!-- полное наименование -->
+    <text font-size="2.13" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
+      <textPath xlink:href="#b_name" href="#b_name" startOffset="50%">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ</textPath>
+    </text>
+  </g>
   <g id="f_name_short">   <!-- краткое наименование -->
     <text x="0" y="-0.86" font-size="2.33" text-anchor="middle" fill="currentColor">ООО «РОМАШКА»</text>
   </g>
+  <g id="f_ogrn">   <!-- ОГРН или ОГРНИП -->
+    <text x="0" y="7.66" font-size="1.78" text-anchor="middle" fill="currentColor">ОГРН 0123456789012</text>
+  </g>
   <g id="f_inn">   <!-- ИНН -->
     <text x="0" y="-4.17" font-size="2.33" text-anchor="middle" fill="currentColor">ИНН 0123456789</text>
-  </g>
-  <g id="f_ogrn">   <!-- ОГРН -->
-    <text x="0" y="7.66" font-size="1.78" text-anchor="middle" fill="currentColor">ОГРН 0123456789012</text>
   </g>
 </svg>
