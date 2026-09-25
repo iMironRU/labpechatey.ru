@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:seal="https://rpk-seal.local/ns/1"
-     viewBox="-20.0 -20.0 40.0 40.0" width="40.0mm" height="40.0mm">
+     viewBox="-20.0 -20.0 40.0 40.0" width="40.0mm" height="40.0mm"
+     font-family="PT Sans, sans-serif">
 
   <title>Образец дизайнера O_01</title>
   <desc>Макет O_01 дизайнера, переведён в формат шаблона: миллиметры, центр 0,0,
@@ -30,16 +31,16 @@
   "name": {
    "role": "name",
    "kind": "arc",
-   "size": 2.33,
+   "size": 2.13,
    "minSize": 1.8,
-   "maxSize": 2.63
+   "maxSize": 2.43
   },
   "city": {
    "role": "city",
    "kind": "arc",
-   "size": 2.33,
+   "size": 2.18,
    "minSize": 1.8,
-   "maxSize": 2.63
+   "maxSize": 2.48
   },
   "name_short": {
    "role": "name_short",
@@ -59,9 +60,9 @@
   "ogrn": {
    "role": "ogrn",
    "kind": "line",
-   "size": 2.33,
+   "size": 1.78,
    "minSize": 1.8,
-   "maxSize": 2.63,
+   "maxSize": 2.08,
    "prefix": "ОГРН "
   }
  }
@@ -78,22 +79,22 @@
     <text transform="translate(22.56 93.19)"><tspan x="0" y="0">*</tspan></text>   <!-- stars -->
   </g>
   <g id="f_name">   <!-- полная форма организации -->
-    <text font-size="2.33" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath href="#b_name" startOffset="50%"></textPath>
+    <text font-size="2.13" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
+      <textPath href="#b_name" startOffset="50%">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ</textPath>
     </text>
   </g>
   <g id="f_city">   <!-- город -->
-    <text font-size="2.33" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath href="#b_city" startOffset="50%"></textPath>
+    <text font-size="2.18" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
+      <textPath href="#b_city" startOffset="50%">РФ г.ОРЕНБУРГ</textPath>
     </text>
   </g>
   <g id="f_name_short">   <!-- краткое наименование -->
-    <text x="0" y="-0.86" font-size="2.33" text-anchor="middle" fill="currentColor"></text>
+    <text x="0" y="-0.86" font-size="2.33" text-anchor="middle" fill="currentColor">ООО «РОМАШКА»</text>
   </g>
   <g id="f_inn">   <!-- ИНН -->
-    <text x="0" y="-4.17" font-size="2.33" text-anchor="middle" fill="currentColor"></text>
+    <text x="0" y="-4.17" font-size="2.33" text-anchor="middle" fill="currentColor">ИНН 0123456789</text>
   </g>
   <g id="f_ogrn">   <!-- ОГРН -->
-    <text x="0" y="7.66" font-size="2.33" text-anchor="middle" fill="currentColor"></text>
+    <text x="0" y="7.66" font-size="1.78" text-anchor="middle" fill="currentColor">ОГРН 0123456789012</text>
   </g>
 </svg>

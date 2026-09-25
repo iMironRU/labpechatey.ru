@@ -27,6 +27,10 @@ PT_MM = 25.4 / 72          # экспорт Illustrator в пунктах
 OUT = Path(__file__).resolve().parent.parent / "docs" / "образец-шаблона-O_01.svg"
 
 # что в макете дизайнера соответствует нашим ключам
+# рыба вместо исходной там, где у дизайнера текст был многострочным:
+# движок подставляет строку целиком и переносов не делает
+SAMPLE_OVERRIDE = {"name_short": "ООО «РОМАШКА»"}
+
 FIELD_MAP = {
     "tip": ("name", "arc", "полная форма организации"),
     "region": ("city", "arc", "город"),
@@ -66,6 +70,37 @@ def groups(svg: str, prefix: str) -> dict[str, str]:
             i += 1
         out[key] = svg[start:i]
     return out
+
+
+FONT = Path.home() / "Library/Fonts/PT_Sans-Web-Regular.ttf"
+_widths: dict[str, float] = {}
+
+
+def text_mm(text: str, size: float, tracking: float) -> float:
+    """Ширина строки в миллиметрах по метрикам PT Sans."""
+    if not _widths:
+        from fontTools.ttLib import TTFont
+
+        font = TTFont(FONT)
+        cmap, hmtx, upm = font.getBestCmap(), font["hmtx"], font["head"].unitsPerEm
+        for code, name in cmap.items():
+            _widths[chr(code)] = hmtx[name][0] / upm
+    return sum((_widths.get(c, 0.55) + tracking) * size for c in text)
+
+
+def fit_size(text: str, room: float, size: float, tracking: float, floor: float = 1.8) -> float:
+    """Кегль, при котором рыба влезает: тем же способом, что и движок."""
+    while size > floor and text_mm(text, size, tracking) > room:
+        size = round(size - 0.05, 2)
+    return size
+
+
+def sample_text(chunk: str, key: str = "") -> str:
+    """Текст поля из макета — оставляем рыбой, движок её заменит."""
+    if key in SAMPLE_OVERRIDE:
+        return SAMPLE_OVERRIDE[key]
+    parts = re.findall(r"<tspan[^>]*>([^<]*)</tspan>", chunk)
+    return re.sub(r"\s+", " ", "".join(parts)).strip()
 
 
 def letters(chunk: str) -> list[tuple[float, float]]:
@@ -156,24 +191,29 @@ def main() -> int:
         if kind == "arc":
             r, span = arcs[src_key]
             top = src_key == "tip"
+            room = math.radians(span) * r
+            size = fit_size(sample_text(chunk, key), room, default_size, 0.05)
             defs.append(f'    <path id="b_{key}" d="{arc_path(r, span, top)}"/>')
             body.append(
                 f'  <g id="f_{key}">   <!-- {human} -->\n'
-                f'    <text font-size="{default_size}" letter-spacing="0.05" text-anchor="middle"'
+                f'    <text font-size="{size}" letter-spacing="0.05" text-anchor="middle"'
                 f' fill="currentColor">\n'
-                f'      <textPath href="#b_{key}" startOffset="50%"></textPath>\n'
+                f'      <textPath href="#b_{key}" startOffset="50%">{sample_text(chunk, key)}</textPath>\n'
                 f"    </text>\n  </g>")
-            meta_fields[key] = {"role": key, "kind": "arc", "size": default_size,
-                                "minSize": 1.8, "maxSize": round(default_size + 0.3, 2)}
+            meta_fields[key] = {"role": key, "kind": "arc", "size": size,
+                                "minSize": 1.8, "maxSize": round(size + 0.3, 2)}
         else:
             m = re.search(r"translate\(([-\d.]+) ([-\d.]+)\)", chunk)
             y = round((float(m.group(2)) - cy0) * PT_MM, 2)
+            inner = arcs["tip"][0] - 2.4
+            room = 2 * math.sqrt(max(0.01, inner ** 2 - y ** 2)) * 0.92
+            size = fit_size(sample_text(chunk, key), room, default_size, 0.05)
             body.append(
                 f'  <g id="f_{key}">   <!-- {human} -->\n'
-                f'    <text x="0" y="{y}" font-size="{default_size}" text-anchor="middle"'
-                f' fill="currentColor"></text>\n  </g>')
-            spec = {"role": key, "kind": "line", "size": default_size,
-                    "minSize": 1.8, "maxSize": round(default_size + 0.3, 2)}
+                f'    <text x="0" y="{y}" font-size="{size}" text-anchor="middle"'
+                f' fill="currentColor">{sample_text(chunk, key)}</text>\n  </g>')
+            spec = {"role": key, "kind": "line", "size": size,
+                    "minSize": 1.8, "maxSize": round(size + 0.3, 2)}
             if key == "inn":
                 spec["prefix"] = "ИНН "
             if key == "ogrn":
@@ -198,7 +238,8 @@ def main() -> int:
     half = round(ring + 1.1, 1)
     out = f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:seal="https://rpk-seal.local/ns/1"
-     viewBox="{-half} {-half} {half * 2} {half * 2}" width="{half * 2}mm" height="{half * 2}mm">
+     viewBox="{-half} {-half} {half * 2} {half * 2}" width="{half * 2}mm" height="{half * 2}mm"
+     font-family="PT Sans, sans-serif">
 
   <title>{meta["title"]}</title>
   <desc>Макет O_01 дизайнера, переведён в формат шаблона: миллиметры, центр 0,0,
