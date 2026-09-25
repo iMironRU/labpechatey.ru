@@ -6,15 +6,23 @@ import { IconCat } from "@/components/Icons";
 
 /**
  * «Не знаю — помогите»: кнопка-спасательный круг в углу и карточка с
- * контактами — из макета «Конструктор.dc.html». На телефоне кнопка не
- * показывается: там её место занимает нижняя панель с итогом.
+ * контактами — из макета «Конструктор.dc.html». На телефоне круг не
+ * показывается: там помощь зовут кнопкой из нижней панели.
  */
-export default function HelpCard({ openOnMount = false }: { openOnMount?: boolean }) {
+export default function HelpCard({ openOnMount = false, openSignal = 0 }: {
+  openOnMount?: boolean;
+  /** Счётчик нажатий снаружи: на телефоне помощь зовут из нижней панели. */
+  openSignal?: number;
+}) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (openOnMount) setOpen(true);
   }, [openOnMount]);
+
+  useEffect(() => {
+    if (openSignal) setOpen(true);
+  }, [openSignal]);
 
   return (
     <>

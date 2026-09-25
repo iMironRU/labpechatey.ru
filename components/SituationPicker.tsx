@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import home from "@/content/home.json";
 import texts from "@/content/constructor.json";
 import { IconArrowRight, IconCat } from "@/components/Icons";
 
@@ -9,13 +11,35 @@ const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, tr
  * Первый экран конструктора — «Что вам нужно изготовить?» из макета
  * «Конструктор.dc.html». Пять карточек ситуаций и два тихих варианта
  * пунктиром для тех, кто не знает, что выбрать.
+ *
+ * На телефоне внизу стоит панель «позвонить · помощь · Продолжить» — она
+ * есть в макете на обоих шагах конструктора. Раз в ней живёт «Продолжить»,
+ * карточка на узком экране не уводит сразу, а выделяется: подтверждение
+ * кнопкой. На широком, где панели нет, тап по карточке ведёт как раньше.
  */
 export default function SituationPicker({
   onPick,
+  onHelp,
 }: {
   onPick: (kind: string, situation: string) => void;
+  onHelp: () => void;
 }) {
   const t = texts.choose;
+  const [picked, setPicked] = useState<{ kind: string; sit: string } | null>(null);
+  const [compact, setCompact] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 560px)");
+    const sync = () => setCompact(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  const choose = (kind: string, sit: string) => {
+    if (compact) setPicked({ kind, sit });
+    else onPick(kind, sit);
+  };
 
   return (
     <main
@@ -40,9 +64,13 @@ export default function SituationPicker({
           <button
             key={c.sit}
             type="button"
-            onClick={() => onPick(c.kind, c.sit)}
-            className="card flex w-full cursor-pointer flex-col items-start gap-3 border-0 p-5 text-left transition-transform hover:-translate-y-0.5"
-            style={{ boxShadow: "var(--shadow-sm)" }}
+            onClick={() => choose(c.kind, c.sit)}
+            aria-pressed={picked?.sit === c.sit}
+            className="card flex w-full cursor-pointer flex-col items-start gap-3 p-5 text-left transition-transform hover:-translate-y-0.5"
+            style={{
+              boxShadow: "var(--shadow-sm)",
+              border: picked?.sit === c.sit ? "1.5px solid var(--color-accent)" : "1.5px solid transparent",
+            }}
           >
             <span
               className="grid h-10 w-10 place-items-center rounded-[10px]"
@@ -70,8 +98,10 @@ export default function SituationPicker({
           <button
             key={q.sit}
             type="button"
-            onClick={() => onPick(q.kind, q.sit)}
-            className="flex min-w-[240px] flex-1 items-center gap-[13px] rounded-[12px] border border-dashed border-[var(--color-divider)] px-[17px] py-[15px] text-left transition-colors hover:border-[var(--color-accent)]"
+            onClick={() => choose(q.kind, q.sit)}
+            aria-pressed={picked?.sit === q.sit}
+            className="flex min-w-[240px] flex-1 items-center gap-[13px] rounded-[12px] border border-dashed px-[17px] py-[15px] text-left transition-colors hover:border-[var(--color-accent)]"
+            style={{ borderColor: picked?.sit === q.sit ? "var(--color-accent)" : "var(--color-divider)" }}
           >
             <span
               className="grid h-[34px] w-[34px] flex-none place-items-center rounded-[9px]"
@@ -87,6 +117,29 @@ export default function SituationPicker({
             </span>
           </button>
         ))}
+      </div>
+
+      {/* ——— нижняя панель на телефоне (макет «Конструктор.dc.html», [data-sticky]) ——— */}
+      <div className="mcta mcta-nav">
+        <a href={home.phoneHref} aria-label="Позвонить" className="btn btn-secondary h-11 w-11 p-0">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+            <path d="M6 3h3l2 5-2 1a12 12 0 006 6l1-2 5 2v3a2 2 0 01-2 2A16 16 0 014 5a2 2 0 012-2z" />
+          </svg>
+        </a>
+        <button type="button" onClick={onHelp} aria-label="Помощь" className="btn btn-secondary h-11 w-11 p-0">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round">
+            <path d="M12 17h.01M9.1 9a3 3 0 015.8 1c0 2-3 2.5-3 4" />
+            <circle cx="12" cy="12" r="9" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary h-11 text-[14.5px]"
+          disabled={!picked}
+          onClick={() => picked && onPick(picked.kind, picked.sit)}
+        >
+          {t.continueCta}
+        </button>
       </div>
     </main>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Builder from "@/components/Builder";
 import SituationPicker from "@/components/SituationPicker";
@@ -19,6 +19,8 @@ function Screen() {
   const kind = params.get("k");
   const mount = params.get("mount");
   const { situation, pick } = useOrder();
+  // помощь на телефоне зовут из нижней панели — счётчик нажатий
+  const [help, setHelp] = useState(0);
 
   // адрес — источник правды: при заходе по ссылке состояние берём из него
   useEffect(() => {
@@ -29,8 +31,11 @@ function Screen() {
     return (
       <>
         <SiteHeader onHome={() => router.push("/")} />
-        <SituationPicker onPick={(k, s) => router.push(`/konstruktor?s=${s}&k=${k}`)} />
-        <HelpCard />
+        <SituationPicker
+          onPick={(k, s) => router.push(`/konstruktor?s=${s}&k=${k}`)}
+          onHelp={() => setHelp((n) => n + 1)}
+        />
+        <HelpCard openSignal={help} />
       </>
     );
   }
