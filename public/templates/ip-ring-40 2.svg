@@ -3,21 +3,21 @@
      xmlns:seal="https://rpk-seal.local/ns/1"
      viewBox="-21.0 -21.0 42.0 42.0" width="42.0mm" height="42.0mm">
 
-  <title>Компактный</title>
-  <desc>Раскладка compact из метода stampSvg прототипа «Конструктор — реквизиты», в миллиметрах.</desc>
+  <title>С двойным кольцом</title>
+  <desc>Раскладка ring из метода stampSvg прототипа «Конструктор — реквизиты», в миллиметрах.</desc>
 
   <metadata><seal:template version="2">{
  "version": 2,
- "id": "ip-compact-40",
- "title": "Компактный",
+ "id": "ip-ring-40",
+ "title": "С двойным кольцом",
  "kinds": [
   "ip"
  ],
  "diameterMm": 40,
  "frame": {
   "asset": "прототип «Конструктор — реквизиты», метод stampSvg",
-  "freeRadiusMm": 18.78,
-  "innerRadiusMm": 9.6
+  "freeRadiusMm": 18.65,
+  "innerRadiusMm": 8.52
  },
  "defaults": {
   "font": "PT Sans",
@@ -61,8 +61,9 @@
   </defs>
 
   <g id="s_frame" fill="none" stroke="currentColor">
-    <circle cx="0" cy="0" r="19.73" stroke-width="0.41"/>
-    <circle cx="0" cy="0" r="10.0" stroke-width="0.18"/>
+    <circle cx="0" cy="0" r="19.73" stroke-width="0.54"/>
+    <circle cx="0" cy="0" r="18.65" stroke-width="0.54"/>
+    <circle cx="0" cy="0" r="8.92" stroke-width="0.18"/>
   </g>
   <g id="s_dots" fill="currentColor">
     <circle cx="-15.68" cy="0" r="0.3"/>
@@ -70,12 +71,12 @@
   </g>
   <g id="f_label_ip">
     <text font-size="2.03" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath xlink:href="#b_label_ip" href="#b_label_ip" startOffset="50%"></textPath>
+      <textPath href="#b_label_ip" startOffset="50%"></textPath>
     </text>
   </g>
   <g id="f_city">
     <text font-size="1.49" letter-spacing="0.08" text-anchor="middle" fill="currentColor">
-      <textPath xlink:href="#b_city" href="#b_city" startOffset="50%"></textPath>
+      <textPath href="#b_city" startOffset="50%"></textPath>
     </text>
   </g>
   <g id="f_fio">

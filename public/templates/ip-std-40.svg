@@ -72,17 +72,17 @@
   </g>
   <g id="s_micro">
     <text font-size="0.88" letter-spacing="0.07" fill="currentColor">
-      <textPath href="#b_micro" startOffset="0">· лаборатория печатей · оренбург · гост · лазер 1000 dpi · лаборатория печатей · оренбург · гост · лазер 1000 dpi · лаборатория печатей · оренбург · гост · лазер 1000 dpi</textPath>
+      <textPath xlink:href="#b_micro" href="#b_micro" startOffset="0">· лаборатория печатей · оренбург · гост · лазер 1000 dpi · лаборатория печатей · оренбург · гост · лазер 1000 dpi · лаборатория печатей · оренбург · гост · лазер 1000 dpi</textPath>
     </text>
   </g>
   <g id="f_label_ip">
     <text font-size="2.03" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath href="#b_label_ip" startOffset="50%"></textPath>
+      <textPath xlink:href="#b_label_ip" href="#b_label_ip" startOffset="50%"></textPath>
     </text>
   </g>
   <g id="f_city">
     <text font-size="1.49" letter-spacing="0.08" text-anchor="middle" fill="currentColor">
-      <textPath href="#b_city" startOffset="50%"></textPath>
+      <textPath xlink:href="#b_city" href="#b_city" startOffset="50%"></textPath>
     </text>
   </g>
   <g id="f_fio">

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:seal="https://rpk-seal.local/ns/1"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:seal="https://rpk-seal.local/ns/1"
      viewBox="-20.0 -20.0 40.0 40.0" width="40.0mm" height="40.0mm"
      font-family="PT Sans, sans-serif">
 
@@ -80,12 +81,12 @@
   </g>
   <g id="f_name">   <!-- полная форма организации -->
     <text font-size="2.13" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath href="#b_name" startOffset="50%">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ</textPath>
+      <textPath xlink:href="#b_name" href="#b_name" startOffset="50%">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ</textPath>
     </text>
   </g>
   <g id="f_city">   <!-- город -->
     <text font-size="2.18" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath href="#b_city" startOffset="50%">РФ г.ОРЕНБУРГ</textPath>
+      <textPath xlink:href="#b_city" href="#b_city" startOffset="50%">РФ г.ОРЕНБУРГ</textPath>
     </text>
   </g>
   <g id="f_name_short">   <!-- краткое наименование -->

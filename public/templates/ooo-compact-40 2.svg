@@ -8,10 +8,10 @@
 
   <metadata><seal:template version="2">{
  "version": 2,
- "id": "ip-compact-40",
+ "id": "ooo-compact-40",
  "title": "Компактный",
  "kinds": [
-  "ip"
+  "ooo"
  ],
  "diameterMm": 40,
  "frame": {
@@ -27,7 +27,7 @@
   "overflow": "shrink"
  },
  "fields": {
-  "label_ip": {
+  "name": {
    "role": "top-arc",
    "kind": "arc",
    "size": 2.03,
@@ -39,7 +39,7 @@
    "size": 1.49,
    "minSize": 1.29
   },
-  "fio": {
+  "name_short": {
    "role": "center-name",
    "kind": "line",
    "size": 1.62,
@@ -56,7 +56,7 @@
 }</seal:template></metadata>
 
   <defs>
-    <path id="b_label_ip" d="M -14.98 5.45 A 15.95 15.95 0 0 1 0 -15.95 A 15.95 15.95 0 0 1 14.98 5.45"/>
+    <path id="b_name" d="M -14.98 5.45 A 15.95 15.95 0 0 1 0 -15.95 A 15.95 15.95 0 0 1 14.98 5.45"/>
     <path id="b_city" d="M -13.43 6.99 A 15.14 15.14 0 0 0 0 15.14 A 15.14 15.14 0 0 0 13.43 6.99"/>
   </defs>
 
@@ -68,17 +68,17 @@
     <circle cx="-15.68" cy="0" r="0.3"/>
     <circle cx="15.68" cy="0" r="0.3"/>
   </g>
-  <g id="f_label_ip">
+  <g id="f_name">
     <text font-size="2.03" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath xlink:href="#b_label_ip" href="#b_label_ip" startOffset="50%"></textPath>
+      <textPath href="#b_name" startOffset="50%"></textPath>
     </text>
   </g>
   <g id="f_city">
     <text font-size="1.49" letter-spacing="0.08" text-anchor="middle" fill="currentColor">
-      <textPath xlink:href="#b_city" href="#b_city" startOffset="50%"></textPath>
+      <textPath href="#b_city" startOffset="50%"></textPath>
     </text>
   </g>
-  <g id="f_fio">
+  <g id="f_name_short">
     <text x="0" y="-0.54" font-size="1.62" font-weight="600" text-anchor="middle" fill="currentColor"></text>
   </g>
   <g id="f_inn">

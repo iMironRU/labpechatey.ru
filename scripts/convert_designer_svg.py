@@ -198,7 +198,7 @@ def main() -> int:
                 f'  <g id="f_{key}">   <!-- {human} -->\n'
                 f'    <text font-size="{size}" letter-spacing="0.05" text-anchor="middle"'
                 f' fill="currentColor">\n'
-                f'      <textPath href="#b_{key}" startOffset="50%">{sample_text(chunk, key)}</textPath>\n'
+                f'      <textPath xlink:href="#b_{key}" href="#b_{key}" startOffset="50%">{sample_text(chunk, key)}</textPath>\n'
                 f"    </text>\n  </g>")
             meta_fields[key] = {"role": key, "kind": "arc", "size": size,
                                 "minSize": 1.8, "maxSize": round(size + 0.3, 2)}
@@ -237,7 +237,8 @@ def main() -> int:
 
     half = round(ring + 1.1, 1)
     out = f"""<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:seal="https://rpk-seal.local/ns/1"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:seal="https://rpk-seal.local/ns/1"
      viewBox="{-half} {-half} {half * 2} {half * 2}" width="{half * 2}mm" height="{half * 2}mm"
      font-family="PT Sans, sans-serif">
 

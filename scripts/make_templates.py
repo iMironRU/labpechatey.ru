@@ -110,14 +110,14 @@ def build(kind: str, variant: str) -> tuple[str, str]:
     if variant in MICRO_IN:
         body.append('  <g id="s_micro">\n'
                     f'    <text font-size="{MM(6.5)}" letter-spacing="{MM(0.5)}" fill="currentColor">\n'
-                    f'      <textPath href="#b_micro" startOffset="0">{(MICRO * 3).strip()}</textPath>\n'
+                    f'      <textPath xlink:href="#b_micro" href="#b_micro" startOffset="0">{(MICRO * 3).strip()}</textPath>\n'
                     '    </text>\n  </g>')
 
     def arc_field(key: str, path: str, size: float, tracking: float) -> str:
         return (f'  <g id="f_{key}">\n'
                 f'    <text font-size="{size}" letter-spacing="{tracking}" text-anchor="middle"'
                 f' fill="currentColor">\n'
-                f'      <textPath href="#{path}" startOffset="50%"></textPath>\n'
+                f'      <textPath xlink:href="#{path}" href="#{path}" startOffset="50%"></textPath>\n'
                 f'    </text>\n  </g>')
 
     def line_field(key: str, y: float, size: float, weight: str = "") -> str:
