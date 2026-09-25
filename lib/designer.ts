@@ -42,6 +42,8 @@ export type Field = {
   size: number;
   /** Сжатие по горизонтали из макета: 1 — без сжатия. */
   squeeze: number;
+  /** Сколько строк отведено полю в макете. */
+  lines?: number;
   radiusMm?: number;
   spanDeg?: number;
   y?: number;
@@ -128,6 +130,17 @@ function arcPath(r: number, span: number, top: boolean): string {
 }
 
 const textOf = (el: Element) => (el.textContent || "").replace(/\s+/g, " ").trim();
+
+/** Рыба в многострочном поле: те же слова, разложенные на n строк поровну. */
+function splitSample(text: string, n: number): string[] {
+  const words = text.split(/\s+/).filter(Boolean);
+  if (n <= 1) return [text];
+  const out: string[] = [];
+  const per = Math.ceil(words.length / n);
+  for (let i = 0; i < words.length; i += per) out.push(words.slice(i, i + per).join(" "));
+  while (out.length < n) out.push("");
+  return out.filter(Boolean);
+}
 
 /** Сжатие по горизонтали: Illustrator пишет его как scale(.85 1) у текста. */
 function squeezeOf(el: Element): number {
@@ -314,20 +327,28 @@ export function convert(source: string): Parsed {
       issues.push({ level: "ok", text: `Дуга f_${rawKey}: радиус ${radiusMm} мм, размах ${span}° — восстановлена по буквам.` });
     } else {
       const y = pts.length ? +((pts[0][1] - cy0) * PT_MM).toFixed(2) : 0;
+      // сколько строк отведено и с каким интервалом — по y у tspan-ов
+      const rows = [...new Set(Array.from(el.querySelectorAll("tspan"))
+        .map((t) => +(t.getAttribute("y") || 0)))].sort((a, b) => a - b);
+      const lines = Math.max(1, rows.length);
+      const step = rows.length > 1 ? +((rows[1] - rows[0]) * PT_MM).toFixed(2) : 0;
+      const body0 = splitSample(sample, lines);
+      const inner = lines > 1
+        ? body0.map((row, i) => `<tspan x="0" y="${(y + i * step).toFixed(2)}">${row}</tspan>`).join("")
+        : sample;
       body.push(
         `  <g id="f_${key}">   <!-- ${DICT[key]} -->\n` +
         `    <text x="0" y="${y}" font-size="${size}" text-anchor="middle" fill="currentColor"` +
-        `${fitTo(sample, size, 0, squeeze)}>${sample}</text>\n  </g>`,
+        `${lines > 1 ? "" : fitTo(sample, size, 0, squeeze)}>${inner}</text>\n  </g>`,
       );
       const spec: Record<string, unknown> = { role: key, kind: "line", size, squeeze, minSize: 1.8, maxSize: +(size + 0.3).toFixed(2) };
+      if (lines > 1) { spec.lines = lines; spec.lineHeight = step; }
       if (key === "inn") spec.prefix = "ИНН ";
       if (key === "ogrn") spec.prefix = "ОГРН ";
       metaFields[key] = spec;
-      fields.push({ key, kind: "line", sample, size, squeeze, y });
-      // строк несколько, если у tspan-ов разные y — разный трекинг не в счёт
-      const ys = new Set(Array.from(el.querySelectorAll("tspan")).map((t) => t.getAttribute("y") || "0"));
-      if (ys.size > 1) {
-        issues.push({ level: "warn", text: `Поле f_${rawKey} набрано в несколько строк. Движок подставляет строку целиком и переносов не делает.` });
+      fields.push({ key, kind: "line", sample, size, squeeze, y, lines });
+      if (lines > 1) {
+        issues.push({ level: "ok", text: `Поле f_${rawKey} набрано в ${lines} строки с интервалом ${step} мм — движок разложит наименование по словам в эти же строки.` });
       }
     }
   }

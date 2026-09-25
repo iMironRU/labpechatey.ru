@@ -65,6 +65,33 @@ export function widthMm(text: string, size: number, font = "PT Sans"): number {
   return (ruler.getComputedTextLength() / 100) * size;
 }
 
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+/**
+ * Разбивка на ровно n строк по словам: из всех вариантов берём тот, где самая
+ * широкая строка уже. Слова короткие, строк не больше трёх — перебор дешевле
+ * жадного алгоритма и заметно ровнее по виду.
+ */
+export function splitRows(text: string, n: number, size: number, font: string): string[] {
+  const words = text.split(/\s+/).filter(Boolean);
+  if (n <= 1 || words.length <= 1) return [words.join(" ")];
+  let best: string[] = [words.join(" ")];
+  let bestMax = Infinity;
+  const cut = (from: number, left: number, acc: string[]) => {
+    if (left === 1) {
+      const rows = [...acc, words.slice(from).join(" ")];
+      const max = Math.max(...rows.map((r) => widthMm(r, size, font)));
+      if (max < bestMax) { bestMax = max; best = rows; }
+      return;
+    }
+    for (let i = from + 1; i <= words.length - left + 1; i++) {
+      cut(i, left - 1, [...acc, words.slice(from, i).join(" ")]);
+    }
+  };
+  cut(0, n, []);
+  return best;
+}
+
 /** Наименование в две дуги: режем по словам, стараясь заполнить первую. */
 export function splitTwoArcs(text: string, capFirst: number): [string, string] {
   const words = text.split(/\s+/);
@@ -200,18 +227,67 @@ export function fill(svgText: string, vals: Values, color: string): Filled {
     target.textContent = `${prefix}${value}`.trim();
 
     const base = svg.querySelector(`#b_${key}`) as SVGPathElement | null;
-    let room: number;
-    if (base) room = base.getTotalLength();
-    else {
-      const y = parseFloat(textEl.getAttribute("y") || "0");
-      const limit =
-        meta.frame?.innerRadiusMm || meta.frame?.freeRadiusMm || meta.diameterMm / 2;
-      room = 2 * Math.sqrt(Math.max(0.01, limit * limit - y * y)) * 0.92;
-    }
+    // место под строку — хорда круга на её высоте, ограниченная текстом по дуге
+    const limit =
+      meta.frame?.innerRadiusMm || meta.frame?.freeRadiusMm || meta.diameterMm / 2;
+    const chord = (y: number) =>
+      2 * Math.sqrt(Math.max(0.01, limit * limit - y * y)) * 0.92;
+    const room = base ? base.getTotalLength() : chord(parseFloat(textEl.getAttribute("y") || "0"));
 
     // сжатие по горизонтали, как в макете: у дизайнера это scale(.85 1),
     // в живом тексте — textLength, иначе на дуге пришлось бы гнуть саму дугу
     const squeeze: number = spec.squeeze || defaults.squeeze || 1;
+
+    // поле, набранное в макете в несколько строк: раскладываем по словам
+    const maxLines: number = spec.lines || 1;
+    if (!base && maxLines > 1) {
+      const step: number = spec.lineHeight || +(spec.size * 1.2).toFixed(2);
+      // блок держим по центру отведённого места, сколько бы строк ни вышло
+      const middle = parseFloat(textEl.getAttribute("y") || "0") + ((maxLines - 1) * step) / 2;
+      const font: string = defaults.font || "PT Sans";
+      const text = `${prefix}${value}`.trim();
+
+      const put = (lines: number, pt: number) => {
+        const rows = splitRows(text, lines, pt, font);
+        const top = middle - ((rows.length - 1) * step) / 2;
+        textEl.setAttribute("font-size", String(pt));
+        textEl.textContent = "";
+        rows.forEach((row, i) => {
+          const t = document.createElementNS(SVG_NS, "tspan");
+          t.setAttribute("x", "0");
+          t.setAttribute("y", (top + i * step).toFixed(2));
+          t.textContent = row;
+          textEl.appendChild(t);
+        });
+        // .every обрывается на первой неудаче, а атрибуты нужны всем строкам
+        return rows.map((_, i) => {
+          const t = textEl.children[i] as unknown as SVGTextContentElement;
+          const w = t.getComputedTextLength() * squeeze;
+          if (squeeze !== 1) {
+            (t as unknown as Element).setAttribute("textLength", w.toFixed(3));
+            (t as unknown as Element).setAttribute("lengthAdjust", "spacingAndGlyphs");
+          }
+          return w <= chord(top + i * step);
+        }).every(Boolean);
+      };
+
+      let pt: number = spec.size;
+      const floor: number = spec.minSize || pt;
+      let ok = false;
+      while (!ok) {
+        for (let n = 1; n <= maxLines && !ok; n++) ok = put(n, pt);
+        if (ok || pt <= floor) break;
+        pt = Math.round((pt - 0.05) * 100) / 100;
+      }
+      if (!ok) {
+        grade = "bad";
+        notes.push(`${LABELS[key] ?? key} не помещается`);
+      } else if (pt < spec.size - 0.01 && grade === "ok") {
+        grade = "tight";
+      }
+      continue;
+    }
+
     const width = () => {
       target.removeAttribute("textLength");
       return textEl.getComputedTextLength() * squeeze;

@@ -52,7 +52,9 @@
    "size": 2.33,
    "squeeze": 0.85,
    "minSize": 1.8,
-   "maxSize": 2.63
+   "maxSize": 2.63,
+   "lines": 3,
+   "lineHeight": 2.8
   },
   "ogrn": {
    "role": "ogrn",
@@ -97,7 +99,7 @@
     </text>
   </g>
   <g id="f_name_bare">   <!-- наименование без формы -->
-    <text x="0" y="-0.86" font-size="2.33" text-anchor="middle" fill="currentColor" textLength="11.18" lengthAdjust="spacingAndGlyphs">«РОМАШКА»</text>
+    <text x="0" y="-0.86" font-size="2.33" text-anchor="middle" fill="currentColor"><tspan x="0" y="-0.86">«РОМАШКА»</tspan></text>
   </g>
   <g id="f_ogrn">   <!-- ОГРН или ОГРНИП -->
     <text x="0" y="7.66" font-size="2.03" text-anchor="middle" fill="currentColor" textLength="16.75" lengthAdjust="spacingAndGlyphs">ОГРН 0123456789012</text>

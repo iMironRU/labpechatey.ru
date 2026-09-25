@@ -272,13 +272,29 @@ def main() -> int:
             room = 2 * math.sqrt(max(0.01, inner ** 2 - y ** 2)) * 0.92
             squeeze = squeeze_of(chunk)
             sample = sample_text(chunk, key)
+            # сколько строк отведено полю и с каким интервалом — по y у tspan-ов
+            ys = sorted({float(v) for v in re.findall(r'<tspan[^>]*\sy="([-\d.]+)"', chunk)})
+            lines = max(1, len(ys))
+            step = round((ys[1] - ys[0]) * PT_MM, 2) if lines > 1 else 0
             size = fit_size(sample, room / squeeze, default_size, 0.05)
+            if lines > 1:
+                words = sample.split()
+                per = math.ceil(len(words) / lines)
+                rows = [" ".join(words[i:i + per]) for i in range(0, len(words), per)]
+                inner = "".join(f'<tspan x="0" y="{y + i * step:.2f}">{r}</tspan>'
+                                for i, r in enumerate(rows))
+                tail = ""
+            else:
+                inner, tail = sample, fit_to(sample, size, 0, squeeze)
             body.append(
                 f'  <g id="f_{key}">   <!-- {human} -->\n'
                 f'    <text x="0" y="{y}" font-size="{size}" text-anchor="middle"'
-                f' fill="currentColor"{fit_to(sample, size, 0, squeeze)}>{sample}</text>\n  </g>')
+                f' fill="currentColor"{tail}>{inner}</text>\n  </g>')
             spec = {"role": key, "kind": "line", "size": size, "squeeze": squeeze,
                     "minSize": 1.8, "maxSize": round(size + 0.3, 2)}
+            if lines > 1:
+                spec["lines"] = lines
+                spec["lineHeight"] = step
             if key == "inn":
                 spec["prefix"] = "ИНН "
             if key == "ogrn":
