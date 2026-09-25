@@ -162,6 +162,22 @@ def arc_path(r: float, span: float, top: bool) -> str:
             f" A {r:.2f} {r:.2f} 0 0 0 {x:.2f} {y:.2f}")
 
 
+def squeeze_of(chunk: str) -> float:
+    """Сжатие по горизонтали: Illustrator пишет его как scale(.85 1)."""
+    for sx, sy in re.findall(r"scale\(\s*([\d.]+)[\s,]+([\d.]+)\s*\)", chunk):
+        if float(sy) == 1 and float(sx) != 1:
+            return round(float(sx), 3)
+    return 1.0
+
+
+def fit_to(text: str, size: float, tracking: float, squeeze: float) -> str:
+    """Сжатие для рыбы в файле: у живого текста это textLength, не scale."""
+    if squeeze == 1:
+        return ""
+    pen = text_mm(text, size, tracking)
+    return f' textLength="{pen * squeeze:.2f}" lengthAdjust="spacingAndGlyphs"'
+
+
 def main() -> int:
     src = Path(sys.argv[1] if len(sys.argv) > 1 else Path.home() / "Downloads/O_01.svg")
     svg = src.read_text(encoding="utf-8", errors="ignore")
@@ -236,27 +252,32 @@ def main() -> int:
             r, span = arcs[src_key]
             top = src_key == "tip"
             room = math.radians(span) * r
-            size = fit_size(sample_text(chunk, key), room, default_size, 0.05)
+            squeeze = squeeze_of(chunk)
+            sample = sample_text(chunk, key)
+            size = fit_size(sample, room / squeeze, default_size, 0.05)
             defs.append(f'    <path id="b_{key}" d="{arc_path(r, span, top)}"/>')
             body.append(
                 f'  <g id="f_{key}">   <!-- {human} -->\n'
                 f'    <text font-size="{size}" letter-spacing="0.05" text-anchor="middle"'
                 f' fill="currentColor">\n'
-                f'      <textPath xlink:href="#b_{key}" href="#b_{key}" startOffset="50%">{sample_text(chunk, key)}</textPath>\n'
+                f'      <textPath xlink:href="#b_{key}" href="#b_{key}" startOffset="50%"'
+                f'{fit_to(sample, size, 0.05, squeeze)}>{sample}</textPath>\n'
                 f"    </text>\n  </g>")
-            meta_fields[key] = {"role": key, "kind": "arc", "size": size,
+            meta_fields[key] = {"role": key, "kind": "arc", "size": size, "squeeze": squeeze,
                                 "minSize": 1.8, "maxSize": round(size + 0.3, 2)}
         else:
             m = re.search(r"translate\(([-\d.]+) ([-\d.]+)\)", chunk)
             y = round((float(m.group(2)) - cy0) * PT_MM, 2)
             inner = arcs["tip"][0] - 2.4
             room = 2 * math.sqrt(max(0.01, inner ** 2 - y ** 2)) * 0.92
-            size = fit_size(sample_text(chunk, key), room, default_size, 0.05)
+            squeeze = squeeze_of(chunk)
+            sample = sample_text(chunk, key)
+            size = fit_size(sample, room / squeeze, default_size, 0.05)
             body.append(
                 f'  <g id="f_{key}">   <!-- {human} -->\n'
                 f'    <text x="0" y="{y}" font-size="{size}" text-anchor="middle"'
-                f' fill="currentColor">{sample_text(chunk, key)}</text>\n  </g>')
-            spec = {"role": key, "kind": "line", "size": size,
+                f' fill="currentColor"{fit_to(sample, size, 0, squeeze)}>{sample}</text>\n  </g>')
+            spec = {"role": key, "kind": "line", "size": size, "squeeze": squeeze,
                     "minSize": 1.8, "maxSize": round(size + 0.3, 2)}
             if key == "inn":
                 spec["prefix"] = "ИНН "
@@ -275,7 +296,8 @@ def main() -> int:
                   "freeRadiusMm": round(ring - 0.6, 2),
                   "innerRadiusMm": round(arcs["tip"][0] - 2.4, 2)},
         "defaults": {"font": "PT Sans", "case": "upper", "tracking": 0.05,
-                     "align": "middle", "overflow": "shrink"},
+                     "align": "middle", "overflow": "shrink",
+                     "squeeze": squeeze_of(svg)},
         "fields": meta_fields,
     }
 

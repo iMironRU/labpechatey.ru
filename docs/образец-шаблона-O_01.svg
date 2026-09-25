@@ -26,42 +26,48 @@
   "case": "upper",
   "tracking": 0.05,
   "align": "middle",
-  "overflow": "shrink"
+  "overflow": "shrink",
+  "squeeze": 0.85
  },
  "fields": {
   "city": {
    "role": "city",
    "kind": "arc",
-   "size": 2.18,
+   "size": 2.33,
+   "squeeze": 0.85,
    "minSize": 1.8,
-   "maxSize": 2.48
+   "maxSize": 2.63
   },
   "label_ooo": {
    "role": "label_ooo",
    "kind": "arc",
-   "size": 2.13,
+   "size": 2.33,
+   "squeeze": 0.85,
    "minSize": 1.8,
-   "maxSize": 2.43
+   "maxSize": 2.63
   },
   "name_bare": {
    "role": "name_bare",
    "kind": "line",
    "size": 2.33,
+   "squeeze": 0.85,
    "minSize": 1.8,
    "maxSize": 2.63
   },
   "ogrn": {
    "role": "ogrn",
    "kind": "line",
-   "size": 1.78,
+   "size": 2.03,
+   "squeeze": 0.85,
    "minSize": 1.8,
-   "maxSize": 2.08,
+   "maxSize": 2.33,
    "prefix": "ОГРН "
   },
   "inn": {
    "role": "inn",
    "kind": "line",
    "size": 2.33,
+   "squeeze": 0.85,
    "minSize": 1.8,
    "maxSize": 2.63,
    "prefix": "ИНН "
@@ -81,22 +87,22 @@
     <text font-size="9.65" transform="translate(22.56 93.19)"><tspan x="0" y="0">*</tspan></text>   <!-- stars -->
   </g>
   <g id="f_city">   <!-- город -->
-    <text font-size="2.18" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath xlink:href="#b_city" href="#b_city" startOffset="50%">РФ г.ОРЕНБУРГ</textPath>
+    <text font-size="2.33" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
+      <textPath xlink:href="#b_city" href="#b_city" startOffset="50%" textLength="14.64" lengthAdjust="spacingAndGlyphs">РФ г.ОРЕНБУРГ</textPath>
     </text>
   </g>
   <g id="f_label_ooo">   <!-- надпись с организационно-правовой формой -->
-    <text font-size="2.13" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
-      <textPath xlink:href="#b_label_ooo" href="#b_label_ooo" startOffset="50%">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ</textPath>
+    <text font-size="2.33" letter-spacing="0.05" text-anchor="middle" fill="currentColor">
+      <textPath xlink:href="#b_label_ooo" href="#b_label_ooo" startOffset="50%" textLength="50.87" lengthAdjust="spacingAndGlyphs">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ</textPath>
     </text>
   </g>
   <g id="f_name_bare">   <!-- наименование без формы -->
-    <text x="0" y="-0.86" font-size="2.33" text-anchor="middle" fill="currentColor">«РОМАШКА»</text>
+    <text x="0" y="-0.86" font-size="2.33" text-anchor="middle" fill="currentColor" textLength="11.18" lengthAdjust="spacingAndGlyphs">«РОМАШКА»</text>
   </g>
   <g id="f_ogrn">   <!-- ОГРН или ОГРНИП -->
-    <text x="0" y="7.66" font-size="1.78" text-anchor="middle" fill="currentColor">ОГРН 0123456789012</text>
+    <text x="0" y="7.66" font-size="2.03" text-anchor="middle" fill="currentColor" textLength="16.75" lengthAdjust="spacingAndGlyphs">ОГРН 0123456789012</text>
   </g>
   <g id="f_inn">   <!-- ИНН -->
-    <text x="0" y="-4.17" font-size="2.33" text-anchor="middle" fill="currentColor">ИНН 0123456789</text>
+    <text x="0" y="-4.17" font-size="2.33" text-anchor="middle" fill="currentColor" textLength="15.33" lengthAdjust="spacingAndGlyphs">ИНН 0123456789</text>
   </g>
 </svg>

@@ -7,6 +7,8 @@
  * положению букв: через точки их привязки проводим окружность.
  */
 
+import { widthMm } from "@/lib/stamp";
+
 const PT_MM = 25.4 / 72;
 
 /** Конечный словарь полей: как названо в макете, так называется у нас. */
@@ -38,6 +40,8 @@ export type Field = {
   kind: "arc" | "line";
   sample: string;
   size: number;
+  /** Сжатие по горизонтали из макета: 1 — без сжатия. */
+  squeeze: number;
   radiusMm?: number;
   spanDeg?: number;
   y?: number;
@@ -124,6 +128,26 @@ function arcPath(r: number, span: number, top: boolean): string {
 }
 
 const textOf = (el: Element) => (el.textContent || "").replace(/\s+/g, " ").trim();
+
+/** Сжатие по горизонтали: Illustrator пишет его как scale(.85 1) у текста. */
+function squeezeOf(el: Element): number {
+  for (const n of [el, ...Array.from(el.querySelectorAll("*"))]) {
+    const m = /scale\(\s*([\d.]+)[\s,]+([\d.]+)\s*\)/.exec(n.getAttribute("transform") || "");
+    if (m && +m[2] === 1 && +m[1] !== 1) return +(+m[1]).toFixed(3);
+  }
+  return 1;
+}
+
+/**
+ * Атрибуты сжатия для рыбы в шаблоне: у дизайнера это scale(.85 1), у живого
+ * текста — textLength. Движок пересчитает их под настоящие данные, но файл
+ * должен открываться таким же, каким его нарисовали.
+ */
+function fitTo(text: string, size: number, tracking: number, squeeze: number): string {
+  if (squeeze === 1) return "";
+  const pen = widthMm(text, size, "PT Sans") + tracking * Math.max(0, text.length - 1);
+  return ` textLength="${(pen * squeeze).toFixed(2)}" lengthAdjust="spacingAndGlyphs"`;
+}
 
 /**
  * Правила из `<style>`: так Illustrator экспортирует, если не переключить
@@ -263,6 +287,7 @@ export function convert(source: string): Parsed {
     const sample = textOf(el);
     const sizePx = fontSizePx(el, rules);
     const size = sizePx ? +(sizePx * PT_MM).toFixed(2) : 2.3;
+    const squeeze = squeezeOf(el);
     if (size < 1.8) {
       issues.push({ level: "warn", text: `Поле f_${rawKey}: кегль ${size} мм — меньше производственного минимума 1.8 мм.` });
     }
@@ -280,23 +305,25 @@ export function convert(source: string): Parsed {
       body.push(
         `  <g id="f_${key}">   <!-- ${DICT[key]} -->\n` +
         `    <text font-size="${size}" letter-spacing="0.05" text-anchor="middle" fill="currentColor">\n` +
-        `      <textPath xlink:href="#b_${key}" href="#b_${key}" startOffset="50%">${sample}</textPath>\n` +
+        `      <textPath xlink:href="#b_${key}" href="#b_${key}" startOffset="50%"` +
+        `${fitTo(sample, size, 0.05, squeeze)}>${sample}</textPath>\n` +
         `    </text>\n  </g>`,
       );
-      metaFields[key] = { role: key, kind: "arc", size, minSize: 1.8, maxSize: +(size + 0.3).toFixed(2) };
-      fields.push({ key, kind: "arc", sample, size, radiusMm, spanDeg: span });
+      metaFields[key] = { role: key, kind: "arc", size, squeeze, minSize: 1.8, maxSize: +(size + 0.3).toFixed(2) };
+      fields.push({ key, kind: "arc", sample, size, squeeze, radiusMm, spanDeg: span });
       issues.push({ level: "ok", text: `Дуга f_${rawKey}: радиус ${radiusMm} мм, размах ${span}° — восстановлена по буквам.` });
     } else {
       const y = pts.length ? +((pts[0][1] - cy0) * PT_MM).toFixed(2) : 0;
       body.push(
         `  <g id="f_${key}">   <!-- ${DICT[key]} -->\n` +
-        `    <text x="0" y="${y}" font-size="${size}" text-anchor="middle" fill="currentColor">${sample}</text>\n  </g>`,
+        `    <text x="0" y="${y}" font-size="${size}" text-anchor="middle" fill="currentColor"` +
+        `${fitTo(sample, size, 0, squeeze)}>${sample}</text>\n  </g>`,
       );
-      const spec: Record<string, unknown> = { role: key, kind: "line", size, minSize: 1.8, maxSize: +(size + 0.3).toFixed(2) };
+      const spec: Record<string, unknown> = { role: key, kind: "line", size, squeeze, minSize: 1.8, maxSize: +(size + 0.3).toFixed(2) };
       if (key === "inn") spec.prefix = "ИНН ";
       if (key === "ogrn") spec.prefix = "ОГРН ";
       metaFields[key] = spec;
-      fields.push({ key, kind: "line", sample, size, y });
+      fields.push({ key, kind: "line", sample, size, squeeze, y });
       // строк несколько, если у tspan-ов разные y — разный трекинг не в счёт
       const ys = new Set(Array.from(el.querySelectorAll("tspan")).map((t) => t.getAttribute("y") || "0"));
       if (ys.size > 1) {
@@ -319,6 +346,10 @@ export function convert(source: string): Parsed {
   // внутренний край: по самой нижней дуге, а если дуг нет — с отступом от кольца
   const inner = Math.min(Number.isFinite(innerMm) ? innerMm : ringMm - 2.4, ringMm - 1);
 
+  // сжатие обычно одно на весь макет — выносим в умолчания
+  const used = Object.values(metaFields).map((f) => (f as { squeeze: number }).squeeze);
+  const common = used.length && used.every((v) => v === used[0]) ? used[0] : 1;
+
   const meta = {
     version: 2,
     id: `tpl-${diameterMm}`,
@@ -326,7 +357,7 @@ export function convert(source: string): Parsed {
     kinds: ["ooo"],
     diameterMm,
     frame: { asset: "макет дизайнера", freeRadiusMm: +(ringMm - 0.6).toFixed(2), innerRadiusMm: +inner.toFixed(2) },
-    defaults: { font: "PT Sans", case: "upper", tracking: 0.05, align: "middle", overflow: "shrink" },
+    defaults: { font: "PT Sans", case: "upper", tracking: 0.05, align: "middle", overflow: "shrink", squeeze: common },
     fields: metaFields,
   };
 

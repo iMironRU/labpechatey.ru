@@ -21,6 +21,8 @@ export type FieldIndex = {
   comfort: number;
   tight: number;
   variable: boolean;
+  /** Сжатие по горизонтали из макета: 0.85 — буквы уже на 15%. */
+  squeeze?: number;
 };
 
 export type TemplateIndex = {
@@ -88,8 +90,9 @@ export function score(tpl: TemplateIndex, vals: Values): Omit<Scored, "tpl" | "v
     const str = String(
       key === "name" && tpl.fields.name_2 ? splitTwoArcs(String(raw), f.comfort)[0] : raw,
     ).toUpperCase();
-    const need = widthMm(str, f.sizeMm, tpl.font);
-    const needMin = widthMm(str, f.minSizeMm, tpl.font);
+    const squeeze = f.squeeze || 1;
+    const need = widthMm(str, f.sizeMm, tpl.font) * squeeze;
+    const needMin = widthMm(str, f.minSizeMm, tpl.font) * squeeze;
 
     if (key === "name" && tpl.fields.name_2) {
       const tail = splitTwoArcs(String(raw), f.comfort)[1];
@@ -206,20 +209,33 @@ export function fill(svgText: string, vals: Values, color: string): Filled {
       room = 2 * Math.sqrt(Math.max(0.01, limit * limit - y * y)) * 0.92;
     }
 
+    // сжатие по горизонтали, как в макете: у дизайнера это scale(.85 1),
+    // в живом тексте — textLength, иначе на дуге пришлось бы гнуть саму дугу
+    const squeeze: number = spec.squeeze || defaults.squeeze || 1;
+    const width = () => {
+      target.removeAttribute("textLength");
+      return textEl.getComputedTextLength() * squeeze;
+    };
+
     let size: number = spec.size;
     const min: number = spec.minSize || size;
     textEl.setAttribute("font-size", String(size));
-    while (textEl.getComputedTextLength() > room && size > min) {
+    while (width() > room && size > min) {
       size = Math.round((size - 0.05) * 100) / 100;
       textEl.setAttribute("font-size", String(size));
     }
-    if (textEl.getComputedTextLength() > room) {
+    if (width() > room) {
       for (let tr = -0.01; tr >= -0.03; tr -= 0.01) {
         textEl.setAttribute("letter-spacing", (tr * size).toFixed(3));
-        if (textEl.getComputedTextLength() <= room) break;
+        if (width() <= room) break;
       }
     }
-    if (textEl.getComputedTextLength() > room) {
+    const fitted = width();
+    if (squeeze !== 1) {
+      target.setAttribute("textLength", fitted.toFixed(3));
+      target.setAttribute("lengthAdjust", "spacingAndGlyphs");
+    }
+    if (fitted > room) {
       grade = "bad";
       notes.push(`${LABELS[key] ?? key} не помещается`);
     } else if (size < spec.size - 0.01) {

@@ -3,33 +3,43 @@
 import { useEffect, useRef, useState } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import { convert, type Parsed } from "@/lib/designer";
-import { fill, valuesFor, ensureFont } from "@/lib/stamp";
+import { fill, valuesFor, ensureFont, rootOf } from "@/lib/stamp";
 import { asset } from "@/lib/paths";
-import { rootOf } from "@/lib/stamp";
 import { IconCheck, IconCross, IconUpload } from "@/components/Icons";
 
 const muted = (pct: number) => `color-mix(in srgb, var(--color-text) ${pct}%, transparent)`;
 
-/** Данные для примерки: длинные, чтобы сразу видеть, где не хватает места. */
-const SAMPLE = {
+type Data = { org: string; city: string; inn: string; ogrn: string };
+
+const START: Data = {
   org: "Ромашка",
   city: "Оренбург",
   inn: "5610100213",
   ogrn: "1105658001239",
 };
 
+/** Готовые наименования: от короткого до такого, что заведомо не влезет. */
+const NAMES = [
+  "Ромашка",
+  "Российская народная компания",
+  "Специализированный застройщик «Территория комфорта плюс»",
+];
+
 /**
  * Приёмка макета печати от дизайнера.
  *
  * Работает целиком в браузере: файл никуда не уходит. Проверяем разметку
  * по документу с требованиями, собираем шаблон и тут же примеряем на нём
- * реальные реквизиты — так сразу видно, что не влезает.
+ * реквизиты — их можно менять прямо на странице, чтобы дизайнер сам увидел,
+ * что будет с макетом на коротком и на длинном наименовании.
  */
 export default function DesignerPage() {
   const [res, setRes] = useState<Parsed | null>(null);
   const [name, setName] = useState("");
+  const [data, setData] = useState<Data>(START);
   const [preview, setPreview] = useState<{ html: string; box: string; font: string } | null>(null);
   const [notes, setNotes] = useState<string[]>([]);
+  const [grade, setGrade] = useState<"ok" | "tight" | "bad">("ok");
   const input = useRef<HTMLInputElement>(null);
 
   async function take(file: File) {
@@ -43,23 +53,30 @@ export default function DesignerPage() {
                 "Экспортируйте из него SVG (File → Export → Export As → SVG) и перетащите сюда.",
         }],
       });
-      setPreview(null);
       return;
     }
-    const parsed = convert(await file.text());
-    setRes(parsed);
-    if (!parsed.svg) { setPreview(null); return; }
-    try {
-      await ensureFont();
-      const values = valuesFor("ooo", SAMPLE);
-      const filled = fill(parsed.svg, values, "var(--ink)");
-      setPreview(rootOf(filled.svg));
-      setNotes(filled.notes);
-    } catch {
-      setPreview(null);
-      setNotes(["Шаблон собрался, но примерить данные не вышло — посмотрите замечания выше."]);
-    }
+    setRes(convert(await file.text()));
   }
+
+  // примерка пересобирается на каждое изменение реквизитов
+  useEffect(() => {
+    if (!res?.svg) { setPreview(null); return; }
+    let alive = true;
+    void (async () => {
+      try {
+        await ensureFont();
+        if (!alive) return;
+        const filled = fill(res.svg, valuesFor("ooo", data), "var(--ink)");
+        setPreview(rootOf(filled.svg));
+        setNotes(filled.notes);
+        setGrade(filled.grade);
+      } catch {
+        setPreview(null);
+        setNotes(["Шаблон собрался, но примерить данные не вышло — посмотрите замечания слева."]);
+      }
+    })();
+    return () => { alive = false; };
+  }, [res, data]);
 
   useEffect(() => {
     const stop = (e: DragEvent) => { e.preventDefault(); };
@@ -83,6 +100,9 @@ export default function DesignerPage() {
     URL.revokeObjectURL(a.href);
   };
 
+  const set = (k: keyof Data) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setData((d) => ({ ...d, [k]: e.target.value }));
+
   return (
     <>
       <SiteHeader />
@@ -92,8 +112,10 @@ export default function DesignerPage() {
         </h1>
         <p className="mb-6 mt-0 max-w-[62ch] text-[15px]" style={{ color: muted(70) }}>
           Перетащите SVG-экспорт из Illustrator — проверим разметку полей, соберём
-          шаблон и примерим на нём настоящие реквизиты. Файл остаётся у вас в
-          браузере и никуда не отправляется. Требования — в{" "}
+          шаблон и примерим на нём реквизиты. Наименование и остальное меняются
+          прямо здесь: сразу видно, что будет с макетом на коротком и на длинном
+          названии. Файл остаётся у вас в браузере и никуда не отправляется.
+          Требования — в{" "}
           <a href={asset("/docs/шаблоны-печатей-для-дизайнера.md")} style={{ color: "var(--color-accent)" }}>
             документе для дизайнера
           </a>.
@@ -138,6 +160,7 @@ export default function DesignerPage() {
                         <span className="font-semibold">f_{f.key}</span>
                         <span style={{ color: muted(62) }}>
                           {f.kind === "arc" ? `дуга R${f.radiusMm} мм · ${f.spanDeg}°` : `строка y=${f.y}`} · {f.size} мм
+                          {f.squeeze !== 1 ? ` · сжатие ${Math.round(f.squeeze * 100)}%` : ""}
                         </span>
                       </div>
                     ))}
@@ -165,14 +188,54 @@ export default function DesignerPage() {
                   </span>
                 )}
               </div>
-              {notes.length > 0 && (
-                <ul className="m-0 mt-3 list-none p-0 text-[12.5px]" style={{ color: muted(62) }}>
-                  {notes.map((n) => <li key={n}>— {n}</li>)}
-                </ul>
+
+              {preview && (
+                <>
+                  <div className="mt-4 flex flex-col gap-3">
+                    <div className="field">
+                      <label htmlFor="dz-org">Наименование</label>
+                      <input id="dz-org" className="input" value={data.org} onChange={set("org")} />
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {NAMES.map((n) => (
+                        <button key={n} type="button"
+                          onClick={() => setData((d) => ({ ...d, org: n }))}
+                          className="rounded-full border px-2.5 py-1 text-[12px]"
+                          style={{
+                            borderColor: data.org === n ? "var(--color-accent)" : "var(--color-divider)",
+                            color: data.org === n ? "var(--color-accent)" : muted(65),
+                          }}>
+                          {n.length} знаков
+                        </button>
+                      ))}
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="field">
+                        <label htmlFor="dz-city">Город</label>
+                        <input id="dz-city" className="input" value={data.city} onChange={set("city")} />
+                      </div>
+                      <div className="field">
+                        <label htmlFor="dz-inn">ИНН</label>
+                        <input id="dz-inn" className="input" value={data.inn} onChange={set("inn")} inputMode="numeric" />
+                      </div>
+                    </div>
+                    <div className="field">
+                      <label htmlFor="dz-ogrn">ОГРН · 15 цифр читаются как ОГРНИП</label>
+                      <input id="dz-ogrn" className="input" value={data.ogrn} onChange={set("ogrn")} inputMode="numeric" />
+                    </div>
+                  </div>
+
+                  <p className="mb-0 mt-3 text-[12.5px]" style={{
+                    color: grade === "bad" ? "var(--warn)" : muted(62),
+                  }}>
+                    {notes.length > 0
+                      ? notes.map((n) => n[0].toUpperCase() + n.slice(1)).join(". ") + "."
+                      : grade === "tight"
+                        ? "Влезает, но кегль пришлось снизить — на таких данных макет работает впритык."
+                        : "Всё помещается в исходном кегле."}
+                  </p>
+                </>
               )}
-              <p className="mb-0 mt-3 text-[12px]" style={{ color: muted(55) }}>
-                Подставлены: ООО «Ромашка», Оренбург, ИНН {SAMPLE.inn}, ОГРН {SAMPLE.ogrn}.
-              </p>
             </section>
           </div>
         )}
