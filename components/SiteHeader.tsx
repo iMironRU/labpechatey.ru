@@ -65,7 +65,7 @@ export default function SiteHeader({ onHome, onConstructor }: {
 
         <nav className="hidden items-center gap-5 min-[861px]:flex" hidden={Boolean(onHome)}>
           {home.nav.map((n) =>
-            n.href === "#constructor" ? (
+            n.href === "/#constructor" ? (
               <button key={n.label} type="button" onClick={onConstructor} className="text-[14px]">
                 {n.label}
               </button>
