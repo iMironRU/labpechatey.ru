@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { KIND_LABEL, MOUNTS, ROUND_SIZES, sizeLabel, type Mount } from "@/lib/mounts";
 import MountPhoto from "@/components/MountPhoto";
 
@@ -110,9 +111,15 @@ export default function MountsCatalog() {
   );
 }
 
+const slug = (s: string) => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+
 function MountCard({ m }: { m: Mount }) {
   return (
-    <div className="card flex flex-col gap-3 p-4" style={{ boxShadow: "var(--shadow-sm)" }}>
+    <Link
+      href={`/osnastki/${slug(m.id)}`}
+      className="card flex flex-col gap-3 p-4 no-underline transition-transform hover:-translate-y-0.5"
+      style={{ color: "inherit", boxShadow: "var(--shadow-sm)" }}
+    >
       <div className="relative">
         <MountPhoto m={m} className="mount-photo--card" />
         <span
@@ -141,7 +148,7 @@ function MountCard({ m }: { m: Mount }) {
           с клише
         </span>
       </div>
-    </div>
+    </Link>
   );
 }
 

@@ -64,15 +64,19 @@ function Chip({ name, icon }: { name: string; icon: keyof typeof ICONS }) {
  * там, где человек уже видел «печать 690 ₽».
  */
 export default function Mounts({
-  diameterMm, value, onChange,
+  diameterMm, value, onChange, pinnedId,
 }: {
   diameterMm: number;
   value: number;
   onChange: (i: number) => void;
+  /** артикул из каталога: если он подходит по размеру, он и выбран */
+  pinnedId?: string | null;
 }) {
   const list = forDiameter(diameterMm);
   const base = list[0]?.price ?? 0;
   const [sheet, setSheet] = useState(false);
+  const pinned = pinnedId ? list.findIndex((m) => m.id === pinnedId) : -1;
+  const active = pinned >= 0 ? pinned : value;
 
   if (!list.length) {
     const near = nearestSizes(diameterMm);
@@ -87,14 +91,14 @@ export default function Mounts({
     );
   }
 
-  const current = list[value] ?? list[0];
+  const current = list[active] ?? list[0];
   const priceLabel = current.price === base
     ? "включена в стоимость"
     : `+ ${(current.price - base).toLocaleString("ru-RU")} ₽`;
 
   const tiles = (onPick?: () => void) =>
     list.map((m, i) => (
-      <Tile key={m.id} m={m} extra={m.price - base} base={base} active={i === value}
+      <Tile key={m.id} m={m} extra={m.price - base} base={base} active={i === active}
         onClick={() => { onChange(i); onPick?.(); }} />
     ));
 

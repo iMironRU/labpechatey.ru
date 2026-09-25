@@ -28,6 +28,9 @@ function useOrderState() {
   const [ogrn, setOgrn] = useState("");
   const [urgency, setUrgency] = useState<"rush" | "calm">("calm");
   const [mount, setMount] = useState(0);
+  // оснастка, выбранная в каталоге: индекс в ленте зависит от диаметра,
+  // поэтому храним артикул и ищем его в подходящих
+  const [mountId, setMountId] = useState<string | null>(null);
   const [tpl, setTpl] = useState<string | null>(null);
   const [index, setIndex] = useState<TemplateIndex[]>([]);
   const [variants, setVariants] = useState<Scored[]>([]);
@@ -77,7 +80,8 @@ function useOrderState() {
 
   const diameter = (variants.find((v) => v.tpl.id === tpl) ?? variants[0])?.tpl.diameterMm ?? 40;
   const fitting = forDiameter(diameter);
-  const mountItem = fitting[mount] ?? fitting[0];
+  const byId = mountId ? fitting.findIndex((m) => m.id === mountId) : -1;
+  const mountItem = fitting[byId >= 0 ? byId : mount] ?? fitting[0];
   // самая дешёвая подходящая входит в цену печати, остальные — доплатой к ней
   const mountExtra = mountItem && fitting[0] ? mountItem.price - fitting[0].price : 0;
   const total =
@@ -93,11 +97,13 @@ function useOrderState() {
   const onVariants = useCallback((list: Scored[]) => setVariants(list), []);
 
 
-  const pick = useCallback((kind: string, sit: string) => {
+  const pick = useCallback((kind: string, sit: string, mountFromCatalog?: string) => {
     setSel(kind);
     setSituation(sit);
     setTpl(null);
     setOwnPicked(false);
+    setMountId(mountFromCatalog ?? null);
+    setMount(0);
   }, []);
 
   const reset = useCallback(() => {
@@ -107,7 +113,7 @@ function useOrderState() {
 
   return {
     situation, sel, setSel, inn, setInn, reg, manual, setManual, org, setOrg, city, setCity,
-    ogrn, setOgrn, urgency, setUrgency, mount, setMount, tpl, setTpl, index, variants,
+    ogrn, setOgrn, urgency, setUrgency, mount, setMount, mountId, setMountId, tpl, setTpl, index, variants,
     ownPicked, setOwnPicked,
     kindItem, ownLayout, sealKind, innCheck, ogrnCheck, editable, filled, values,
     diameter, mountItem, mountExtra, total, currentTemplate, money, onChoose, onVariants,

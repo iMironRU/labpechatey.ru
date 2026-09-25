@@ -15,7 +15,7 @@ import { useOrder } from "@/components/OrderState";
 export default function Builder() {
   const router = useRouter();
   const o = useOrder();
-  const { situation, sel, setSel, inn, setInn, reg, manual, setManual, org, setOrg, city, setCity, ogrn, setOgrn, urgency, setUrgency, mount, setMount, tpl, setTpl, index, variants, ownPicked, setOwnPicked, kindItem, ownLayout, sealKind, innCheck, ogrnCheck, editable, filled, values, diameter, mountItem, mountExtra, total, currentTemplate, money, onChoose, onVariants } = o;
+  const { situation, sel, setSel, inn, setInn, reg, manual, setManual, org, setOrg, city, setCity, ogrn, setOgrn, urgency, setUrgency, mount, setMount, mountId, setMountId, tpl, setTpl, index, variants, ownPicked, setOwnPicked, kindItem, ownLayout, sealKind, innCheck, ogrnCheck, editable, filled, values, diameter, mountItem, mountExtra, total, currentTemplate, money, onChoose, onVariants } = o;
 
   return (
     <>
@@ -257,7 +257,7 @@ export default function Builder() {
             own={ownLayout}
             onOwn={setOwnPicked}
           />
-          <Mounts diameterMm={diameter} value={mount} onChange={setMount} />
+          <Mounts diameterMm={diameter} value={mount} onChange={(i) => { setMountId(null); setMount(i); }} pinnedId={mountId} />
         </section>
       </div>
 

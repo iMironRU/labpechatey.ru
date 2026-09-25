@@ -17,12 +17,13 @@ function Screen() {
   const params = useSearchParams();
   const sit = params.get("s");
   const kind = params.get("k");
+  const mount = params.get("mount");
   const { situation, pick } = useOrder();
 
   // адрес — источник правды: при заходе по ссылке состояние берём из него
   useEffect(() => {
-    if (sit && kind && sit !== situation) pick(kind, sit);
-  }, [sit, kind, situation, pick]);
+    if (sit && kind && sit !== situation) pick(kind, sit, mount ?? undefined);
+  }, [sit, kind, mount, situation, pick]);
 
   if (!sit) {
     return (
