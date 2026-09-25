@@ -28,6 +28,9 @@ export type Placed = {
   delivery: string;
   address: string;
   pay: string;
+  name: string;
+  phone: string;
+  email: string;
   total: number;
   thumbFile?: string;
   thumbValues?: Values;

@@ -6,6 +6,7 @@ import texts from "@/content/checkout.json";
 import { StampThumb } from "@/components/StampPreview";
 import { IconArrowLeft, IconChevronRight, IconPin, IconShield } from "@/components/Icons";
 import type { Values } from "@/lib/stamp";
+import { emailOk, formatPhone, phoneDigits, phoneOk } from "@/lib/contact";
 
 type Props = {
   kindTitle: string;
@@ -20,7 +21,10 @@ type Props = {
   thumbValues?: Values;
   onBack: () => void;
   /** Оформление: куда везти и чем платить — остальное знает состояние заказа. */
-  onSubmit: (order: { delivery: string; address: string; pay: string; total: number }) => void;
+  onSubmit: (order: {
+    delivery: string; address: string; pay: string; total: number;
+    name: string; phone: string; email: string;
+  }) => void;
 };
 
 const money = (n: number) => `${n.toLocaleString("ru-RU")} ₽`;
@@ -33,6 +37,11 @@ export default function Checkout({
   const [service, setService] = useState("cdek");
   const [pvz, setPvz] = useState<number | null>(null);
   const [pay, setPay] = useState("online");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  // ошибку показываем не на каждой букве, а когда человек ушёл из поля
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const deliveryItem = catalog.delivery.find((d) => d.id === delivery)!;
   const grand = total + deliveryItem.cost;
@@ -46,11 +55,18 @@ export default function Checkout({
     return point ? `${name}, ${point.addr}` : name;
   };
 
-  // кнопку держим неактивной, пока не ясно, куда везти
-  const ready =
+  // почта обязательна там, где без неё нечем закрыть оплату
+  const needEmail = pay === "online" || pay === "invoice";
+  const phoneBad = phone.length > 0 && !phoneOk(phone);
+  const emailBad = email.length > 0 && !emailOk(email);
+
+  // кнопку держим неактивной, пока не ясно, куда везти и кому сообщить
+  const addressReady =
     delivery === "pickup" ||
     (delivery === "courier" && addr.trim().length > 5) ||
     (delivery === "post" && pvz !== null);
+  const ready =
+    addressReady && phoneOk(phone) && (needEmail ? emailOk(email) : !emailBad);
 
   return (
     <main className="w-full flex-1" style={{ padding: "clamp(20px,4vw,40px) clamp(16px,4vw,48px)" }}>
@@ -195,6 +211,57 @@ export default function Checkout({
               ))}
             </div>
           </section>
+
+          <section className="panel" style={{ padding: "clamp(16px,2vw,22px)" }}>
+            <h2 className="m-0 mb-1 text-[16px] font-semibold">{texts.contactTitle}</h2>
+            <p className="mb-3 mt-0 text-[12.5px] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]">
+              {texts.contactLead}
+            </p>
+            <div className="field mb-3">
+              <label htmlFor="cname">{texts.nameLabel}</label>
+              <input id="cname" className="input" placeholder={texts.namePlaceholder}
+                value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div className="ap-2col">
+              <div className="field">
+                <label htmlFor="cphone">{texts.phoneLabel}</label>
+                <input
+                  id="cphone"
+                  className="input"
+                  type="tel"
+                  inputMode="tel"
+                  placeholder="+7 (___) ___-__-__"
+                  value={phone}
+                  onChange={(e) => setPhone(formatPhone(e.target.value))}
+                  onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
+                  aria-invalid={touched.phone && phoneBad}
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="cemail">{texts.emailLabel}</label>
+                <input
+                  id="cemail"
+                  className="input"
+                  type="email"
+                  inputMode="email"
+                  placeholder="pochta@example.ru"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                  aria-invalid={touched.email && emailBad}
+                />
+              </div>
+            </div>
+            {touched.phone && phoneBad && (
+              <p className="mt-1 text-[12.5px]" style={{ color: "var(--warn)" }}>{texts.phoneError}</p>
+            )}
+            {touched.email && emailBad && (
+              <p className="mt-1 text-[12.5px]" style={{ color: "var(--warn)" }}>{texts.emailError}</p>
+            )}
+            <p className="mt-2 text-[12px] text-[color-mix(in_srgb,var(--color-text)_55%,transparent)]">
+              {pay === "online" ? texts.emailHintOnline : pay === "invoice" ? texts.emailHintInvoice : texts.emailHint}
+            </p>
+          </section>
         </div>
 
         <section className="panel sticky top-5 self-start" style={{ padding: "clamp(16px,2vw,22px)" }}>
@@ -245,7 +312,10 @@ export default function Checkout({
             type="button"
             className="btn btn-primary btn-block mt-3 px-5 py-[13px] text-[15px]"
             disabled={!ready}
-            onClick={() => onSubmit({ delivery, address: whereTo(), pay, total: grand })}
+            onClick={() => onSubmit({
+              delivery, address: whereTo(), pay, total: grand,
+              name: name.trim(), phone: `+7${phoneDigits(phone)}`, email: email.trim(),
+            })}
           >
             {texts.cta} · {money(grand)}
           </button>

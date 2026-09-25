@@ -39,7 +39,7 @@ export default function OrderDone({ order }: { order: Placed }) {
                 {texts.title}
               </h1>
               <p className="mb-0 mt-1.5 max-w-[56ch] text-[14px]" style={{ color: muted(68) }}>
-                {texts.lead}
+                {order.name ? `${order.name}, ${texts.lead[0].toLowerCase()}${texts.lead.slice(1)}` : texts.lead}
               </p>
             </div>
             <div className="ml-auto hidden flex-none text-right min-[720px]:block">
@@ -132,6 +132,11 @@ export default function OrderDone({ order }: { order: Placed }) {
                 muted={!delivery?.cost}
               />
               <Row label={texts.payLabel} sub={pay?.note} value={pay?.name ?? ""} />
+              <Row
+                label={texts.contactLabel}
+                sub={order.email || undefined}
+                value={order.phone}
+              />
             </div>
 
             <div className="mt-3 flex items-end justify-between border-t border-[var(--color-divider)] pt-3">
