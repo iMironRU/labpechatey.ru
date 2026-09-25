@@ -44,7 +44,7 @@ export default function Home({ onPick, onStart }: {
             <p className="mt-[22px] text-[17px] leading-[1.6]" style={{ maxWidth: "46ch", color: muted(78) }}>
               {home.hero.lead}
             </p>
-            <div className="mt-7 flex flex-wrap gap-3 max-[860px]:hidden">
+            <div className="mt-7 flex flex-wrap gap-3">
               <button type="button" className="btn btn-primary px-[22px] py-3 text-[15px]" onClick={onStart}>
                 {home.hero.cta}
                 <IconArrowRight />

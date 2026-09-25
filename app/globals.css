@@ -186,8 +186,12 @@ body {
   @media (max-width: 860px) { .two-col { grid-template-columns: minmax(0, 1fr); } }
 
   /* Лейбл + значение в строку — тот же класс-страховка, что в Апликоне */
+  /* Город и ОГРН стоят парой и на телефоне — так в макете «Конструктор —
+     реквизиты (моб)»: поля короткие, разбивать их на две строки незачем. */
   .ap-2col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
-  @media (max-width: 640px) { .ap-2col { grid-template-columns: 1fr !important; } }
+  /* А вот телефон с почтой на 390 рядом не живут — адрес не виден целиком. */
+  .ap-2col-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  @media (max-width: 640px) { .ap-2col-wrap { grid-template-columns: 1fr; } }
 
   @keyframes spin { to { transform: rotate(360deg); } }
   .spinner {

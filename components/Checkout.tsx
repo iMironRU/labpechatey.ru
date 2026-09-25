@@ -222,7 +222,7 @@ export default function Checkout({
               <input id="cname" className="input" placeholder={texts.namePlaceholder}
                 value={name} onChange={(e) => setName(e.target.value)} />
             </div>
-            <div className="ap-2col">
+            <div className="ap-2col-wrap">
               <div className="field">
                 <label htmlFor="cphone">{texts.phoneLabel}</label>
                 <input
