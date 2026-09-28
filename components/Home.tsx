@@ -203,7 +203,7 @@ export default function Home({ onPick, onStart }: {
 
         {/* ——— отзывы ——— */}
         <section className="mt-[clamp(46px,6vw,72px)]">
-          <div className="grid items-stretch gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))" }}>
+          <Rail grid="grid items-stretch gap-4" gridStyle={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))" }}>
             <div
               className="flex flex-col justify-center gap-2 rounded-[14px] p-6"
               style={{ background: "var(--color-accent-800)", color: "var(--color-accent-100)" }}
@@ -233,7 +233,7 @@ export default function Home({ onPick, onStart }: {
                 </span>
               </div>
             ))}
-          </div>
+          </Rail>
         </section>
 
         {/* ——— финальный призыв ——— */}
