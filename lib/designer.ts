@@ -7,7 +7,7 @@
  * положению букв: через точки их привязки проводим окружность.
  */
 
-import { widthMm } from "@/lib/stamp";
+import { widthMm, SEAL_NS } from "@/lib/stamp";
 
 const PT_MM = 25.4 / 72;
 
@@ -204,6 +204,53 @@ function fontSizePx(el: Element, rules: Record<string, Record<string, string>>):
   return null;
 }
 
+/**
+ * Готовый шаблон: разбирать нечего, только показываем, что в нём лежит.
+ * Так страница принимает и выгрузку скрипта из Illustrator, и сырой SVG.
+ */
+function passthrough(source: string, doc: Document, node: Element): Parsed {
+  // радиус и размах в таблице полей — из самой дуги: в метаданных их нет
+  const arcInfo = (d: string) => {
+    const nums = (d.match(/-?[\d.]+/g) || []).map(Number);
+    if (nums.length < 16) return {};
+    const [x0, y0, r] = [nums[0], nums[1], nums[2]];
+    const [x1, y1] = [nums[7], nums[8]];
+    const [x2, y2] = [nums[14], nums[15]];
+    const deg = (x: number, y: number) => (Math.atan2(y, x) * 180) / Math.PI;
+    const hop = (a: number, b: number) => Math.abs(((b - a + 540) % 360) - 180);
+    const a0 = deg(x0, y0), a1 = deg(x1, y1), a2 = deg(x2, y2);
+    return { radiusMm: +r.toFixed(2), spanDeg: Math.round(hop(a0, a1) + hop(a1, a2)) };
+  };
+  const meta = JSON.parse(node.textContent || "{}");
+  const fields: Field[] = [];
+  for (const [key, raw] of Object.entries((meta.fields || {}) as Record<string, any>)) {
+    const spec = raw as Record<string, number | string>;
+    const arc = spec.kind === "arc"
+      ? arcInfo(doc.querySelector(`#b_${key}`)?.getAttribute("d") || "")
+      : {};
+    fields.push({
+      ...arc,
+      key,
+      kind: spec.kind === "arc" ? "arc" : "line",
+      sample: (doc.querySelector(`#f_${key}`)?.textContent || "").trim(),
+      size: Number(spec.size) || 0,
+      squeeze: Number(spec.squeeze) || 1,
+      lines: Number(spec.lines) || 1,
+      y: spec.kind === "arc" ? undefined : Number(doc.querySelector(`#f_${key} text`)?.getAttribute("y") || 0),
+    });
+  }
+  return {
+    svg: source,
+    fields,
+    diameterMm: Number(meta.diameterMm) || 0,
+    meta,
+    issues: [{
+      level: "ok",
+      text: `Это уже готовый шаблон (Ø${meta.diameterMm} мм, полей ${fields.length}) — выгрузка из Illustrator нашим скриптом. Разбирать нечего, сразу примеряю данные.`,
+    }],
+  };
+}
+
 export function convert(source: string): Parsed {
   const issues: Issue[] = [];
   const doc = new DOMParser().parseFromString(normalizeIds(source), "image/svg+xml");
@@ -212,6 +259,10 @@ export function convert(source: string): Parsed {
     return { svg: "", fields: [], diameterMm: 0, meta: {},
              issues: [{ level: "error", text: "Это не похоже на SVG: не нашёлся viewBox." }] };
   }
+
+  // файл из illustrator-экспорт-шаблона.jsx — уже наш шаблон, не сырьё
+  const ready = doc.getElementsByTagNameNS(SEAL_NS, "template")[0];
+  if (ready) return passthrough(source, doc, ready);
 
   const vb = (root.getAttribute("viewBox") || "").split(/\s+/).map(Number);
   const cx0 = vb[2] / 2, cy0 = vb[3] / 2;
