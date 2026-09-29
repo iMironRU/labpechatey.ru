@@ -98,6 +98,50 @@
   }
 
   /**
+   * Базовая линия первой строки.
+   *
+   * У площадного текста её никто не отдаёт: anchor есть только у точечного,
+   * а position и bounds показывают верх рамки — это на целый кегль выше.
+   * Поэтому переводим копию в кривые и смотрим, где стоят сами буквы:
+   * у большинства из них низ и есть базовая линия, выносные элементы
+   * оказываются в меньшинстве и на медиану не влияют.
+   */
+  function baseline(t, sizePt) {
+    var dup = t.duplicate();
+    var outline = dup.createOutline();
+    var g = [], i;
+    for (i = 0; i < outline.pageItems.length; i++) g.push(outline.pageItems[i].geometricBounds);
+    outline.remove();
+    if (!g.length) return null;
+
+    // буквы группируем в строки по низу: разные строки разводит интерлиньяж
+    var rows = [];
+    for (i = 0; i < g.length; i++) {
+      var put = false;
+      for (var k = 0; k < rows.length; k++) {
+        if (Math.abs(rows[k].y - g[i][3]) < sizePt * 0.6) {
+          rows[k].bottoms.push(g[i][3]);
+          if (g[i][0] < rows[k].left) rows[k].left = g[i][0];
+          if (g[i][2] > rows[k].right) rows[k].right = g[i][2];
+          put = true;
+          break;
+        }
+      }
+      if (!put) rows.push({ y: g[i][3], bottoms: [g[i][3]], left: g[i][0], right: g[i][2] });
+    }
+    rows.sort(function (a, b) { return b.y - a.y; });    // сверху вниз: у растёт вверх
+    var out = [];
+    for (i = 0; i < rows.length; i++) {
+      rows[i].bottoms.sort(function (a, b) { return a - b; });
+      out.push({
+        y: rows[i].bottoms[Math.floor(rows[i].bottoms.length / 2)],
+        width: (rows[i].right - rows[i].left) * PT_MM
+      });
+    }
+    return { y: out[0].y, width: out[0].width, rows: out };
+  }
+
+  /**
    * Где на окружности стоит строка. Illustrator не отдаёт ни размах текста по
    * контуру, ни его начало, поэтому переводим копию строки в кривые и смотрим
    * на углы её точек. Копию тут же удаляем — документ не меняется, но окажется
@@ -142,18 +186,44 @@
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
-  /** Контур как есть: якоря и управляющие точки — без упрощения в дуги. */
-  function pathData(p) {
+  /**
+   * Контур как есть: якоря и управляющие точки, без упрощения в дуги.
+   *
+   * k — коэффициент раздувания относительно собственного центра фигуры.
+   * Нужен там, где обводка в макете выровнена внутрь или наружу: в SVG
+   * такого выравнивания нет, и кольцо приходится подвинуть самим.
+   */
+  function pathData(p, k, o) {
     var pts = p.pathPoints, d = "", i;
     if (!pts || pts.length === 0) return "";
+    var put = function (raw) {
+      var v = xy(raw);
+      if (k && k !== 1) { v = [o.x + (v[0] - o.x) * k, o.y + (v[1] - o.y) * k]; }
+      return n(v[0]) + " " + n(v[1]);
+    };
     for (i = 0; i < pts.length; i++) {
-      if (i === 0) d += "M " + mm(pts[i].anchor);
-      else d += " C " + mm(pts[i - 1].rightDirection) + " " + mm(pts[i].leftDirection) + " " + mm(pts[i].anchor);
+      if (i === 0) d += "M " + put(pts[i].anchor);
+      else d += " C " + put(pts[i - 1].rightDirection) + " " + put(pts[i].leftDirection) + " " + put(pts[i].anchor);
     }
     if (p.closed && pts.length > 1) {
-      d += " C " + mm(pts[pts.length - 1].rightDirection) + " " + mm(pts[0].leftDirection) + " " + mm(pts[0].anchor) + " Z";
+      d += " C " + put(pts[pts.length - 1].rightDirection) + " " + put(pts[0].leftDirection) + " " + put(pts[0].anchor) + " Z";
     }
     return d;
+  }
+
+  /**
+   * Выравнивание обводки. Illustrator умеет класть её по центру контура,
+   * внутрь и наружу, но в DOM этого свойства нет — зато видно по габаритам
+   * с обводкой и без. В SVG выравнивания нет вовсе, поэтому невыровненную
+   * обводку переводим в центральную, сдвигая сам контур.
+   */
+  function strokeShift(p) {
+    if (!p.stroked) return 0;
+    var g = p.geometricBounds, v = p.visibleBounds;
+    var half = p.strokeWidth / 2;
+    var out = ((v[2] - v[0]) - (g[2] - g[0])) / 2;     // насколько обводка вылезла
+    var shift = out - half;                            // 0 — по центру
+    return Math.abs(shift) < 0.05 ? 0 : shift * PT_MM; // 0.05 pt — шум округления
   }
 
   function named(items, out) {
@@ -206,7 +276,7 @@
     if (!doc.layers[l].visible) { issues.push("Слой «" + doc.layers[l].name + "» скрыт — пропускаю."); continue; }
     named(doc.layers[l].pageItems, all);
   }
-  var defs = [], body = [], meta = [], fields = 0;
+  var defs = [], body = [], meta = [], fields = 0, faces = {};
   var innerMm = 1e9, ringMm = 0;
 
   // ——— статика: рамка, звёздочки, микротекст ———
@@ -231,7 +301,17 @@
       } else {
         paint = 'fill="currentColor"';
       }
-      var d = pathData(p);
+      var k = 1, o1 = { x: 0, y: 0 };
+      var shift = strokeShift(p);
+      if (shift) {
+        o1 = circleOf(p);
+        if (o1.r > 0.01) {
+          k = (o1.r + shift) / o1.r;
+          issues.push("«" + tag + "»: обводка выровнена не по центру контура — подвинул кольцо на " +
+                      n(shift, 3) + " мм, чтобы в SVG оно легло туда же.");
+        }
+      }
+      var d = pathData(p, k, o1);
       if (!d) continue;
       body.push('    <path d="' + d + '" ' + paint + "/>   <!-- " + tag + " -->");
       for (var q = 0; q < p.pathPoints.length; q++) ringMm = Math.max(ringMm, radius(p.pathPoints[q].anchor));
@@ -265,8 +345,11 @@
     var size = attrs.size * PT_MM;
     var squeeze = attrs.horizontalScale / 100;
     var track = attrs.tracking / 1000;                 // 1/1000 em → доли кегля
+    // шрифт лежит не на фрейме, а в атрибутах символов; имя берём
+    // постскриптовое — по нему браузер находит установленный файл
     var font = "";
-    try { font = t.textFont.name; } catch (e) {}
+    try { font = attrs.textFont.name; } catch (e) {}
+    if (font) { faces[font] = (faces[font] || 0) + 1; }
     if (size < 1.8) issues.push("f_" + key + ": кегль " + n(size) + " мм — меньше производственного минимума 1.8 мм.");
 
     var spec = '  "' + key + '": { "role": "' + key + '", ';
@@ -285,9 +368,9 @@
         var arc = arcOf(t, o);
         if (!arc) { issues.push("f_" + key + ": не смог измерить строку на окружности."); continue; }
         d2 = arcPath(o, o.r, arc.span, arc.mid < 0);
-        // чтобы файл и сам по себе открывался таким, каким нарисован:
-        // рыба занимает ровно ту дугу, по которой мы её и обмерили
-        fit = ' textLength="' + n(arc.span * Math.PI / 180 * o.r) + '" lengthAdjust="spacingAndGlyphs"';
+        // рыбу в файле держим в тех же границах, по которым обмеряли дугу:
+        // так шаблон и сам по себе открывается похожим на макет
+        fit = ' textLength="' + n(arc.span / DEG * o.r) + '" lengthAdjust="spacingAndGlyphs"';
         issues.push("f_" + key + ": строка лежит на целой окружности — взял дугу R" +
                     n(o.r) + " мм, размах " + n(arc.span, 0) + "°. Надёжнее сразу резать окружность ножницами.");
       } else {
@@ -304,9 +387,9 @@
         innerMm = Math.min(innerMm, radius(base.pathPoints[r2].anchor));
       }
     } else {
-      var a;                                            // начало базовой линии
-      try { a = t.anchor; } catch (e3) { a = [t.position[0], t.position[1]]; }
-      var y0 = (cy - a[1]) * PT_MM;
+      var base1 = baseline(t, attrs.size);
+      if (base1 === null) { issues.push("f_" + key + ": не смог найти базовую линию."); continue; }
+      var y0 = (cy - base1.y) * PT_MM;
       var rows = t.lines.length;
       var lead = attrs.leading * PT_MM;
       if (!lead || lead <= 0) lead = size * 1.2;
@@ -314,26 +397,37 @@
       if (rows > 1) {
         inner = "";
         for (var L = 0; L < rows; L++) {
-          inner += '<tspan x="0" y="' + n(y0 + L * lead) + '">' + esc(t.lines[L].contents) + "</tspan>";
+          var rw = base1.rows[L] ? ' textLength="' + n(base1.rows[L].width) + '" lengthAdjust="spacingAndGlyphs"' : "";
+          inner += '<tspan x="0" y="' + n(y0 + L * lead) + '"' + rw + ">" + esc(t.lines[L].contents) + "</tspan>";
         }
       }
       body.push('  <g id="f_' + key + '">   <!-- ' + DICT[key] + " -->\n" +
                 '    <text x="0" y="' + n(y0) + '" font-size="' + n(size) +
                 '" text-anchor="middle" fill="currentColor"' +
-                (rows > 1 ? "" : ' textLength="' + n(t.width * PT_MM) + '" lengthAdjust="spacingAndGlyphs"') +
+                (rows > 1 ? "" : ' textLength="' + n(base1.width) + '" lengthAdjust="spacingAndGlyphs"') +
                 ">" + inner + "</text>\n  </g>");
       spec += '"kind": "line", ';
       if (rows > 1) spec += '"lines": ' + rows + ', "lineHeight": ' + n(lead) + ", ";
     }
     spec += '"size": ' + n(size) + ', "squeeze": ' + n(squeeze, 3) +
             ', "minSize": 1.8, "maxSize": ' + n(size + 0.3);
+    if (font) spec += ', "font": "' + esc(font) + '"';
     if (PREFIX[key]) spec += ', "prefix": "' + PREFIX[key] + '"';
     spec += " }";
     meta.push(spec);
     fields++;
 
-    if (font && font.indexOf("PTSans") !== 0 && font.indexOf("PT_Sans") !== 0) {
-      issues.push("f_" + key + ": шрифт " + font + ". Ёмкость полей мы считаем по PT Sans — пришлите файл шрифта или согласуйте замену.");
+
+  }
+
+  var docFont = "", best = 0;
+  for (var ff in faces) if (faces[ff] > best) { best = faces[ff]; docFont = ff; }
+  for (var bi = 0; bi < body.length; bi++) {
+    var m2 = /<g id="f_(\w+)">/.exec(body[bi]);
+    if (!m2) continue;
+    var own = /"font": "([^"]+)"/.exec(meta.join("\n").split('"' + m2[1] + '":')[1] || "");
+    if (own && own[1] !== docFont) {
+      body[bi] = body[bi].replace("<text ", '<text font-family="' + own[1] + '" ');
     }
   }
 
@@ -363,7 +457,7 @@
     '     xmlns:seal="https://rpk-seal.local/ns/1"\n' +
     '     viewBox="' + n(-half) + " " + n(-half) + " " + n(half * 2) + " " + n(half * 2) + '"' +
     ' width="' + n(half * 2) + 'mm" height="' + n(half * 2) + 'mm"\n' +
-    '     font-family="PT Sans, sans-serif">\n\n' +
+    '     font-family="' + esc(docFont || "PT Sans") + ', sans-serif">\n\n' +
     "  <title>" + esc(doc.name) + "</title>\n" +
     "  <desc>Выгружено из Illustrator скриптом illustrator-экспорт-шаблона.jsx:\n" +
     "        дуги взяты из textPath, а не восстановлены по положению букв.</desc>\n\n" +
@@ -375,7 +469,7 @@
     ' "diameterMm": ' + diameter + ",\n" +
     ' "frame": { "asset": "' + esc(doc.name) + '", "freeRadiusMm": ' + n(ringMm - 0.6) +
     ', "innerRadiusMm": ' + n(inner2) + " },\n" +
-    ' "defaults": { "font": "PT Sans", "case": "upper", "align": "middle", "overflow": "shrink" },\n' +
+    ' "defaults": { "font": "' + esc(docFont || "PT Sans") + '", "case": "upper", "align": "middle", "overflow": "shrink" },\n' +
     ' "fields": {\n' + meta.join(",\n") + "\n }\n}</seal:template></metadata>\n\n" +
     "  <defs>\n" + defs.join("\n") + "\n  </defs>\n\n";
 
