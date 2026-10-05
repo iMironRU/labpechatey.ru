@@ -4,6 +4,7 @@ import { useState } from "react";
 import catalog from "@/content/catalog.json";
 import texts from "@/content/checkout.json";
 import { StampThumb } from "@/components/StampPreview";
+import Hint from "@/components/Hint";
 import { IconArrowLeft, IconChevronRight, IconPin, IconShield } from "@/components/Icons";
 import type { Values } from "@/lib/stamp";
 import { emailOk, formatPhone, phoneDigits, phoneOk } from "@/lib/contact";
@@ -282,11 +283,12 @@ export default function Checkout({
           </div>
 
           <div className="flex flex-col gap-[11px] border-t border-[var(--color-divider)] pt-3">
-            <Row label="Печать" value={money(catalog.prices.stamp)} />
+            <Row label={texts.stampRow} hint={texts.stampHint} value={money(catalog.prices.stamp)} />
             {ownLayout && <Row label="Свой макет" value={`от ${money(catalog.prices.ownLayout)}`} />}
-            <Row label="Оснастка" sub={mountName} value={mountCost ? `+ ${money(mountCost)}` : "включена"} muted={!mountCost} />
+            <Row label="Оснастка" hint={texts.mountHint} sub={mountName} value={mountCost ? `+ ${money(mountCost)}` : "включена"} muted={!mountCost} />
             <Row
               label="Срочность"
+              hint={texts.urgencyHint}
               value={urgency === "rush" ? `+ ${money(catalog.prices.rush)}` : "бесплатно"}
               muted={urgency === "calm"}
             />
@@ -363,11 +365,16 @@ function Tile({
   );
 }
 
-function Row({ label, sub, value, muted }: { label: string; sub?: string; value: string; muted?: boolean }) {
+function Row({ label, sub, value, muted, hint }: {
+  label: string; sub?: string; value: string; muted?: boolean; hint?: string;
+}) {
   return (
     <div className="flex items-baseline justify-between gap-3">
       <span className="min-w-0">
-        <span className="block text-[13px]">{label}</span>
+        <span className="inline-flex items-center gap-[6px] text-[13px]">
+          {label}
+          {hint && <Hint text={hint} />}
+        </span>
         {sub && (
           <span className="block truncate text-[11.5px] text-[color-mix(in_srgb,var(--color-text)_52%,transparent)]">
             {sub}

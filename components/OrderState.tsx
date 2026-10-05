@@ -46,6 +46,18 @@ function orderNumber(): string {
     String(Math.floor(Math.random() * 9000) + 1000)}`;
 }
 
+/**
+ * Срочность по умолчанию включена, пока мастерская успевает сделать за час:
+ * будний день до 17:00. Вечером и в выходные — выключена. Второе правило
+ * заказчика — «меньше трёх заказов за три часа» — ждёт бэкенда: загрузку
+ * фронт знать неоткуда.
+ */
+function rushByDefault(): "rush" | "calm" {
+  const now = new Date();
+  const workday = now.getDay() >= 1 && now.getDay() <= 5;
+  return workday && now.getHours() < 17 ? "rush" : "calm";
+}
+
 function useOrderState() {
   // состояние конструктора — см. design-ref/README.md, раздел State Management
   const [situation, setSituation] = useState<string | null>(null);
@@ -56,7 +68,9 @@ function useOrderState() {
   const [org, setOrg] = useState("");
   const [city, setCity] = useState("");
   const [ogrn, setOgrn] = useState("");
+  // считаем после монтирования: на сервере часа нет, иначе разъедется гидратация
   const [urgency, setUrgency] = useState<"rush" | "calm">("calm");
+  useEffect(() => { setUrgency(rushByDefault()); }, []);
   const [mount, setMount] = useState(0);
   // оснастка, выбранная в каталоге: индекс в ленте зависит от диаметра,
   // поэтому храним артикул и ищем его в подходящих
@@ -113,6 +127,17 @@ function useOrderState() {
   }, [inn]);
 
   const innCheck = inn.length >= 10 ? checkInn(inn) : null;
+  // карточка на главной одна — «Печать ИП или ООО», форму берём из ИНН
+  useEffect(() => {
+    if (!innCheck?.ok) return;
+    const want = innCheck.kind === "ooo" ? "ooo" : "ip";
+    setSel((cur) => {
+      const copy = cur.endsWith("-copy") ? "-copy" : "";
+      const next = want + copy;
+      if (next !== cur) setTpl(null);
+      return next;
+    });
+  }, [innCheck?.ok, innCheck?.kind]);
   const ogrnCheck = ogrn ? checkOgrn(ogrn) : null;
   const editable = manual || reg.status === "found";
   const filled = Boolean(org && (reg.status === "found" || manual));

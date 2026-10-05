@@ -6,7 +6,8 @@ import Mounts from "@/components/Mounts";
 import StampPreview from "@/components/StampPreview";
 import SiteHeader from "@/components/SiteHeader";
 import HelpCard from "@/components/HelpCard";
-import { IconArrowLeft, IconArrowRight, IconCalendar, IconCheck, IconClock, IconCross } from "@/components/Icons";
+import Hint from "@/components/Hint";
+import { IconArrowLeft, IconArrowRight, IconCheck, IconClock, IconCross } from "@/components/Icons";
 import catalog from "@/content/catalog.json";
 import texts from "@/content/constructor.json";
 import { useOrder } from "@/components/OrderState";
@@ -49,40 +50,60 @@ export default function Builder() {
         <div className="flex flex-wrap items-end justify-between gap-[14px]">
           <KindSelector value={sel} onChange={(id) => { setSel(id); setTpl(null); }} />
 
-          <div
-            className="flex gap-1 rounded-full border border-[var(--color-divider)] p-[3px]"
-            style={{ background: "color-mix(in srgb, var(--color-text) 3%, transparent)" }}
+          {/* срочность — один переключатель: «не тороплюсь» это просто его выкл. */}
+          <button
+            type="button"
+            onClick={() => setUrgency(urgency === "rush" ? "calm" : "rush")}
+            aria-pressed={urgency === "rush"}
+            className="inline-flex items-center gap-[9px] rounded-full border px-[13px] py-[7px] text-left leading-[1.2]"
+            style={{
+              borderColor: urgency === "rush" ? "var(--color-accent)" : "var(--color-divider)",
+              background: urgency === "rush"
+                ? "color-mix(in srgb, var(--color-accent) 8%, transparent)"
+                : "transparent",
+            }}
           >
-            {(["rush", "calm"] as const).map((u) => (
-              <button
-                key={u}
-                type="button"
-                onClick={() => setUrgency(u)}
-                aria-pressed={urgency === u}
-                className="inline-flex items-center gap-[6px] rounded-full px-[13px] py-[6px] text-[12.5px] leading-[1.2]"
-                style={
-                  urgency === u
-                    ? { background: "var(--color-surface)", boxShadow: "var(--shadow-sm)" }
-                    : { color: "color-mix(in srgb, var(--color-text) 60%, transparent)" }
-                }
-              >
-                {u === "rush" ? <IconClock /> : <IconCalendar />}
-                {u === "rush" ? texts.urgency.rush : texts.urgency.calm}
-              </button>
-            ))}
-          </div>
+            <span
+              className="relative inline-block h-[18px] w-[32px] flex-none rounded-full transition-colors"
+              style={{
+                background: urgency === "rush"
+                  ? "var(--color-accent)"
+                  : "color-mix(in srgb, var(--color-text) 20%, transparent)",
+              }}
+            >
+              <span
+                className="absolute top-[2px] h-[14px] w-[14px] rounded-full bg-white transition-all"
+                style={{ left: urgency === "rush" ? 16 : 2 }}
+              />
+            </span>
+            <span className="flex flex-col">
+              <span className="inline-flex items-center gap-[5px] text-[12.5px] font-semibold">
+                <IconClock />
+                {texts.urgency.rush}
+              </span>
+              <span className="text-[11.5px]" style={{ color: "color-mix(in srgb, var(--color-text) 58%, transparent)" }}>
+                {texts.urgency.rushNote}
+              </span>
+            </span>
+          </button>
         </div>
 
         <div className="mt-[14px] flex flex-wrap items-end justify-between gap-5 border-t border-[var(--color-divider)] pt-4 max-[560px]:hidden">
           <div className="flex min-w-[220px] flex-1 flex-wrap gap-x-7 gap-y-[14px]">
-            <PriceRow label={`${texts.price.stampRow} · ${currentTemplate?.tpl.title ?? "макет"}`} value={money(catalog.prices.stamp)} />
+            <PriceRow
+              label={`${texts.price.stampRow} · ${currentTemplate?.tpl.title ?? "макет"}`}
+              hint={texts.price.stampHint}
+              value={money(catalog.prices.stamp)}
+            />
             <PriceRow
               label={`${texts.price.mountRow} · ${mountItem ? `${mountItem.brand} ${mountItem.model}` : "подберём"}`}
+              hint={texts.price.mountHint}
               value={mountExtra === 0 ? texts.price.included : `+ ${money(mountExtra)}`}
               muted={mountExtra === 0}
             />
             <PriceRow
               label={texts.price.urgencyRow}
+              hint={texts.urgency.hint}
               value={urgency === "rush" ? `+ ${money(catalog.prices.rush)}` : texts.price.free}
               muted={urgency === "calm"}
               onClear={urgency === "rush" ? () => setUrgency("calm") : undefined}
@@ -192,22 +213,6 @@ export default function Builder() {
             </p>
           )}
 
-          {/* Длина ИНН говорит, кто перед нами: 10 цифр — организация, 12 — ИП.
-              Если это расходится с выбранным типом печати, предлагаем поправить. */}
-          {innCheck?.ok && innCheck.kind !== sealKind && (
-            <p className="mt-2 text-[12.5px]" style={{ color: "var(--warn)" }}>
-              По ИНН это {innCheck.kind === "ooo" ? "организация" : "ИП"}, а выбрана{" "}
-              {kindItem.title.toLowerCase()}.{" "}
-              <button
-                type="button"
-                className="underline"
-                style={{ color: "var(--color-accent)" }}
-                onClick={() => { setSel(innCheck.kind === "ooo" ? "ooo" : "ip"); setTpl(null); }}
-              >
-                Переключить на {innCheck.kind === "ooo" ? "печать ООО" : "печать ИП"}
-              </button>
-            </p>
-          )}
 
           <div className="mt-4 border-t border-[var(--color-divider)] pt-4">
             <div className="field mb-3">
@@ -278,7 +283,7 @@ export default function Builder() {
           disabled={!filled}
           onClick={() => router.push("/oformlenie")}
         >
-          Оформить
+          {texts.price.ctaShort}
         </button>
       </div>
       </div>
@@ -291,16 +296,21 @@ export default function Builder() {
 
 
 function PriceRow({
-  label, value, muted, onClear,
+  label, value, muted, onClear, hint,
 }: {
   label: string;
   value: string;
   muted?: boolean;
   onClear?: () => void;
+  /** Текст контекстной справки — рядом с подписью появится кружок с вопросом. */
+  hint?: string;
 }) {
   return (
     <div className="flex flex-col gap-[3px]">
-      <span className="text-[11.5px] text-[color-mix(in_srgb,var(--color-text)_52%,transparent)]">{label}</span>
+      <span className="inline-flex items-center gap-[6px] text-[11.5px] text-[color-mix(in_srgb,var(--color-text)_52%,transparent)]">
+        {label}
+        {hint && <Hint text={hint} />}
+      </span>
       <span className="inline-flex items-center gap-[7px]">
         <span
           className="text-[15px] font-semibold"

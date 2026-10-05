@@ -4,6 +4,7 @@ import Link from "next/link";
 import catalog from "@/content/catalog.json";
 import home from "@/content/home.json";
 import texts from "@/content/done.json";
+import check from "@/content/checkout.json";
 import { StampThumb } from "@/components/StampPreview";
 import { IconCheck, IconShield } from "@/components/Icons";
 import type { Placed } from "@/components/OrderState";
@@ -112,7 +113,7 @@ export default function OrderDone({ order }: { order: Placed }) {
             </div>
 
             <div className="flex flex-col gap-[11px] border-t border-[var(--color-divider)] pt-3">
-              <Row label="Печать" value={money(catalog.prices.stamp)} />
+              <Row label={check.stampRow} value={money(catalog.prices.stamp)} />
               {order.ownLayout && <Row label="Свой макет" value={`от ${money(catalog.prices.ownLayout)}`} />}
               <Row
                 label="Оснастка"

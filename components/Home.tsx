@@ -70,6 +70,42 @@ export default function Home({ onPick, onStart }: {
           </div>
         </section>
 
+        {/* ——— ситуации ——— */}
+        <section id="cat" className="mt-[clamp(40px,5vw,64px)]" style={{ scrollMarginTop: 80 }}>
+          <h2 className="m-0 mb-[22px] font-semibold" style={{ fontSize: "clamp(24px,3vw,34px)", letterSpacing: "-0.015em" }}>
+            {home.catsTitle}
+          </h2>
+          <Rail grid="grid gap-3.5" gridStyle={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 258px), 1fr))" }}>
+            {home.cats.map((c) => (
+              <button
+                key={c.sit}
+                type="button"
+                onClick={() => onPick(c.kind, c.sit)}
+                className="card flex w-full cursor-pointer flex-col items-start gap-3 border-0 p-[18px] text-left transition-transform hover:-translate-y-0.5"
+                style={{ boxShadow: "var(--shadow-sm)" }}
+              >
+                <span
+                  className="grid h-[38px] w-[38px] place-items-center rounded-[9px]"
+                  style={{ background: "var(--color-accent-800)", color: "var(--color-accent-100)" }}
+                >
+                  <IconCat name={c.icon} />
+                </span>
+                <span className="text-[17px] font-semibold leading-[1.15]">{c.title}</span>
+                <span className="flex-1 text-[13px] leading-[1.5]" style={{ color: muted(70) }}>
+                  {c.desc}
+                </span>
+                <span className="flex w-full items-center justify-between text-[12.5px]" style={{ color: muted(60) }}>
+                  <span>{c.price}</span>
+                  <span className="inline-flex items-center gap-1" style={{ color: "var(--color-accent)" }}>
+                    Собрать
+                    <IconArrowRight size={13} width={2} />
+                  </span>
+                </span>
+              </button>
+            ))}
+          </Rail>
+        </section>
+
         {/* ——— как проходит заказ ——— */}
         <section
           id="steps"
@@ -108,45 +144,12 @@ export default function Home({ onPick, onStart }: {
 
         <hr className="border-0 border-t border-[var(--color-divider)]" style={{ margin: "clamp(30px,4vw,54px) 0" }} />
 
-        {/* ——— ситуации ——— */}
-        <section id="cat" className="mt-[clamp(40px,5vw,64px)]" style={{ scrollMarginTop: 80 }}>
-          <p className="m-0 mb-[22px] text-[15px]" style={{ color: muted(66) }}>
-            {home.catsLead}
-          </p>
-          <Rail grid="grid gap-3.5" gridStyle={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 258px), 1fr))" }}>
-            {home.cats.map((c) => (
-              <button
-                key={c.sit}
-                type="button"
-                onClick={() => onPick(c.kind, c.sit)}
-                className="card flex w-full cursor-pointer flex-col items-start gap-3 border-0 p-[18px] text-left transition-transform hover:-translate-y-0.5"
-                style={{ boxShadow: "var(--shadow-sm)" }}
-              >
-                <span
-                  className="grid h-[38px] w-[38px] place-items-center rounded-[9px]"
-                  style={{ background: "var(--color-accent-800)", color: "var(--color-accent-100)" }}
-                >
-                  <IconCat name={c.icon} />
-                </span>
-                <span className="text-[17px] font-semibold leading-[1.15]">{c.title}</span>
-                <span className="flex-1 text-[13px] leading-[1.5]" style={{ color: muted(70) }}>
-                  {c.desc}
-                </span>
-                <span className="flex w-full items-center justify-between text-[12.5px]" style={{ color: muted(60) }}>
-                  <span>{c.price}</span>
-                  <span className="inline-flex items-center gap-1" style={{ color: "var(--color-accent)" }}>
-                    Собрать
-                    <IconArrowRight size={13} width={2} />
-                  </span>
-                </span>
-              </button>
-            ))}
-          </Rail>
-        </section>
-
         {/* ——— почему мы ——— */}
+        <h2 className="mb-4 mt-[clamp(46px,6vw,72px)] font-semibold" style={{ fontSize: "clamp(24px,3vw,34px)", letterSpacing: "-0.015em" }}>
+          {home.badgesTitle}
+        </h2>
         <section
-          className="mt-[clamp(46px,6vw,72px)] rounded-2xl"
+          className="rounded-2xl"
           style={{ background: "var(--color-surface)", boxShadow: "var(--shadow-sm)", padding: "clamp(24px,3vw,38px)" }}
         >
           <Rail
@@ -302,17 +305,20 @@ export default function Home({ onPick, onStart }: {
                 {col.title}
               </span>
               {/* «Каталог» — ссылки полным цветом, «Как заказать» — просто текст */}
-              {col.items.map((it) =>
-                col.title === "Каталог" ? (
-                  <a key={it} href="#cat" className="text-[13.5px] no-underline" style={{ color: "inherit" }}>
-                    {it}
-                  </a>
+              {col.items.map((it) => {
+                // пункт может быть просто строкой или ссылкой: {t, href}
+                const text = typeof it === "string" ? it : it.t;
+                const href = typeof it === "string" ? (col.title === "Каталог" ? "#cat" : null) : it.href;
+                return href ? (
+                  <Link key={text} href={href} className="text-[13.5px] no-underline" style={{ color: "inherit" }}>
+                    {text}
+                  </Link>
                 ) : (
-                  <span key={it} className="text-[13.5px]" style={{ color: muted(72) }}>
-                    {it}
+                  <span key={text} className="text-[13.5px]" style={{ color: muted(72) }}>
+                    {text}
                   </span>
-                ),
-              )}
+                );
+              })}
             </div>
           ))}
 

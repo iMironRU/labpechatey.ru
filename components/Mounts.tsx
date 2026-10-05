@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { forDiameter, nearestSizes, sizeLabel, KIND_LABEL, type Mount } from "@/lib/mounts";
 import MountPhoto from "@/components/MountPhoto";
@@ -133,16 +132,14 @@ export default function Mounts({
       )}
 
     <div className="mt-4 min-w-0 border-t border-[var(--color-divider)] pt-4 max-[560px]:hidden">
-      <div className="mb-3 flex items-center justify-between gap-3">
+      <div className="mb-3 flex items-center gap-3">
         <span className="text-[15px] font-semibold">
           Подходящие оснастки{" "}
           <span className="font-normal" style={{ color: "color-mix(in srgb, var(--color-text) 52%, transparent)" }}>
             · Ø{diameterMm} мм
           </span>
         </span>
-        <Link href="/osnastki" className="text-[13px] no-underline" style={{ color: "var(--color-accent)" }}>
-          Посмотреть все
-        </Link>
+
       </div>
 
       <div className="rail flex min-w-0 gap-3 pb-1">{tiles()}</div>

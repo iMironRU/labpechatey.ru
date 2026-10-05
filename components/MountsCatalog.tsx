@@ -22,18 +22,20 @@ export default function MountsCatalog() {
   const [brand, setBrand] = useState<"all" | string>("all");
   const [size, setSize] = useState<"all" | number>(40);
   const [limit, setLimit] = useState(8);
+  const [sort, setSort] = useState<"cheap" | "pricey">("cheap");
 
   const brands = useMemo(() => [...new Set(MOUNTS.map((m) => m.brand))], []);
 
   const list = useMemo(() => {
-    return MOUNTS.filter((m) => {
+    const picked = MOUNTS.filter((m) => {
       if (shape !== "all" && m.shape !== shape) return false;
       if (kind !== "all" && m.kind !== kind) return false;
       if (brand !== "all" && m.brand !== brand) return false;
       if (size !== "all" && shape === "round" && m.diameterMm !== size) return false;
       return true;
     });
-  }, [shape, kind, brand, size]);
+    return picked.sort((a, b) => (sort === "cheap" ? a.price - b.price : b.price - a.price));
+  }, [shape, kind, brand, size, sort]);
 
   const shown = list.slice(0, limit);
 
@@ -82,6 +84,14 @@ export default function MountsCatalog() {
             ))}
           </Select>
         )}
+        <Select
+          value={sort}
+          onChange={(v) => setSort(v as "cheap" | "pricey")}
+          label="Сортировка"
+        >
+          <option value="cheap">Сначала дешёвые</option>
+          <option value="pricey">Сначала дорогие</option>
+        </Select>
         <span className="ml-auto text-[12.5px]" style={{ color: muted(55) }}>
           найдено: {list.length}
         </span>
